@@ -1,0 +1,10 @@
+program Variaveis;
+var
+  a, b: integer;
+  c: real;
+begin
+  a := 10;
+  b := 20;
+  c := 3.14;
+  writeln('a:', a, ' b:', b, ' c:', c);
+end.

@@ -1,0 +1,9 @@
+program Expressoes;
+var
+  x, y, resultado: integer;
+begin
+  x := 5;
+  y := 3;
+  resultado := (x + y) * (x - y);
+  writeln('Resultado: ', resultado);
+end.

@@ -1,0 +1,10 @@
+program TesteIf;
+var
+  numero: integer;
+begin
+  numero := 7;
+  if numero mod 2 = 0 then
+    writeln('O número é par')
+  else
+    writeln('O número é ímpar');
+end.

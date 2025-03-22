@@ -1,0 +1,8 @@
+program TesteProcedure;
+procedure Saudacao;
+begin
+  writeln('Olá, mundo!');
+end;
+begin
+  Saudacao;
+end.

@@ -1,0 +1,11 @@
+program TesteFunction;
+function Quadrado(x: integer): integer;
+begin
+  Quadrado := x * x;
+end;
+var
+  num: integer;
+begin
+  num := 4;
+  writeln('Quadrado de ', num, ' é ', Quadrado(num));
+end.
