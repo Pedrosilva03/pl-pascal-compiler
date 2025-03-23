@@ -1,7 +1,6 @@
 import ply.yacc as yacc
 from pascalLexer import tokens
 
-
 def p_error(p):
     print("Erro sintático no input!")
     
