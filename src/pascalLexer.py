@@ -106,10 +106,10 @@ reserved_keywords = {
 	
 	'procedure':'PROCEDURE',
 	'function':	'FUNCTION',
-    'array': 'ARRAY',
-    'of': 'OF',
-    'writeln': 'WRITELN',
-    'readln': 'READLN',
+    'array':    'ARRAY',
+    'of':       'OF',
+    'writeln':  'WRITELN',
+    'readln':   'READLN',
 	
 	'real':		'NREAL',
 	'integer':	'NINTEGER',
