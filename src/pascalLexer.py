@@ -4,7 +4,7 @@ tokens = (
 	# Assignment
 	'IDENTIFIER', 'ASSIGNMENT', 'SEMICOLON', 'COLON', 'COMMA',
 	# Main
-    'COMMENT', 'PROGRAM', 'DOT',
+    	'COMMENT', 'PROGRAM', 'DOT',
 	# Blocks
 	'VAR', 'BEGIN', 'END',
 	# Control Flow
@@ -49,16 +49,16 @@ reserved_keywords = {
 	
 	'procedure': 'PROCEDURE',
 	'function': 'FUNCTION',
-    'array': 'ARRAY',
-    'of': 'OF',
-    'writeln': 'WRITELN',
-    'readln': 'READLN',
+    	'array': 'ARRAY',
+    	'of': 'OF',
+	'writeln': 'WRITELN',
+    	'readln': 'READLN',
 	
 	'real': 'NREAL',
 	'integer': 'NINTEGER',
 	'string': 'NSTRING',
 	'char': 'NCHAR',
-    'boolean': 'NBOOLEAN'
+    	'boolean': 'NBOOLEAN'
 }
 
 t_DOT = r"\."
