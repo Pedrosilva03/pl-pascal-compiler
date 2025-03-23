@@ -24,41 +24,19 @@ tokens = (
 )
 
 reserved_keywords = {
-	'program': 'PROGRAM',
-	'var': 'VAR',
-	'begin': 'BEGIN',
-	'end': 'END',
+	'program': 'PROGRAM', 'var': 'VAR', 'begin': 'BEGIN', 'end': 'END',
 	
-	'if': 'IF',
-	'then': 'THEN',
-	'else': 'ELSE',
-	'for': 'FOR',
-	'while': 'WHILE',
-	'repeat': 'REPEAT',
-	'do': 'DO',
-	'to': 'TO',
-	'downto': 'DOWNTO',
-	'until': 'UNTIL',
+	'if': 'IF', 'then': 'THEN', 'else': 'ELSE',
+	'for': 'FOR', 'while': 'WHILE', 'repeat': 'REPEAT', 'do': 'DO', 'to': 'TO', 'downto': 'DOWNTO', 'until': 'UNTIL',
 	
-	'and': 'AND',
-	'or': 'OR',
-	'not': 'NOT',
+	'and': 'AND', 'or': 'OR', 'not': 'NOT',
 	
-	'div': 'DIV',
-	'mod': 'MOD',
+	'div': 'DIV', 'mod': 'MOD',
 	
-	'procedure': 'PROCEDURE',
-	'function': 'FUNCTION',
-    	'array': 'ARRAY',
-    	'of': 'OF',
-	'writeln': 'WRITELN',
-    	'readln': 'READLN',
+	'procedure': 'PROCEDURE', 'function': 'FUNCTION', 
+	'array': 'ARRAY', 'of': 'OF', 'writeln': 'WRITELN', 'readln': 'READLN',
 	
-	'real': 'NREAL',
-	'integer': 'NINTEGER',
-	'string': 'NSTRING',
-	'char': 'NCHAR',
-    	'boolean': 'NBOOLEAN'
+	'real': 'NREAL', 'integer': 'NINTEGER', 'string': 'NSTRING', 'char': 'NCHAR', 'boolean': 'NBOOLEAN'
 }
 
 t_DOT = r"\."
@@ -90,10 +68,10 @@ t_INTEGER = r"(\-)?[0-9]+"
 t_BOOLEAN = r"true|false"
 
 def t_IDENTIFIER(t):
-	r"[a-zA-Z]([a-zA-Z0-9])*"
-	if t.value.lower() in reserved_keywords:
-		t.type = reserved_keywords[t.value.lower()]
-	return t
+    r"[a-zA-Z]([a-zA-Z0-9])*"
+    if t.value.lower() in reserved_keywords:
+	t.type = reserved_keywords[t.value.lower()]
+    return t
 
 def t_CHAR(t):
     r"'\w'"
