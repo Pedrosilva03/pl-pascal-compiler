@@ -4,7 +4,7 @@ tokens = (
 	# Assignment
 	'IDENTIFIER', 'ASSIGNMENT', 'SEMICOLON', 'COLON', 'COMMA',
 	# Main
-    	'COMMENT', 'PROGRAM', 'DOT',
+    'COMMENT', 'PROGRAM', 'DOT',
 	# Blocks
 	'VAR', 'BEGIN', 'END',
 	# Control Flow
@@ -27,6 +27,7 @@ reserved_keywords = {
 	'program': 'PROGRAM', 'var': 'VAR', 'begin': 'BEGIN', 'end': 'END',
 	
 	'if': 'IF', 'then': 'THEN', 'else': 'ELSE',
+ 
 	'for': 'FOR', 'while': 'WHILE', 'repeat': 'REPEAT', 'do': 'DO', 'to': 'TO', 'downto': 'DOWNTO', 'until': 'UNTIL',
 	
 	'and': 'AND', 'or': 'OR', 'not': 'NOT',
@@ -34,6 +35,7 @@ reserved_keywords = {
 	'div': 'DIV', 'mod': 'MOD',
 	
 	'procedure': 'PROCEDURE', 'function': 'FUNCTION', 
+ 
 	'array': 'ARRAY', 'of': 'OF', 'writeln': 'WRITELN', 'readln': 'READLN',
 	
 	'real': 'NREAL', 'integer': 'NINTEGER', 'string': 'NSTRING', 'char': 'NCHAR', 'boolean': 'NBOOLEAN'
@@ -70,7 +72,7 @@ t_BOOLEAN = r"true|false"
 def t_IDENTIFIER(t):
     r"[a-zA-Z]([a-zA-Z0-9])*"
     if t.value.lower() in reserved_keywords:
-	t.type = reserved_keywords[t.value.lower()]
+        t.type = reserved_keywords[t.value.lower()]
     return t
 
 def t_CHAR(t):
