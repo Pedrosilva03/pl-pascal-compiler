@@ -97,6 +97,7 @@ GRAMÁTICA:
 def p_error(p):
     if p:
         print(f"Erro de sintaxe próximo a '{p.value}' na linha {p.lineno}")
+        parser.errok()
     else:
         print("Erro de sintaxe: token inesperado")
     
