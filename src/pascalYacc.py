@@ -2,7 +2,7 @@ import ply.yacc as yacc
 from pascalLexer import tokens
 
 vm_code = ""
-function_definitions = {}
+functions = {}
 variables = {}
 
 def p_program(p):
@@ -14,8 +14,16 @@ def p_header(p):
     p[0] = ('header', p[2])
     
 def p_block(p):
-    'block : variable_declaration procedure_function statements'
-    p[0] = ('block',p[1], p[2], p[3])
+    """block : variable_declaration body
+             | body"""
+            #| variable_declaration procedure_function body"""
+    # Um bloco contém declarações de variáveis, definições de funções/procedimentos e comandos dentro do 'begin ... end'.
+    if len(p) == 4:
+        p[0] = ("block", p[1], p[2], p[3])
+    elif len(p) == 3:
+        p[0] = ("block", p[1], p[2])
+    else:
+        p[0] = ("block", p[1])        
     
 ### VARIABLE DECLARATION ###
 
@@ -48,10 +56,40 @@ def p_type(p):
             | NREAL
             | NSTRING
             | NCHAR
-            | NBOOLEAN"""
+            | NBOOLEAN
+            | array_type""" 
     p[0] = p[1]
+
+def p_array_type(p):
+    'array_type : ARRAY LBRACKET INTEGER RANGE INTEGER RBRACKET OF type'
+    # Representa arrays, incluindo limites inferiores e superiores
+    p[0] = ("array", p[3], p[5], p[8])  # Exemplo: ('array', 1, 5, 'NINTEGER')
     
 ### PROCEDURES E FUNCTIONS ###
+
+
+### BODY ###
+    
+def p_body(p):
+    'body : BEGIN statements END'
+    global vm_code
+    vm_code += "START\n"
+    vm_code += "\n".join(p[2]) + "\n" 
+    vm_code += "STOP\n"
+    p[0] = ["START"] + p[2] + ["STOP"]
+    
+def p_statements(p):
+    """statements : statement SEMICOLON statements
+                  | statement SEMICOLON"""
+    # Concatena os comandos da VM
+    if len(p) == 4:
+        p[0] = p[1] + p[3]  # Junta as instruções das statements
+    else:
+        p[0] = p[1]  # Apenas um statement
+
+def p_statement(p):
+    """statement : WRITELN LPAREN STRING RPAREN"""
+    p[0] = [f'PUSHS "{p[3]}"', "WRITES", "WRITELN"]
 
 # VER SE O QUE FOI FEITO ANTERIORMENTE NÃO PRECISA JÁ DE CÓDIGO MÁQUINA LÁ INSERIDO # 
     
@@ -91,7 +129,7 @@ GRAMÁTICA:
 -> expr : term ((PLUS | MINUS) term)*
 -> term : factor ((TIMES | DIV) factor)*
 -> factor : PLUS factor | MINUS factor | INTEGER | LPAREN expr RPAREN | variable
--> empty :
+
 """
 
 def p_error(p):
@@ -103,5 +141,6 @@ def p_error(p):
     
 parser = yacc.yacc()
 
-def parse_input(data):
-    return parser.parse(data)
+def parse_input(input_string):
+    parser.parse(input_string)
+    return vm_code

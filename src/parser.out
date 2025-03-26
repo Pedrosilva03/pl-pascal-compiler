@@ -1,0 +1,517 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND
+    ASSIGNMENT
+    BOOLEAN
+    CHAR
+    COMMENT
+    DIV
+    DIVISION
+    DO
+    DOWNTO
+    ELSE
+    EQ
+    FOR
+    FUNCTION
+    GT
+    GTE
+    IF
+    LT
+    LTE
+    MINUS
+    MOD
+    NEQ
+    NOT
+    OR
+    PLUS
+    PROCEDURE
+    READLN
+    REAL
+    REPEAT
+    THEN
+    TIMES
+    TO
+    UNTIL
+    WHILE
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> header block DOT
+Rule 2     header -> PROGRAM IDENTIFIER SEMICOLON
+Rule 3     block -> variable_declaration body
+Rule 4     block -> body
+Rule 5     variable_declaration -> VAR identifier_list COLON type SEMICOLON variable_declaration
+Rule 6     variable_declaration -> VAR identifier_list COLON type SEMICOLON
+Rule 7     identifier_list -> IDENTIFIER COMMA identifier_list
+Rule 8     identifier_list -> IDENTIFIER
+Rule 9     type -> NINTEGER
+Rule 10    type -> NREAL
+Rule 11    type -> NSTRING
+Rule 12    type -> NCHAR
+Rule 13    type -> NBOOLEAN
+Rule 14    type -> array_type
+Rule 15    array_type -> ARRAY LBRACKET INTEGER RANGE INTEGER RBRACKET OF type
+Rule 16    body -> BEGIN statements END
+Rule 17    statements -> statement SEMICOLON statements
+Rule 18    statements -> statement SEMICOLON
+Rule 19    statement -> WRITELN LPAREN STRING RPAREN
+
+Terminals, with rules where they appear
+
+AND                  : 
+ARRAY                : 15
+ASSIGNMENT           : 
+BEGIN                : 16
+BOOLEAN              : 
+CHAR                 : 
+COLON                : 5 6
+COMMA                : 7
+COMMENT              : 
+DIV                  : 
+DIVISION             : 
+DO                   : 
+DOT                  : 1
+DOWNTO               : 
+ELSE                 : 
+END                  : 16
+EQ                   : 
+FOR                  : 
+FUNCTION             : 
+GT                   : 
+GTE                  : 
+IDENTIFIER           : 2 7 8
+IF                   : 
+INTEGER              : 15 15
+LBRACKET             : 15
+LPAREN               : 19
+LT                   : 
+LTE                  : 
+MINUS                : 
+MOD                  : 
+NBOOLEAN             : 13
+NCHAR                : 12
+NEQ                  : 
+NINTEGER             : 9
+NOT                  : 
+NREAL                : 10
+NSTRING              : 11
+OF                   : 15
+OR                   : 
+PLUS                 : 
+PROCEDURE            : 
+PROGRAM              : 2
+RANGE                : 15
+RBRACKET             : 15
+READLN               : 
+REAL                 : 
+REPEAT               : 
+RPAREN               : 19
+SEMICOLON            : 2 5 6 17 18
+STRING               : 19
+THEN                 : 
+TIMES                : 
+TO                   : 
+UNTIL                : 
+VAR                  : 5 6
+WHILE                : 
+WRITELN              : 19
+error                : 
+
+Nonterminals, with rules where they appear
+
+array_type           : 14
+block                : 1
+body                 : 3 4
+header               : 1
+identifier_list      : 5 6 7
+program              : 0
+statement            : 17 18
+statements           : 16 17
+type                 : 5 6 15
+variable_declaration : 3 5
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . header block DOT
+    (2) header -> . PROGRAM IDENTIFIER SEMICOLON
+
+    PROGRAM         shift and go to state 3
+
+    program                        shift and go to state 1
+    header                         shift and go to state 2
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> header . block DOT
+    (3) block -> . variable_declaration body
+    (4) block -> . body
+    (5) variable_declaration -> . VAR identifier_list COLON type SEMICOLON variable_declaration
+    (6) variable_declaration -> . VAR identifier_list COLON type SEMICOLON
+    (16) body -> . BEGIN statements END
+
+    VAR             shift and go to state 7
+    BEGIN           shift and go to state 8
+
+    block                          shift and go to state 4
+    variable_declaration           shift and go to state 5
+    body                           shift and go to state 6
+
+state 3
+
+    (2) header -> PROGRAM . IDENTIFIER SEMICOLON
+
+    IDENTIFIER      shift and go to state 9
+
+
+state 4
+
+    (1) program -> header block . DOT
+
+    DOT             shift and go to state 10
+
+
+state 5
+
+    (3) block -> variable_declaration . body
+    (16) body -> . BEGIN statements END
+
+    BEGIN           shift and go to state 8
+
+    body                           shift and go to state 11
+
+state 6
+
+    (4) block -> body .
+
+    DOT             reduce using rule 4 (block -> body .)
+
+
+state 7
+
+    (5) variable_declaration -> VAR . identifier_list COLON type SEMICOLON variable_declaration
+    (6) variable_declaration -> VAR . identifier_list COLON type SEMICOLON
+    (7) identifier_list -> . IDENTIFIER COMMA identifier_list
+    (8) identifier_list -> . IDENTIFIER
+
+    IDENTIFIER      shift and go to state 13
+
+    identifier_list                shift and go to state 12
+
+state 8
+
+    (16) body -> BEGIN . statements END
+    (17) statements -> . statement SEMICOLON statements
+    (18) statements -> . statement SEMICOLON
+    (19) statement -> . WRITELN LPAREN STRING RPAREN
+
+    WRITELN         shift and go to state 16
+
+    statements                     shift and go to state 14
+    statement                      shift and go to state 15
+
+state 9
+
+    (2) header -> PROGRAM IDENTIFIER . SEMICOLON
+
+    SEMICOLON       shift and go to state 17
+
+
+state 10
+
+    (1) program -> header block DOT .
+
+    $end            reduce using rule 1 (program -> header block DOT .)
+
+
+state 11
+
+    (3) block -> variable_declaration body .
+
+    DOT             reduce using rule 3 (block -> variable_declaration body .)
+
+
+state 12
+
+    (5) variable_declaration -> VAR identifier_list . COLON type SEMICOLON variable_declaration
+    (6) variable_declaration -> VAR identifier_list . COLON type SEMICOLON
+
+    COLON           shift and go to state 18
+
+
+state 13
+
+    (7) identifier_list -> IDENTIFIER . COMMA identifier_list
+    (8) identifier_list -> IDENTIFIER .
+
+    COMMA           shift and go to state 19
+    COLON           reduce using rule 8 (identifier_list -> IDENTIFIER .)
+
+
+state 14
+
+    (16) body -> BEGIN statements . END
+
+    END             shift and go to state 20
+
+
+state 15
+
+    (17) statements -> statement . SEMICOLON statements
+    (18) statements -> statement . SEMICOLON
+
+    SEMICOLON       shift and go to state 21
+
+
+state 16
+
+    (19) statement -> WRITELN . LPAREN STRING RPAREN
+
+    LPAREN          shift and go to state 22
+
+
+state 17
+
+    (2) header -> PROGRAM IDENTIFIER SEMICOLON .
+
+    VAR             reduce using rule 2 (header -> PROGRAM IDENTIFIER SEMICOLON .)
+    BEGIN           reduce using rule 2 (header -> PROGRAM IDENTIFIER SEMICOLON .)
+
+
+state 18
+
+    (5) variable_declaration -> VAR identifier_list COLON . type SEMICOLON variable_declaration
+    (6) variable_declaration -> VAR identifier_list COLON . type SEMICOLON
+    (9) type -> . NINTEGER
+    (10) type -> . NREAL
+    (11) type -> . NSTRING
+    (12) type -> . NCHAR
+    (13) type -> . NBOOLEAN
+    (14) type -> . array_type
+    (15) array_type -> . ARRAY LBRACKET INTEGER RANGE INTEGER RBRACKET OF type
+
+    NINTEGER        shift and go to state 24
+    NREAL           shift and go to state 25
+    NSTRING         shift and go to state 26
+    NCHAR           shift and go to state 27
+    NBOOLEAN        shift and go to state 28
+    ARRAY           shift and go to state 30
+
+    type                           shift and go to state 23
+    array_type                     shift and go to state 29
+
+state 19
+
+    (7) identifier_list -> IDENTIFIER COMMA . identifier_list
+    (7) identifier_list -> . IDENTIFIER COMMA identifier_list
+    (8) identifier_list -> . IDENTIFIER
+
+    IDENTIFIER      shift and go to state 13
+
+    identifier_list                shift and go to state 31
+
+state 20
+
+    (16) body -> BEGIN statements END .
+
+    DOT             reduce using rule 16 (body -> BEGIN statements END .)
+
+
+state 21
+
+    (17) statements -> statement SEMICOLON . statements
+    (18) statements -> statement SEMICOLON .
+    (17) statements -> . statement SEMICOLON statements
+    (18) statements -> . statement SEMICOLON
+    (19) statement -> . WRITELN LPAREN STRING RPAREN
+
+    END             reduce using rule 18 (statements -> statement SEMICOLON .)
+    WRITELN         shift and go to state 16
+
+    statement                      shift and go to state 15
+    statements                     shift and go to state 32
+
+state 22
+
+    (19) statement -> WRITELN LPAREN . STRING RPAREN
+
+    STRING          shift and go to state 33
+
+
+state 23
+
+    (5) variable_declaration -> VAR identifier_list COLON type . SEMICOLON variable_declaration
+    (6) variable_declaration -> VAR identifier_list COLON type . SEMICOLON
+
+    SEMICOLON       shift and go to state 34
+
+
+state 24
+
+    (9) type -> NINTEGER .
+
+    SEMICOLON       reduce using rule 9 (type -> NINTEGER .)
+
+
+state 25
+
+    (10) type -> NREAL .
+
+    SEMICOLON       reduce using rule 10 (type -> NREAL .)
+
+
+state 26
+
+    (11) type -> NSTRING .
+
+    SEMICOLON       reduce using rule 11 (type -> NSTRING .)
+
+
+state 27
+
+    (12) type -> NCHAR .
+
+    SEMICOLON       reduce using rule 12 (type -> NCHAR .)
+
+
+state 28
+
+    (13) type -> NBOOLEAN .
+
+    SEMICOLON       reduce using rule 13 (type -> NBOOLEAN .)
+
+
+state 29
+
+    (14) type -> array_type .
+
+    SEMICOLON       reduce using rule 14 (type -> array_type .)
+
+
+state 30
+
+    (15) array_type -> ARRAY . LBRACKET INTEGER RANGE INTEGER RBRACKET OF type
+
+    LBRACKET        shift and go to state 35
+
+
+state 31
+
+    (7) identifier_list -> IDENTIFIER COMMA identifier_list .
+
+    COLON           reduce using rule 7 (identifier_list -> IDENTIFIER COMMA identifier_list .)
+
+
+state 32
+
+    (17) statements -> statement SEMICOLON statements .
+
+    END             reduce using rule 17 (statements -> statement SEMICOLON statements .)
+
+
+state 33
+
+    (19) statement -> WRITELN LPAREN STRING . RPAREN
+
+    RPAREN          shift and go to state 36
+
+
+state 34
+
+    (5) variable_declaration -> VAR identifier_list COLON type SEMICOLON . variable_declaration
+    (6) variable_declaration -> VAR identifier_list COLON type SEMICOLON .
+    (5) variable_declaration -> . VAR identifier_list COLON type SEMICOLON variable_declaration
+    (6) variable_declaration -> . VAR identifier_list COLON type SEMICOLON
+
+    BEGIN           reduce using rule 6 (variable_declaration -> VAR identifier_list COLON type SEMICOLON .)
+    VAR             shift and go to state 7
+
+    variable_declaration           shift and go to state 37
+
+state 35
+
+    (15) array_type -> ARRAY LBRACKET . INTEGER RANGE INTEGER RBRACKET OF type
+
+    INTEGER         shift and go to state 38
+
+
+state 36
+
+    (19) statement -> WRITELN LPAREN STRING RPAREN .
+
+    SEMICOLON       reduce using rule 19 (statement -> WRITELN LPAREN STRING RPAREN .)
+
+
+state 37
+
+    (5) variable_declaration -> VAR identifier_list COLON type SEMICOLON variable_declaration .
+
+    BEGIN           reduce using rule 5 (variable_declaration -> VAR identifier_list COLON type SEMICOLON variable_declaration .)
+
+
+state 38
+
+    (15) array_type -> ARRAY LBRACKET INTEGER . RANGE INTEGER RBRACKET OF type
+
+    RANGE           shift and go to state 39
+
+
+state 39
+
+    (15) array_type -> ARRAY LBRACKET INTEGER RANGE . INTEGER RBRACKET OF type
+
+    INTEGER         shift and go to state 40
+
+
+state 40
+
+    (15) array_type -> ARRAY LBRACKET INTEGER RANGE INTEGER . RBRACKET OF type
+
+    RBRACKET        shift and go to state 41
+
+
+state 41
+
+    (15) array_type -> ARRAY LBRACKET INTEGER RANGE INTEGER RBRACKET . OF type
+
+    OF              shift and go to state 42
+
+
+state 42
+
+    (15) array_type -> ARRAY LBRACKET INTEGER RANGE INTEGER RBRACKET OF . type
+    (9) type -> . NINTEGER
+    (10) type -> . NREAL
+    (11) type -> . NSTRING
+    (12) type -> . NCHAR
+    (13) type -> . NBOOLEAN
+    (14) type -> . array_type
+    (15) array_type -> . ARRAY LBRACKET INTEGER RANGE INTEGER RBRACKET OF type
+
+    NINTEGER        shift and go to state 24
+    NREAL           shift and go to state 25
+    NSTRING         shift and go to state 26
+    NCHAR           shift and go to state 27
+    NBOOLEAN        shift and go to state 28
+    ARRAY           shift and go to state 30
+
+    type                           shift and go to state 43
+    array_type                     shift and go to state 29
+
+state 43
+
+    (15) array_type -> ARRAY LBRACKET INTEGER RANGE INTEGER RBRACKET OF type .
+
+    SEMICOLON       reduce using rule 15 (array_type -> ARRAY LBRACKET INTEGER RANGE INTEGER RBRACKET OF type .)
+
