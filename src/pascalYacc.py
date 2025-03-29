@@ -14,7 +14,7 @@ def p_header(p):
     p[0] = ('header', p[2])
     
 def p_block(p):
-    """block : variable_declaration body
+    """block : VAR variable_declaration body
              | body"""
             #| variable_declaration procedure_function body"""
     # Um bloco contém declarações de variáveis, definições de funções/procedimentos e comandos dentro do 'begin ... end'.
@@ -28,18 +28,18 @@ def p_block(p):
 ### VARIABLE DECLARATION ###
 
 def p_variable_declaration(p):
-    """variable_declaration : VAR identifier_list COLON type SEMICOLON variable_declaration
-                            | VAR identifier_list COLON type SEMICOLON"""
+    """variable_declaration : identifier_list COLON type_name SEMICOLON variable_declaration
+                            | identifier_list COLON type_name SEMICOLON"""
     # Permite declarações de múltiplas variáveis do mesmo tipo.
     # Exemplo: 'n, i, fat: integer;' será interpretado como [('n', 'NINTEGER'), ('i', 'NINTEGER'), ('fat', 'NINTEGER')]
     # O símbolo '+' é utilizado para concatenar listas.
     global variables
-    for var in p[2]:  # Para cada variável declarada
-        variables[var] = p[4]  # Associa à tabela de símbolos com seu tipo
+    for var in p[1]:  # Para cada variável declarada
+        variables[var] = p[3]  # Associa à tabela de símbolos com seu tipo
     if len(p) == 7:
-        p[0] = [(var, p[4]) for var in p[2]] + p[6]
+        p[0] = [(var, p[3]) for var in p[1]] + p[5]
     else:
-        p[0] = [(var, p[4]) for var in p[2]]
+        p[0] = [(var, p[3]) for var in p[1]]
 
 def p_identifier_list(p):
     '''identifier_list : IDENTIFIER COMMA identifier_list
@@ -51,22 +51,27 @@ def p_identifier_list(p):
     else:
         p[0] = [p[1]]  # Apenas um identificador
         
-def p_type(p):
-    """type : NINTEGER
+def p_type_name(p):
+    """type_name : NINTEGER
             | NREAL
             | NSTRING
             | NCHAR
             | NBOOLEAN
             | array_type""" 
     p[0] = p[1]
+    
+def p_type(p):
+    """type : INTEGER
+            | REAL
+            | STRING
+            | CHAR
+            | BOOLEAN""" 
+    p[0] = p[1]
 
 def p_array_type(p):
-    'array_type : ARRAY LBRACKET INTEGER RANGE INTEGER RBRACKET OF type'
+    'array_type : ARRAY LBRACKET type RANGE type RBRACKET OF type_name'
     # Representa arrays, incluindo limites inferiores e superiores
     p[0] = ("array", p[3], p[5], p[8])  # Exemplo: ('array', 1, 5, 'NINTEGER')
-    
-### PROCEDURES E FUNCTIONS ###
-
 
 ### BODY ###
     
@@ -88,49 +93,31 @@ def p_statements(p):
         p[0] = p[1]  # Apenas um statement
 
 def p_statement(p):
-    """statement : WRITELN LPAREN STRING RPAREN"""
-    p[0] = [f'PUSHS "{p[3]}"', "WRITES", "WRITELN"]
+    """statement : writeln"""
+#                 | readln
+#                 | assignment"""
+    p[0] = p[1]
 
-# VER SE O QUE FOI FEITO ANTERIORMENTE NÃO PRECISA JÁ DE CÓDIGO MÁQUINA LÁ INSERIDO # 
+def p_writeln(p):
+    """writeln : WRITELN LPAREN type RPAREN"""
+    #          | WRITELN LPAREN type COMMA writen_args RPAREN"""        
+    if isinstance(p[3], str): 
+        p[0] = [f'PUSHS "{p[3]}"', "WRITES", "WRITELN"]
+    elif isinstance(p[3], int):
+        p[0] = [f'PUSHI {p[3]}', "WRITEI", "WRITELN"]
+    elif isinstance(p[3], float):
+        p[0] = [f'PUSHF {p[3]}', "WRITEF", "WRITELN"]
+    elif isinstance(p[3], chr):
+        p[0] = [f'PUSHI {ord(p[3])}', "WRITECHR", "WRITELN"]
     
-"""
-PARA SE VER MAIS TARDE
-def p_statement_assignment(p):
-    'statement : IDENTIFIER ASSIGNMENT expression'
-    global variables
-    var_name = p[1]
-    if var_name not in variables:
-        print(f"Erro: variável '{var_name}' não foi declarada!")
+def p_writeln_args(p):
+    """writeln_args : type COMMA writeln_args 
+                    | type"""
+    # Concatena os argumentos da função writeln
+    if len(p) == 4:
+        p[0] = [f'PUSHS "{p[1]}"'] + p[3]
     else:
-        expected_type = variables[var_name]
-        print(f"Atribuição válida: {var_name} ({expected_type}) := {p[3]}")
-    p[0] = ("assign", var_name, p[3])""" 
-    
-""" 
-GRAMÁTICA:
--> program : header block DOT
--> header : PROGRAM IDENTIFIER SEMICOLON
--> block : variable_declaration procedure_function statements
--> variable_declaration : VAR identifier_list COLON type SEMICOLON variable_declaration
-                        | VAR identifier_list COLON type SEMICOLON
--> identifier_list : IDENTIFIER COMMA identifier_list
-                   | IDENTIFIER'''                        
--> type : NINTEGER | NREAL | NSTRING | NCHAR | NBOOLEAN
-
-### A FAZER ###
-
--> procedure_function : procedure_function procedure_function
-                      | procedure_function
--> compound_statement : BEGIN statement_list END
--> statement_list : statement (SEMICOLON statement)*
--> statement : compound_statement | assignment_statement | empty
--> assignment_statement : variable ASSIGNMENT expr
--> variable : IDENTIFIER
--> expr : term ((PLUS | MINUS) term)*
--> term : factor ((TIMES | DIV) factor)*
--> factor : PLUS factor | MINUS factor | INTEGER | LPAREN expr RPAREN | variable
-
-"""
+        p[0] = [f'PUSHS "{p[1]}"']
 
 def p_error(p):
     if p:
@@ -143,4 +130,5 @@ parser = yacc.yacc()
 
 def parse_input(input_string):
     parser.parse(input_string)
+    print(variables)
     return vm_code

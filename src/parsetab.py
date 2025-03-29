@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AND ARRAY ASSIGNMENT BEGIN BOOLEAN CHAR COLON COMMA COMMENT DIV DIVISION DO DOT DOWNTO ELSE END EQ FOR FUNCTION GT GTE IDENTIFIER IF INTEGER LBRACKET LPAREN LT LTE MINUS MOD NBOOLEAN NCHAR NEQ NINTEGER NOT NREAL NSTRING OF OR PLUS PROCEDURE PROGRAM RANGE RBRACKET READLN REAL REPEAT RPAREN SEMICOLON STRING THEN TIMES TO UNTIL VAR WHILE WRITELNprogram : header block DOTheader : PROGRAM IDENTIFIER SEMICOLONblock : variable_declaration body\n             | bodyvariable_declaration : VAR identifier_list COLON type SEMICOLON variable_declaration\n                            | VAR identifier_list COLON type SEMICOLONidentifier_list : IDENTIFIER COMMA identifier_list\n                       | IDENTIFIERtype : NINTEGER\n            | NREAL\n            | NSTRING\n            | NCHAR\n            | NBOOLEAN\n            | array_typearray_type : ARRAY LBRACKET INTEGER RANGE INTEGER RBRACKET OF typebody : BEGIN statements ENDstatements : statement SEMICOLON statements\n                  | statement SEMICOLONstatement : WRITELN LPAREN STRING RPAREN'
+_lr_signature = 'AND ARRAY ASSIGNMENT BEGIN BOOLEAN CHAR COLON COMMA COMMENT DIV DIVISION DO DOT DOWNTO ELSE END EQ FOR FUNCTION GT GTE IDENTIFIER IF INTEGER LBRACKET LPAREN LT LTE MINUS MOD NBOOLEAN NCHAR NEQ NINTEGER NOT NREAL NSTRING OF OR PLUS PROCEDURE PROGRAM RANGE RBRACKET READLN REAL REPEAT RPAREN SEMICOLON STRING THEN TIMES TO UNTIL VAR WHILE WRITELNprogram : header block DOTheader : PROGRAM IDENTIFIER SEMICOLONblock : VAR variable_declaration body\n             | bodyvariable_declaration : identifier_list COLON type_name SEMICOLON variable_declaration\n                            | identifier_list COLON type_name SEMICOLONidentifier_list : IDENTIFIER COMMA identifier_list\n                       | IDENTIFIERtype_name : NINTEGER\n            | NREAL\n            | NSTRING\n            | NCHAR\n            | NBOOLEAN\n            | array_typetype : INTEGER\n            | REAL\n            | STRING\n            | CHAR\n            | BOOLEANarray_type : ARRAY LBRACKET type RANGE type RBRACKET OF type_namebody : BEGIN statements ENDstatements : statement SEMICOLON statements\n                  | statement SEMICOLONstatement : writelnwriteln : WRITELN LPAREN type RPARENwriteln_args : type COMMA writeln_args \n                    | type'
     
-_lr_action_items = {'PROGRAM':([0,],[3,]),'$end':([1,10,],[0,-1,]),'VAR':([2,17,34,],[7,-2,7,]),'BEGIN':([2,5,17,34,37,],[8,8,-2,-6,-5,]),'IDENTIFIER':([3,7,19,],[9,13,13,]),'DOT':([4,6,11,20,],[10,-4,-3,-16,]),'WRITELN':([8,21,],[16,16,]),'SEMICOLON':([9,15,23,24,25,26,27,28,29,36,43,],[17,21,34,-9,-10,-11,-12,-13,-14,-19,-15,]),'COLON':([12,13,31,],[18,-8,-7,]),'COMMA':([13,],[19,]),'END':([14,21,32,],[20,-18,-17,]),'LPAREN':([16,],[22,]),'NINTEGER':([18,42,],[24,24,]),'NREAL':([18,42,],[25,25,]),'NSTRING':([18,42,],[26,26,]),'NCHAR':([18,42,],[27,27,]),'NBOOLEAN':([18,42,],[28,28,]),'ARRAY':([18,42,],[30,30,]),'STRING':([22,],[33,]),'LBRACKET':([30,],[35,]),'RPAREN':([33,],[36,]),'INTEGER':([35,39,],[38,40,]),'RANGE':([38,],[39,]),'RBRACKET':([40,],[41,]),'OF':([41,],[42,]),}
+_lr_action_items = {'PROGRAM':([0,],[3,]),'$end':([1,9,],[0,-1,]),'VAR':([2,17,],[5,-2,]),'BEGIN':([2,10,17,40,43,],[7,7,-2,-6,-5,]),'IDENTIFIER':([3,5,20,40,],[8,12,12,12,]),'DOT':([4,6,18,21,],[9,-4,-3,-21,]),'WRITELN':([7,22,],[16,16,]),'SEMICOLON':([8,14,15,24,25,26,27,28,29,30,42,49,],[17,22,-24,40,-9,-10,-11,-12,-13,-14,-25,-20,]),'COLON':([11,12,32,],[19,-8,-7,]),'COMMA':([12,],[20,]),'END':([13,22,33,],[21,-23,-22,]),'LPAREN':([16,],[23,]),'NINTEGER':([19,48,],[25,25,]),'NREAL':([19,48,],[26,26,]),'NSTRING':([19,48,],[27,27,]),'NCHAR':([19,48,],[28,28,]),'NBOOLEAN':([19,48,],[29,29,]),'ARRAY':([19,48,],[31,31,]),'INTEGER':([23,41,45,],[35,35,35,]),'REAL':([23,41,45,],[36,36,36,]),'STRING':([23,41,45,],[37,37,37,]),'CHAR':([23,41,45,],[38,38,38,]),'BOOLEAN':([23,41,45,],[39,39,39,]),'LBRACKET':([31,],[41,]),'RPAREN':([34,35,36,37,38,39,],[42,-15,-16,-17,-18,-19,]),'RANGE':([35,36,37,38,39,44,],[-15,-16,-17,-18,-19,45,]),'RBRACKET':([35,36,37,38,39,46,],[-15,-16,-17,-18,-19,47,]),'OF':([47,],[48,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'header':([0,],[2,]),'block':([2,],[4,]),'variable_declaration':([2,34,],[5,37,]),'body':([2,5,],[6,11,]),'identifier_list':([7,19,],[12,31,]),'statements':([8,21,],[14,32,]),'statement':([8,21,],[15,15,]),'type':([18,42,],[23,43,]),'array_type':([18,42,],[29,29,]),}
+_lr_goto_items = {'program':([0,],[1,]),'header':([0,],[2,]),'block':([2,],[4,]),'body':([2,10,],[6,18,]),'variable_declaration':([5,40,],[10,43,]),'identifier_list':([5,20,40,],[11,32,11,]),'statements':([7,22,],[13,33,]),'statement':([7,22,],[14,14,]),'writeln':([7,22,],[15,15,]),'type_name':([19,48,],[24,49,]),'array_type':([19,48,],[30,30,]),'type':([23,41,45,],[34,44,46,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -29,21 +29,29 @@ _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
   ('program -> header block DOT','program',3,'p_program','pascalYacc.py',9),
   ('header -> PROGRAM IDENTIFIER SEMICOLON','header',3,'p_header','pascalYacc.py',13),
-  ('block -> variable_declaration body','block',2,'p_block','pascalYacc.py',17),
+  ('block -> VAR variable_declaration body','block',3,'p_block','pascalYacc.py',17),
   ('block -> body','block',1,'p_block','pascalYacc.py',18),
-  ('variable_declaration -> VAR identifier_list COLON type SEMICOLON variable_declaration','variable_declaration',6,'p_variable_declaration','pascalYacc.py',31),
-  ('variable_declaration -> VAR identifier_list COLON type SEMICOLON','variable_declaration',5,'p_variable_declaration','pascalYacc.py',32),
+  ('variable_declaration -> identifier_list COLON type_name SEMICOLON variable_declaration','variable_declaration',5,'p_variable_declaration','pascalYacc.py',31),
+  ('variable_declaration -> identifier_list COLON type_name SEMICOLON','variable_declaration',4,'p_variable_declaration','pascalYacc.py',32),
   ('identifier_list -> IDENTIFIER COMMA identifier_list','identifier_list',3,'p_identifier_list','pascalYacc.py',45),
   ('identifier_list -> IDENTIFIER','identifier_list',1,'p_identifier_list','pascalYacc.py',46),
-  ('type -> NINTEGER','type',1,'p_type','pascalYacc.py',55),
-  ('type -> NREAL','type',1,'p_type','pascalYacc.py',56),
-  ('type -> NSTRING','type',1,'p_type','pascalYacc.py',57),
-  ('type -> NCHAR','type',1,'p_type','pascalYacc.py',58),
-  ('type -> NBOOLEAN','type',1,'p_type','pascalYacc.py',59),
-  ('type -> array_type','type',1,'p_type','pascalYacc.py',60),
-  ('array_type -> ARRAY LBRACKET INTEGER RANGE INTEGER RBRACKET OF type','array_type',8,'p_array_type','pascalYacc.py',64),
-  ('body -> BEGIN statements END','body',3,'p_body','pascalYacc.py',74),
-  ('statements -> statement SEMICOLON statements','statements',3,'p_statements','pascalYacc.py',82),
-  ('statements -> statement SEMICOLON','statements',2,'p_statements','pascalYacc.py',83),
-  ('statement -> WRITELN LPAREN STRING RPAREN','statement',4,'p_statement','pascalYacc.py',91),
+  ('type_name -> NINTEGER','type_name',1,'p_type_name','pascalYacc.py',56),
+  ('type_name -> NREAL','type_name',1,'p_type_name','pascalYacc.py',57),
+  ('type_name -> NSTRING','type_name',1,'p_type_name','pascalYacc.py',58),
+  ('type_name -> NCHAR','type_name',1,'p_type_name','pascalYacc.py',59),
+  ('type_name -> NBOOLEAN','type_name',1,'p_type_name','pascalYacc.py',60),
+  ('type_name -> array_type','type_name',1,'p_type_name','pascalYacc.py',61),
+  ('type -> INTEGER','type',1,'p_type','pascalYacc.py',65),
+  ('type -> REAL','type',1,'p_type','pascalYacc.py',66),
+  ('type -> STRING','type',1,'p_type','pascalYacc.py',67),
+  ('type -> CHAR','type',1,'p_type','pascalYacc.py',68),
+  ('type -> BOOLEAN','type',1,'p_type','pascalYacc.py',69),
+  ('array_type -> ARRAY LBRACKET type RANGE type RBRACKET OF type_name','array_type',8,'p_array_type','pascalYacc.py',73),
+  ('body -> BEGIN statements END','body',3,'p_body','pascalYacc.py',80),
+  ('statements -> statement SEMICOLON statements','statements',3,'p_statements','pascalYacc.py',88),
+  ('statements -> statement SEMICOLON','statements',2,'p_statements','pascalYacc.py',89),
+  ('statement -> writeln','statement',1,'p_statement','pascalYacc.py',97),
+  ('writeln -> WRITELN LPAREN type RPAREN','writeln',4,'p_writeln','pascalYacc.py',103),
+  ('writeln_args -> type COMMA writeln_args','writeln_args',3,'p_writeln_args','pascalYacc.py',115),
+  ('writeln_args -> type','writeln_args',1,'p_writeln_args','pascalYacc.py',116),
 ]
