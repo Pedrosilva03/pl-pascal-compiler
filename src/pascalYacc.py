@@ -36,7 +36,7 @@ def p_variable_declaration(p):
     global variables
     for var in p[1]:  # Para cada variável declarada
         variables[var] = p[3]  # Associa à tabela de símbolos com seu tipo
-    if len(p) == 7:
+    if len(p) == 6:
         p[0] = [(var, p[3]) for var in p[1]] + p[5]
     else:
         p[0] = [(var, p[3]) for var in p[1]]
