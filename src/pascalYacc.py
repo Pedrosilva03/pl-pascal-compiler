@@ -34,8 +34,10 @@ def p_variable_declaration(p):
     # Exemplo: 'n, i, fat: integer;' será interpretado como [('n', 'NINTEGER'), ('i', 'NINTEGER'), ('fat', 'NINTEGER')]
     # O símbolo '+' é utilizado para concatenar listas.
     global variables
+    variables_aux = {}
     for var in p[1]:  # Para cada variável declarada
-        variables[var] = p[3]  # Associa à tabela de símbolos com seu tipo
+        variables_aux[var] = p[3]  # Associa à tabela de símbolos com seu tipo
+    variables = {**variables_aux, **variables}
     if len(p) == 6:
         p[0] = [(var, p[3]) for var in p[1]] + p[5]
     else:
@@ -130,5 +132,4 @@ parser = yacc.yacc()
 
 def parse_input(input_string):
     parser.parse(input_string)
-    print(variables)
     return vm_code
