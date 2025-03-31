@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AND ARRAY ASSIGNMENT BEGIN BOOLEAN CHAR COLON COMMA COMMENT DIV DIVISION DO DOT DOWNTO ELSE END EQ FOR FUNCTION GT GTE IDENTIFIER IF INTEGER LBRACKET LPAREN LT LTE MINUS MOD NBOOLEAN NCHAR NEQ NINTEGER NOT NREAL NSTRING OF OR PLUS PROCEDURE PROGRAM RANGE RBRACKET READLN REAL REPEAT RPAREN SEMICOLON STRING THEN TIMES TO UNTIL VAR WHILE WRITELNprogram : header block DOTheader : PROGRAM IDENTIFIER SEMICOLONblock : VAR variable_declaration body\n             | bodyvariable_declaration : identifier_list COLON type_name SEMICOLON variable_declaration\n                            | identifier_list COLON type_name SEMICOLONidentifier_list : IDENTIFIER COMMA identifier_list\n                       | IDENTIFIERtype_name : NINTEGER\n            | NREAL\n            | NSTRING\n            | NCHAR\n            | NBOOLEAN\n            | array_typetype : INTEGER\n            | REAL\n            | STRING\n            | CHAR\n            | BOOLEANarray_type : ARRAY LBRACKET type RANGE type RBRACKET OF type_namebody : BEGIN statements ENDstatements : statement SEMICOLON statements\n                  | statement SEMICOLONstatement : writelnwriteln : WRITELN LPAREN type RPARENwriteln_args : type COMMA writeln_args \n                    | type'
+_lr_signature = 'AND ARRAY ASSIGNMENT BEGIN BOOLEAN CHAR COLON COMMA COMMENT DIV DIVISION DO DOT DOWNTO ELSE END EQ FOR FUNCTION GT GTE IDENTIFIER IF INTEGER LBRACKET LPAREN LT LTE MINUS MOD NBOOLEAN NCHAR NEQ NINTEGER NOT NREAL NSTRING OF OR PLUS PROCEDURE PROGRAM RANGE RBRACKET READLN REAL REPEAT RPAREN SEMICOLON STRING THEN TIMES TO UNTIL VAR WHILE WRITELNprogram : header block DOTheader : PROGRAM IDENTIFIER SEMICOLONblock : VAR variable_declaration body\n             | bodyvariable_declaration : identifier_list COLON type_name SEMICOLON variable_declaration\n                            | identifier_list COLON type_name SEMICOLONidentifier_list : IDENTIFIER COMMA identifier_list\n                       | IDENTIFIERarray_type : ARRAY LBRACKET type RANGE type RBRACKET OF type_namebody : BEGIN statements ENDstatements : statement SEMICOLON statements\n                  | statement SEMICOLONstatement : writeln\n                 | assignmentassignment : IDENTIFIER ASSIGNMENT expressionexpression : typeoperation : PLUS\n                 | MINUS\n                 | TIMES\n                 | DIVISION\n                 | DIV\n                 | MOD\n                 | RANGEtype_name : NINTEGER\n            | NREAL\n            | NSTRING\n            | NCHAR\n            | NBOOLEAN\n            | array_typetype : INTEGER\n            | REAL\n            | STRING\n            | CHAR\n            | BOOLEANwriteln : WRITELN LPAREN type RPARENwriteln_args : type COMMA writeln_args \n                    | type'
     
-_lr_action_items = {'PROGRAM':([0,],[3,]),'$end':([1,9,],[0,-1,]),'VAR':([2,17,],[5,-2,]),'BEGIN':([2,10,17,40,43,],[7,7,-2,-6,-5,]),'IDENTIFIER':([3,5,20,40,],[8,12,12,12,]),'DOT':([4,6,18,21,],[9,-4,-3,-21,]),'WRITELN':([7,22,],[16,16,]),'SEMICOLON':([8,14,15,24,25,26,27,28,29,30,42,49,],[17,22,-24,40,-9,-10,-11,-12,-13,-14,-25,-20,]),'COLON':([11,12,32,],[19,-8,-7,]),'COMMA':([12,],[20,]),'END':([13,22,33,],[21,-23,-22,]),'LPAREN':([16,],[23,]),'NINTEGER':([19,48,],[25,25,]),'NREAL':([19,48,],[26,26,]),'NSTRING':([19,48,],[27,27,]),'NCHAR':([19,48,],[28,28,]),'NBOOLEAN':([19,48,],[29,29,]),'ARRAY':([19,48,],[31,31,]),'INTEGER':([23,41,45,],[35,35,35,]),'REAL':([23,41,45,],[36,36,36,]),'STRING':([23,41,45,],[37,37,37,]),'CHAR':([23,41,45,],[38,38,38,]),'BOOLEAN':([23,41,45,],[39,39,39,]),'LBRACKET':([31,],[41,]),'RPAREN':([34,35,36,37,38,39,],[42,-15,-16,-17,-18,-19,]),'RANGE':([35,36,37,38,39,44,],[-15,-16,-17,-18,-19,45,]),'RBRACKET':([35,36,37,38,39,46,],[-15,-16,-17,-18,-19,47,]),'OF':([47,],[48,]),}
+_lr_action_items = {'PROGRAM':([0,],[3,]),'$end':([1,9,],[0,-1,]),'VAR':([2,19,],[5,-2,]),'BEGIN':([2,10,19,45,48,],[7,7,-2,-6,-5,]),'IDENTIFIER':([3,5,7,22,24,45,],[8,12,18,12,18,12,]),'DOT':([4,6,20,23,],[9,-4,-3,-10,]),'WRITELN':([7,24,],[17,17,]),'SEMICOLON':([8,14,15,16,27,28,29,30,31,32,33,38,39,40,41,42,43,44,47,54,],[19,24,-13,-14,45,-24,-25,-26,-27,-28,-29,-30,-31,-32,-33,-34,-15,-16,-35,-9,]),'COLON':([11,12,35,],[21,-8,-7,]),'COMMA':([12,],[22,]),'END':([13,24,36,],[23,-12,-11,]),'LPAREN':([17,],[25,]),'ASSIGNMENT':([18,],[26,]),'NINTEGER':([21,53,],[28,28,]),'NREAL':([21,53,],[29,29,]),'NSTRING':([21,53,],[30,30,]),'NCHAR':([21,53,],[31,31,]),'NBOOLEAN':([21,53,],[32,32,]),'ARRAY':([21,53,],[34,34,]),'INTEGER':([25,26,46,50,],[38,38,38,38,]),'REAL':([25,26,46,50,],[39,39,39,39,]),'STRING':([25,26,46,50,],[40,40,40,40,]),'CHAR':([25,26,46,50,],[41,41,41,41,]),'BOOLEAN':([25,26,46,50,],[42,42,42,42,]),'LBRACKET':([34,],[46,]),'RPAREN':([37,38,39,40,41,42,],[47,-30,-31,-32,-33,-34,]),'RANGE':([38,39,40,41,42,49,],[-30,-31,-32,-33,-34,50,]),'RBRACKET':([38,39,40,41,42,51,],[-30,-31,-32,-33,-34,52,]),'OF':([52,],[53,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'header':([0,],[2,]),'block':([2,],[4,]),'body':([2,10,],[6,18,]),'variable_declaration':([5,40,],[10,43,]),'identifier_list':([5,20,40,],[11,32,11,]),'statements':([7,22,],[13,33,]),'statement':([7,22,],[14,14,]),'writeln':([7,22,],[15,15,]),'type_name':([19,48,],[24,49,]),'array_type':([19,48,],[30,30,]),'type':([23,41,45,],[34,44,46,]),}
+_lr_goto_items = {'program':([0,],[1,]),'header':([0,],[2,]),'block':([2,],[4,]),'body':([2,10,],[6,20,]),'variable_declaration':([5,45,],[10,48,]),'identifier_list':([5,22,45,],[11,35,11,]),'statements':([7,24,],[13,36,]),'statement':([7,24,],[14,14,]),'writeln':([7,24,],[15,15,]),'assignment':([7,24,],[16,16,]),'type_name':([21,53,],[27,54,]),'array_type':([21,53,],[33,33,]),'type':([25,26,46,50,],[37,44,49,51,]),'expression':([26,],[43,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,31 +27,41 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> header block DOT','program',3,'p_program','pascalYacc.py',9),
-  ('header -> PROGRAM IDENTIFIER SEMICOLON','header',3,'p_header','pascalYacc.py',13),
-  ('block -> VAR variable_declaration body','block',3,'p_block','pascalYacc.py',17),
-  ('block -> body','block',1,'p_block','pascalYacc.py',18),
-  ('variable_declaration -> identifier_list COLON type_name SEMICOLON variable_declaration','variable_declaration',5,'p_variable_declaration','pascalYacc.py',31),
-  ('variable_declaration -> identifier_list COLON type_name SEMICOLON','variable_declaration',4,'p_variable_declaration','pascalYacc.py',32),
-  ('identifier_list -> IDENTIFIER COMMA identifier_list','identifier_list',3,'p_identifier_list','pascalYacc.py',45),
-  ('identifier_list -> IDENTIFIER','identifier_list',1,'p_identifier_list','pascalYacc.py',46),
-  ('type_name -> NINTEGER','type_name',1,'p_type_name','pascalYacc.py',56),
-  ('type_name -> NREAL','type_name',1,'p_type_name','pascalYacc.py',57),
-  ('type_name -> NSTRING','type_name',1,'p_type_name','pascalYacc.py',58),
-  ('type_name -> NCHAR','type_name',1,'p_type_name','pascalYacc.py',59),
-  ('type_name -> NBOOLEAN','type_name',1,'p_type_name','pascalYacc.py',60),
-  ('type_name -> array_type','type_name',1,'p_type_name','pascalYacc.py',61),
-  ('type -> INTEGER','type',1,'p_type','pascalYacc.py',65),
-  ('type -> REAL','type',1,'p_type','pascalYacc.py',66),
-  ('type -> STRING','type',1,'p_type','pascalYacc.py',67),
-  ('type -> CHAR','type',1,'p_type','pascalYacc.py',68),
-  ('type -> BOOLEAN','type',1,'p_type','pascalYacc.py',69),
-  ('array_type -> ARRAY LBRACKET type RANGE type RBRACKET OF type_name','array_type',8,'p_array_type','pascalYacc.py',73),
-  ('body -> BEGIN statements END','body',3,'p_body','pascalYacc.py',80),
-  ('statements -> statement SEMICOLON statements','statements',3,'p_statements','pascalYacc.py',88),
-  ('statements -> statement SEMICOLON','statements',2,'p_statements','pascalYacc.py',89),
-  ('statement -> writeln','statement',1,'p_statement','pascalYacc.py',97),
-  ('writeln -> WRITELN LPAREN type RPAREN','writeln',4,'p_writeln','pascalYacc.py',103),
-  ('writeln_args -> type COMMA writeln_args','writeln_args',3,'p_writeln_args','pascalYacc.py',115),
-  ('writeln_args -> type','writeln_args',1,'p_writeln_args','pascalYacc.py',116),
+  ('program -> header block DOT','program',3,'p_program','pascalYacc.py',10),
+  ('header -> PROGRAM IDENTIFIER SEMICOLON','header',3,'p_header','pascalYacc.py',14),
+  ('block -> VAR variable_declaration body','block',3,'p_block','pascalYacc.py',18),
+  ('block -> body','block',1,'p_block','pascalYacc.py',19),
+  ('variable_declaration -> identifier_list COLON type_name SEMICOLON variable_declaration','variable_declaration',5,'p_variable_declaration','pascalYacc.py',32),
+  ('variable_declaration -> identifier_list COLON type_name SEMICOLON','variable_declaration',4,'p_variable_declaration','pascalYacc.py',33),
+  ('identifier_list -> IDENTIFIER COMMA identifier_list','identifier_list',3,'p_identifier_list','pascalYacc.py',48),
+  ('identifier_list -> IDENTIFIER','identifier_list',1,'p_identifier_list','pascalYacc.py',49),
+  ('array_type -> ARRAY LBRACKET type RANGE type RBRACKET OF type_name','array_type',8,'p_array_type','pascalYacc.py',58),
+  ('body -> BEGIN statements END','body',3,'p_body','pascalYacc.py',65),
+  ('statements -> statement SEMICOLON statements','statements',3,'p_statements','pascalYacc.py',73),
+  ('statements -> statement SEMICOLON','statements',2,'p_statements','pascalYacc.py',74),
+  ('statement -> writeln','statement',1,'p_statement','pascalYacc.py',82),
+  ('statement -> assignment','statement',1,'p_statement','pascalYacc.py',83),
+  ('assignment -> IDENTIFIER ASSIGNMENT expression','assignment',3,'p_assignment','pascalYacc.py',88),
+  ('expression -> type','expression',1,'p_expression','pascalYacc.py',98),
+  ('operation -> PLUS','operation',1,'p_operation','pascalYacc.py',106),
+  ('operation -> MINUS','operation',1,'p_operation','pascalYacc.py',107),
+  ('operation -> TIMES','operation',1,'p_operation','pascalYacc.py',108),
+  ('operation -> DIVISION','operation',1,'p_operation','pascalYacc.py',109),
+  ('operation -> DIV','operation',1,'p_operation','pascalYacc.py',110),
+  ('operation -> MOD','operation',1,'p_operation','pascalYacc.py',111),
+  ('operation -> RANGE','operation',1,'p_operation','pascalYacc.py',112),
+  ('type_name -> NINTEGER','type_name',1,'p_type_name','pascalYacc.py',116),
+  ('type_name -> NREAL','type_name',1,'p_type_name','pascalYacc.py',117),
+  ('type_name -> NSTRING','type_name',1,'p_type_name','pascalYacc.py',118),
+  ('type_name -> NCHAR','type_name',1,'p_type_name','pascalYacc.py',119),
+  ('type_name -> NBOOLEAN','type_name',1,'p_type_name','pascalYacc.py',120),
+  ('type_name -> array_type','type_name',1,'p_type_name','pascalYacc.py',121),
+  ('type -> INTEGER','type',1,'p_type','pascalYacc.py',125),
+  ('type -> REAL','type',1,'p_type','pascalYacc.py',126),
+  ('type -> STRING','type',1,'p_type','pascalYacc.py',127),
+  ('type -> CHAR','type',1,'p_type','pascalYacc.py',128),
+  ('type -> BOOLEAN','type',1,'p_type','pascalYacc.py',129),
+  ('writeln -> WRITELN LPAREN type RPAREN','writeln',4,'p_writeln','pascalYacc.py',134),
+  ('writeln_args -> type COMMA writeln_args','writeln_args',3,'p_writeln_args','pascalYacc.py',146),
+  ('writeln_args -> type','writeln_args',1,'p_writeln_args','pascalYacc.py',147),
 ]

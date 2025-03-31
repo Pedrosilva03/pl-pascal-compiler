@@ -4,6 +4,7 @@ from pascalLexer import tokens
 vm_code = ""
 functions = {}
 variables = {}
+variables_assigned = {}
 
 def p_program(p):
     'program : header block DOT'
@@ -53,23 +54,6 @@ def p_identifier_list(p):
     else:
         p[0] = [p[1]]  # Apenas um identificador
         
-def p_type_name(p):
-    """type_name : NINTEGER
-            | NREAL
-            | NSTRING
-            | NCHAR
-            | NBOOLEAN
-            | array_type""" 
-    p[0] = p[1]
-    
-def p_type(p):
-    """type : INTEGER
-            | REAL
-            | STRING
-            | CHAR
-            | BOOLEAN""" 
-    p[0] = p[1]
-
 def p_array_type(p):
     'array_type : ARRAY LBRACKET type RANGE type RBRACKET OF type_name'
     # Representa arrays, incluindo limites inferiores e superiores
@@ -95,9 +79,55 @@ def p_statements(p):
         p[0] = p[1]  # Apenas um statement
 
 def p_statement(p):
-    """statement : writeln"""
+    """statement : writeln
+                 | assignment"""
 #                 | readln
-#                 | assignment"""
+    p[0] = p[1]
+
+def p_assignment(p):
+    """assignment : IDENTIFIER ASSIGNMENT expression"""
+    global variables_assigned, variables
+    if p[1] in variables.keys():
+        var = (p[1], p[3])
+        variables_assigned[var] = variables[p[1]]
+        p[0] = ["vm_code"]
+    else:
+        #TODO: Lidar com assigmnents a variaveis que nao foram declaradas
+        pass
+
+def p_expression(p):
+    """expression : type"""
+    if len(p) == 4:
+        # TODO: Tratar do caso "type operation type"
+        pass
+    else:
+        p[0] = p[1]
+
+def p_operation(p):
+    """operation : PLUS
+                 | MINUS
+                 | TIMES
+                 | DIVISION
+                 | DIV
+                 | MOD
+                 | RANGE"""
+    p[0] = p[1]
+
+def p_type_name(p):
+    """type_name : NINTEGER
+            | NREAL
+            | NSTRING
+            | NCHAR
+            | NBOOLEAN
+            | array_type""" 
+    p[0] = p[1]
+    
+def p_type(p):
+    """type : INTEGER
+            | REAL
+            | STRING
+            | CHAR
+            | BOOLEAN""" 
     p[0] = p[1]
 
 def p_writeln(p):
@@ -132,4 +162,6 @@ parser = yacc.yacc()
 
 def parse_input(input_string):
     parser.parse(input_string)
+    print(variables)
+    print(variables_assigned)
     return vm_code
