@@ -65,9 +65,17 @@ t_RPAREN = r"\)"
 t_LBRACKET = r"\["
 t_RBRACKET = r"\]"
 
-t_REAL = r"(\-)?[0-9]+\.[0-9]+"
-t_INTEGER = r"(\-)?[0-9]+"
 t_BOOLEAN = r"true|false"
+
+def t_REAL(t):
+    r"(\-)?\d+\.\d+"
+    t.value = float(t.value)
+    return t
+
+def t_INTEGER(t):
+    r"(\-)?\d+"
+    t.value = int(t.value)
+    return t
 
 def t_IDENTIFIER(t):
     r"[a-zA-Z]([a-zA-Z0-9])*"

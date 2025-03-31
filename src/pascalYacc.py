@@ -89,8 +89,22 @@ def p_assignment(p):
     global variables_assigned, variables
     if p[1] in variables.keys():
         var = (p[1], p[3])
-        variables_assigned[var] = variables[p[1]]
-        p[0] = ["vm_code"]
+        var_type = variables[p[1]]
+        variables_assigned[var] = var_type
+
+        if var_type == 'integer':
+            p[0] = [f'PUSHI {p[3]}']  # Empilha inteiro
+        elif var_type == 'real':
+            p[0] = [f'PUSHF {p[3]}']  # Empilha real
+        elif var_type == 'string':
+            p[0] = [f'PUSHS "{p[3]}"']  # Empilha string
+        elif var_type == 'char':
+            p[0] = [f'PUSHS "{p[3]}"']  # Empilha caractere
+        elif var_type == 'boolean':
+            p[0] = [f'PUSHS {str(p[3]).lower()}']  # Empilha booleano (true/false)
+        else:
+            raise Exception(f"Erro: Tipo inválido para variável '{p[1]}'.")
+        
     else:
         #TODO: Lidar com assigmnents a variaveis que nao foram declaradas
         pass
