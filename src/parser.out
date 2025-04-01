@@ -63,8 +63,8 @@ Rule 31    type -> REAL
 Rule 32    type -> STRING
 Rule 33    type -> CHAR
 Rule 34    type -> BOOLEAN
-Rule 35    writeln -> WRITELN LPAREN type RPAREN
-Rule 36    writeln -> WRITELN LPAREN type COMMA writeln_args RPAREN
+Rule 35    type -> IDENTIFIER
+Rule 36    writeln -> WRITELN LPAREN writeln_args RPAREN
 Rule 37    writeln_args -> type COMMA writeln_args
 Rule 38    writeln_args -> type
 
@@ -77,7 +77,7 @@ BEGIN                : 10
 BOOLEAN              : 34
 CHAR                 : 33
 COLON                : 5 6
-COMMA                : 7 36 37
+COMMA                : 7 37
 COMMENT              : 
 DIV                  : 21
 DIVISION             : 20
@@ -91,11 +91,11 @@ FOR                  :
 FUNCTION             : 
 GT                   : 
 GTE                  : 
-IDENTIFIER           : 2 7 8 15
+IDENTIFIER           : 2 7 8 15 35
 IF                   : 
 INTEGER              : 30
 LBRACKET             : 9
-LPAREN               : 35 36
+LPAREN               : 36
 LT                   : 
 LTE                  : 
 MINUS                : 18
@@ -117,7 +117,7 @@ RBRACKET             : 9
 READLN               : 
 REAL                 : 31
 REPEAT               : 
-RPAREN               : 35 36
+RPAREN               : 36
 SEMICOLON            : 2 5 6 11 12
 STRING               : 32
 THEN                 : 
@@ -126,7 +126,7 @@ TO                   :
 UNTIL                : 
 VAR                  : 3
 WHILE                : 
-WRITELN              : 35 36
+WRITELN              : 36
 error                : 
 
 Nonterminals, with rules where they appear
@@ -142,7 +142,7 @@ operation            :
 program              : 0
 statement            : 11 12
 statements           : 10 11
-type                 : 9 9 16 35 36 37 38
+type                 : 9 9 16 37 38
 type_name            : 5 6 9
 variable_declaration : 3 5
 writeln              : 13
@@ -221,8 +221,7 @@ state 7
     (12) statements -> . statement SEMICOLON
     (13) statement -> . writeln
     (14) statement -> . assignment
-    (35) writeln -> . WRITELN LPAREN type RPAREN
-    (36) writeln -> . WRITELN LPAREN type COMMA writeln_args RPAREN
+    (36) writeln -> . WRITELN LPAREN writeln_args RPAREN
     (15) assignment -> . IDENTIFIER ASSIGNMENT expression
 
     WRITELN         shift and go to state 17
@@ -304,8 +303,7 @@ state 16
 
 state 17
 
-    (35) writeln -> WRITELN . LPAREN type RPAREN
-    (36) writeln -> WRITELN . LPAREN type COMMA writeln_args RPAREN
+    (36) writeln -> WRITELN . LPAREN writeln_args RPAREN
 
     LPAREN          shift and go to state 25
 
@@ -379,8 +377,7 @@ state 24
     (12) statements -> . statement SEMICOLON
     (13) statement -> . writeln
     (14) statement -> . assignment
-    (35) writeln -> . WRITELN LPAREN type RPAREN
-    (36) writeln -> . WRITELN LPAREN type COMMA writeln_args RPAREN
+    (36) writeln -> . WRITELN LPAREN writeln_args RPAREN
     (15) assignment -> . IDENTIFIER ASSIGNMENT expression
 
     END             reduce using rule 12 (statements -> statement SEMICOLON .)
@@ -394,21 +391,25 @@ state 24
 
 state 25
 
-    (35) writeln -> WRITELN LPAREN . type RPAREN
-    (36) writeln -> WRITELN LPAREN . type COMMA writeln_args RPAREN
+    (36) writeln -> WRITELN LPAREN . writeln_args RPAREN
+    (37) writeln_args -> . type COMMA writeln_args
+    (38) writeln_args -> . type
     (30) type -> . INTEGER
     (31) type -> . REAL
     (32) type -> . STRING
     (33) type -> . CHAR
     (34) type -> . BOOLEAN
+    (35) type -> . IDENTIFIER
 
-    INTEGER         shift and go to state 38
-    REAL            shift and go to state 39
-    STRING          shift and go to state 40
-    CHAR            shift and go to state 41
-    BOOLEAN         shift and go to state 42
+    INTEGER         shift and go to state 39
+    REAL            shift and go to state 40
+    STRING          shift and go to state 41
+    CHAR            shift and go to state 42
+    BOOLEAN         shift and go to state 43
+    IDENTIFIER      shift and go to state 44
 
-    type                           shift and go to state 37
+    writeln_args                   shift and go to state 37
+    type                           shift and go to state 38
 
 state 26
 
@@ -419,22 +420,24 @@ state 26
     (32) type -> . STRING
     (33) type -> . CHAR
     (34) type -> . BOOLEAN
+    (35) type -> . IDENTIFIER
 
-    INTEGER         shift and go to state 38
-    REAL            shift and go to state 39
-    STRING          shift and go to state 40
-    CHAR            shift and go to state 41
-    BOOLEAN         shift and go to state 42
+    INTEGER         shift and go to state 39
+    REAL            shift and go to state 40
+    STRING          shift and go to state 41
+    CHAR            shift and go to state 42
+    BOOLEAN         shift and go to state 43
+    IDENTIFIER      shift and go to state 44
 
-    expression                     shift and go to state 43
-    type                           shift and go to state 44
+    expression                     shift and go to state 45
+    type                           shift and go to state 46
 
 state 27
 
     (5) variable_declaration -> identifier_list COLON type_name . SEMICOLON variable_declaration
     (6) variable_declaration -> identifier_list COLON type_name . SEMICOLON
 
-    SEMICOLON       shift and go to state 45
+    SEMICOLON       shift and go to state 47
 
 
 state 28
@@ -483,7 +486,7 @@ state 34
 
     (9) array_type -> ARRAY . LBRACKET type RANGE type RBRACKET OF type_name
 
-    LBRACKET        shift and go to state 46
+    LBRACKET        shift and go to state 48
 
 
 state 35
@@ -502,83 +505,101 @@ state 36
 
 state 37
 
-    (35) writeln -> WRITELN LPAREN type . RPAREN
-    (36) writeln -> WRITELN LPAREN type . COMMA writeln_args RPAREN
+    (36) writeln -> WRITELN LPAREN writeln_args . RPAREN
 
-    RPAREN          shift and go to state 47
-    COMMA           shift and go to state 48
+    RPAREN          shift and go to state 49
 
 
 state 38
 
+    (37) writeln_args -> type . COMMA writeln_args
+    (38) writeln_args -> type .
+
+    COMMA           shift and go to state 50
+    RPAREN          reduce using rule 38 (writeln_args -> type .)
+
+
+state 39
+
     (30) type -> INTEGER .
 
-    RPAREN          reduce using rule 30 (type -> INTEGER .)
     COMMA           reduce using rule 30 (type -> INTEGER .)
+    RPAREN          reduce using rule 30 (type -> INTEGER .)
     SEMICOLON       reduce using rule 30 (type -> INTEGER .)
     RANGE           reduce using rule 30 (type -> INTEGER .)
     RBRACKET        reduce using rule 30 (type -> INTEGER .)
 
 
-state 39
+state 40
 
     (31) type -> REAL .
 
-    RPAREN          reduce using rule 31 (type -> REAL .)
     COMMA           reduce using rule 31 (type -> REAL .)
+    RPAREN          reduce using rule 31 (type -> REAL .)
     SEMICOLON       reduce using rule 31 (type -> REAL .)
     RANGE           reduce using rule 31 (type -> REAL .)
     RBRACKET        reduce using rule 31 (type -> REAL .)
 
 
-state 40
+state 41
 
     (32) type -> STRING .
 
-    RPAREN          reduce using rule 32 (type -> STRING .)
     COMMA           reduce using rule 32 (type -> STRING .)
+    RPAREN          reduce using rule 32 (type -> STRING .)
     SEMICOLON       reduce using rule 32 (type -> STRING .)
     RANGE           reduce using rule 32 (type -> STRING .)
     RBRACKET        reduce using rule 32 (type -> STRING .)
 
 
-state 41
+state 42
 
     (33) type -> CHAR .
 
-    RPAREN          reduce using rule 33 (type -> CHAR .)
     COMMA           reduce using rule 33 (type -> CHAR .)
+    RPAREN          reduce using rule 33 (type -> CHAR .)
     SEMICOLON       reduce using rule 33 (type -> CHAR .)
     RANGE           reduce using rule 33 (type -> CHAR .)
     RBRACKET        reduce using rule 33 (type -> CHAR .)
 
 
-state 42
+state 43
 
     (34) type -> BOOLEAN .
 
-    RPAREN          reduce using rule 34 (type -> BOOLEAN .)
     COMMA           reduce using rule 34 (type -> BOOLEAN .)
+    RPAREN          reduce using rule 34 (type -> BOOLEAN .)
     SEMICOLON       reduce using rule 34 (type -> BOOLEAN .)
     RANGE           reduce using rule 34 (type -> BOOLEAN .)
     RBRACKET        reduce using rule 34 (type -> BOOLEAN .)
 
 
-state 43
+state 44
+
+    (35) type -> IDENTIFIER .
+
+    COMMA           reduce using rule 35 (type -> IDENTIFIER .)
+    RPAREN          reduce using rule 35 (type -> IDENTIFIER .)
+    SEMICOLON       reduce using rule 35 (type -> IDENTIFIER .)
+    RANGE           reduce using rule 35 (type -> IDENTIFIER .)
+    RBRACKET        reduce using rule 35 (type -> IDENTIFIER .)
+
+
+state 45
 
     (15) assignment -> IDENTIFIER ASSIGNMENT expression .
 
     SEMICOLON       reduce using rule 15 (assignment -> IDENTIFIER ASSIGNMENT expression .)
 
 
-state 44
+state 46
 
     (16) expression -> type .
 
     SEMICOLON       reduce using rule 16 (expression -> type .)
 
 
-state 45
+state 47
 
     (5) variable_declaration -> identifier_list COLON type_name SEMICOLON . variable_declaration
     (6) variable_declaration -> identifier_list COLON type_name SEMICOLON .
@@ -591,9 +612,9 @@ state 45
     IDENTIFIER      shift and go to state 12
 
     identifier_list                shift and go to state 11
-    variable_declaration           shift and go to state 49
+    variable_declaration           shift and go to state 51
 
-state 46
+state 48
 
     (9) array_type -> ARRAY LBRACKET . type RANGE type RBRACKET OF type_name
     (30) type -> . INTEGER
@@ -601,90 +622,25 @@ state 46
     (32) type -> . STRING
     (33) type -> . CHAR
     (34) type -> . BOOLEAN
+    (35) type -> . IDENTIFIER
 
-    INTEGER         shift and go to state 38
-    REAL            shift and go to state 39
-    STRING          shift and go to state 40
-    CHAR            shift and go to state 41
-    BOOLEAN         shift and go to state 42
+    INTEGER         shift and go to state 39
+    REAL            shift and go to state 40
+    STRING          shift and go to state 41
+    CHAR            shift and go to state 42
+    BOOLEAN         shift and go to state 43
+    IDENTIFIER      shift and go to state 44
 
-    type                           shift and go to state 50
-
-state 47
-
-    (35) writeln -> WRITELN LPAREN type RPAREN .
-
-    SEMICOLON       reduce using rule 35 (writeln -> WRITELN LPAREN type RPAREN .)
-
-
-state 48
-
-    (36) writeln -> WRITELN LPAREN type COMMA . writeln_args RPAREN
-    (37) writeln_args -> . type COMMA writeln_args
-    (38) writeln_args -> . type
-    (30) type -> . INTEGER
-    (31) type -> . REAL
-    (32) type -> . STRING
-    (33) type -> . CHAR
-    (34) type -> . BOOLEAN
-
-    INTEGER         shift and go to state 38
-    REAL            shift and go to state 39
-    STRING          shift and go to state 40
-    CHAR            shift and go to state 41
-    BOOLEAN         shift and go to state 42
-
-    type                           shift and go to state 51
-    writeln_args                   shift and go to state 52
+    type                           shift and go to state 52
 
 state 49
 
-    (5) variable_declaration -> identifier_list COLON type_name SEMICOLON variable_declaration .
+    (36) writeln -> WRITELN LPAREN writeln_args RPAREN .
 
-    BEGIN           reduce using rule 5 (variable_declaration -> identifier_list COLON type_name SEMICOLON variable_declaration .)
+    SEMICOLON       reduce using rule 36 (writeln -> WRITELN LPAREN writeln_args RPAREN .)
 
 
 state 50
-
-    (9) array_type -> ARRAY LBRACKET type . RANGE type RBRACKET OF type_name
-
-    RANGE           shift and go to state 53
-
-
-state 51
-
-    (37) writeln_args -> type . COMMA writeln_args
-    (38) writeln_args -> type .
-
-    COMMA           shift and go to state 54
-    RPAREN          reduce using rule 38 (writeln_args -> type .)
-
-
-state 52
-
-    (36) writeln -> WRITELN LPAREN type COMMA writeln_args . RPAREN
-
-    RPAREN          shift and go to state 55
-
-
-state 53
-
-    (9) array_type -> ARRAY LBRACKET type RANGE . type RBRACKET OF type_name
-    (30) type -> . INTEGER
-    (31) type -> . REAL
-    (32) type -> . STRING
-    (33) type -> . CHAR
-    (34) type -> . BOOLEAN
-
-    INTEGER         shift and go to state 38
-    REAL            shift and go to state 39
-    STRING          shift and go to state 40
-    CHAR            shift and go to state 41
-    BOOLEAN         shift and go to state 42
-
-    type                           shift and go to state 56
-
-state 54
 
     (37) writeln_args -> type COMMA . writeln_args
     (37) writeln_args -> . type COMMA writeln_args
@@ -694,45 +650,73 @@ state 54
     (32) type -> . STRING
     (33) type -> . CHAR
     (34) type -> . BOOLEAN
+    (35) type -> . IDENTIFIER
 
-    INTEGER         shift and go to state 38
-    REAL            shift and go to state 39
-    STRING          shift and go to state 40
-    CHAR            shift and go to state 41
-    BOOLEAN         shift and go to state 42
+    INTEGER         shift and go to state 39
+    REAL            shift and go to state 40
+    STRING          shift and go to state 41
+    CHAR            shift and go to state 42
+    BOOLEAN         shift and go to state 43
+    IDENTIFIER      shift and go to state 44
 
-    type                           shift and go to state 51
-    writeln_args                   shift and go to state 57
+    type                           shift and go to state 38
+    writeln_args                   shift and go to state 53
 
-state 55
+state 51
 
-    (36) writeln -> WRITELN LPAREN type COMMA writeln_args RPAREN .
+    (5) variable_declaration -> identifier_list COLON type_name SEMICOLON variable_declaration .
 
-    SEMICOLON       reduce using rule 36 (writeln -> WRITELN LPAREN type COMMA writeln_args RPAREN .)
-
-
-state 56
-
-    (9) array_type -> ARRAY LBRACKET type RANGE type . RBRACKET OF type_name
-
-    RBRACKET        shift and go to state 58
+    BEGIN           reduce using rule 5 (variable_declaration -> identifier_list COLON type_name SEMICOLON variable_declaration .)
 
 
-state 57
+state 52
+
+    (9) array_type -> ARRAY LBRACKET type . RANGE type RBRACKET OF type_name
+
+    RANGE           shift and go to state 54
+
+
+state 53
 
     (37) writeln_args -> type COMMA writeln_args .
 
     RPAREN          reduce using rule 37 (writeln_args -> type COMMA writeln_args .)
 
 
-state 58
+state 54
+
+    (9) array_type -> ARRAY LBRACKET type RANGE . type RBRACKET OF type_name
+    (30) type -> . INTEGER
+    (31) type -> . REAL
+    (32) type -> . STRING
+    (33) type -> . CHAR
+    (34) type -> . BOOLEAN
+    (35) type -> . IDENTIFIER
+
+    INTEGER         shift and go to state 39
+    REAL            shift and go to state 40
+    STRING          shift and go to state 41
+    CHAR            shift and go to state 42
+    BOOLEAN         shift and go to state 43
+    IDENTIFIER      shift and go to state 44
+
+    type                           shift and go to state 55
+
+state 55
+
+    (9) array_type -> ARRAY LBRACKET type RANGE type . RBRACKET OF type_name
+
+    RBRACKET        shift and go to state 56
+
+
+state 56
 
     (9) array_type -> ARRAY LBRACKET type RANGE type RBRACKET . OF type_name
 
-    OF              shift and go to state 59
+    OF              shift and go to state 57
 
 
-state 59
+state 57
 
     (9) array_type -> ARRAY LBRACKET type RANGE type RBRACKET OF . type_name
     (24) type_name -> . NINTEGER
@@ -750,10 +734,10 @@ state 59
     NBOOLEAN        shift and go to state 32
     ARRAY           shift and go to state 34
 
-    type_name                      shift and go to state 60
+    type_name                      shift and go to state 58
     array_type                     shift and go to state 33
 
-state 60
+state 58
 
     (9) array_type -> ARRAY LBRACKET type RANGE type RBRACKET OF type_name .
 

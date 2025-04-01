@@ -141,13 +141,13 @@ def p_type(p):
             | REAL
             | STRING
             | CHAR
-            | BOOLEAN""" 
+            | BOOLEAN
+            | IDENTIFIER""" 
     p[0] = p[1]
 
 def p_writeln(p):
-    """writeln : WRITELN LPAREN type RPAREN
-               | WRITELN LPAREN type COMMA writeln_args RPAREN"""        
-    if isinstance(p[3], str): 
+    """writeln : WRITELN LPAREN writeln_args RPAREN"""        
+    """if isinstance(p[3], str): 
         p[0] = [f'PUSHS "{p[3]}"', "WRITES", "WRITELN"]
     elif isinstance(p[3], int):
         p[0] = [f'PUSHI {p[3]}', "WRITEI", "WRITELN"]
@@ -155,24 +155,39 @@ def p_writeln(p):
         p[0] = [f'PUSHF {p[3]}', "WRITEF", "WRITELN"]
     elif isinstance(p[3], chr):
         p[0] = [f'PUSHI {ord(p[3])}', "WRITECHR", "WRITELN"]
-    if len(p) > 5:
-        p[0] = p[0] + p[5]
+    if len(p) > 5:"""
+    p[0] = p[3] + ["WRITELN"] 
     
 def p_writeln_args(p):
     """writeln_args : type COMMA writeln_args 
                     | type"""
-    # Concatena os argumentos da função writeln
     # TODO: Handle IDENTIFIERS. Ainda crasha porque os IDENTIFIERS não fazem parte do type
-    if isinstance(p[1], str): 
-        p[0] = [f'PUSHS "{p[1]}"', "WRITES", "WRITELN"]
+    global variables
+    
+    if isinstance(p[1], str) and p[1] not in variables:
+        p[0] = [f'PUSHS "{p[1]}"', "WRITES"] + (p[3] if len(p) == 4 else [])
     elif isinstance(p[1], int):
-        p[0] = [f'PUSHI {p[1]}', "WRITEI", "WRITELN"]
+        p[0] = [f'PUSHI {p[1]}', "WRITEI"] + (p[3] if len(p) == 4 else [])
     elif isinstance(p[1], float):
-        p[0] = [f'PUSHF {p[1]}', "WRITEF", "WRITELN"]
-    elif isinstance(p[1], chr):
-        p[0] = [f'PUSHI {ord(p[1])}', "WRITECHR", "WRITELN"]
-    if len(p) == 4:
-        p[0] = p[0] + p[3]
+        p[0] = [f'PUSHF {p[1]}', "WRITEF"] + (p[3] if len(p) == 4 else [])
+    elif p[1] in variables:
+        var_type = variables[p[1]]
+        index = list(variables.keys()).index(p[1])
+        
+        if var_type == 'integer':
+            p[0] = [f'PUSHG {index}', "WRITEI"] + (p[3] if len(p) == 4 else [])
+        elif var_type == 'real':
+            p[0] = [f'PUSHG {index}', "WRITEF"] + (p[3] if len(p) == 4 else [])
+        elif var_type == 'string':
+            p[0] = [f'PUSHG {index}', "WRITES"] + (p[3] if len(p) == 4 else [])
+        elif var_type == 'char':
+            p[0] = [f'PUSHG {index}', "WRITECHR"] + (p[3] if len(p) == 4 else [])
+        elif var_type == 'boolean':
+            p[0] = [f'PUSHG {index}', "WRITES"] + (p[3] if len(p) == 4 else [])
+        else:
+            raise Exception(f"Erro: Tipo inválido para a variável '{p[1]}'.")
+    else:
+        raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
 
 def p_error(p):
     if p:
