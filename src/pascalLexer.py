@@ -77,6 +77,11 @@ def t_INTEGER(t):
     t.value = int(t.value)
     return t
 
+def t_STRING(t):
+    r"'([^']*)'"
+    t.value = t.value[1:-1]
+    return t
+
 def t_IDENTIFIER(t):
     r"[a-zA-Z]([a-zA-Z0-9])*"
     if t.value.lower() in reserved_keywords:
@@ -86,11 +91,6 @@ def t_IDENTIFIER(t):
 def t_CHAR(t):
     r"'\w'"
     t.value = t.value[1]  
-    return t
-
-def t_STRING(t):
-    r"'([^']*)'"
-    t.value = t.value[1:-1]
     return t
 
 def t_COMMENT(t):

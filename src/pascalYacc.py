@@ -145,8 +145,8 @@ def p_type(p):
     p[0] = p[1]
 
 def p_writeln(p):
-    """writeln : WRITELN LPAREN type RPAREN"""
-    #          | WRITELN LPAREN type COMMA writen_args RPAREN"""        
+    """writeln : WRITELN LPAREN type RPAREN
+               | WRITELN LPAREN type COMMA writeln_args RPAREN"""        
     if isinstance(p[3], str): 
         p[0] = [f'PUSHS "{p[3]}"', "WRITES", "WRITELN"]
     elif isinstance(p[3], int):
@@ -155,15 +155,24 @@ def p_writeln(p):
         p[0] = [f'PUSHF {p[3]}', "WRITEF", "WRITELN"]
     elif isinstance(p[3], chr):
         p[0] = [f'PUSHI {ord(p[3])}', "WRITECHR", "WRITELN"]
+    if len(p) > 5:
+        p[0] = p[0] + p[5]
     
 def p_writeln_args(p):
     """writeln_args : type COMMA writeln_args 
                     | type"""
     # Concatena os argumentos da função writeln
+    # TODO: Handle IDENTIFIERS. Ainda crasha porque os IDENTIFIERS não fazem parte do type
+    if isinstance(p[1], str): 
+        p[0] = [f'PUSHS "{p[1]}"', "WRITES", "WRITELN"]
+    elif isinstance(p[1], int):
+        p[0] = [f'PUSHI {p[1]}', "WRITEI", "WRITELN"]
+    elif isinstance(p[1], float):
+        p[0] = [f'PUSHF {p[1]}', "WRITEF", "WRITELN"]
+    elif isinstance(p[1], chr):
+        p[0] = [f'PUSHI {ord(p[1])}', "WRITECHR", "WRITELN"]
     if len(p) == 4:
-        p[0] = [f'PUSHS "{p[1]}"'] + p[3]
-    else:
-        p[0] = [f'PUSHS "{p[1]}"']
+        p[0] = p[0] + p[3]
 
 def p_error(p):
     if p:
