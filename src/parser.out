@@ -43,44 +43,58 @@ Rule 11    statements -> statement SEMICOLON statements
 Rule 12    statements -> statement SEMICOLON
 Rule 13    statement -> writeln
 Rule 14    statement -> assignment
-Rule 15    assignment -> IDENTIFIER ASSIGNMENT expression
-Rule 16    expression -> type
-Rule 17    operation -> PLUS
-Rule 18    operation -> MINUS
-Rule 19    operation -> TIMES
-Rule 20    operation -> DIVISION
-Rule 21    operation -> DIV
-Rule 22    operation -> MOD
-Rule 23    operation -> RANGE
-Rule 24    type_name -> NINTEGER
-Rule 25    type_name -> NREAL
-Rule 26    type_name -> NSTRING
-Rule 27    type_name -> NCHAR
-Rule 28    type_name -> NBOOLEAN
-Rule 29    type_name -> array_type
-Rule 30    type -> INTEGER
-Rule 31    type -> REAL
-Rule 32    type -> STRING
-Rule 33    type -> CHAR
-Rule 34    type -> BOOLEAN
-Rule 35    type -> IDENTIFIER
-Rule 36    writeln -> WRITELN LPAREN writeln_args RPAREN
-Rule 37    writeln_args -> type COMMA writeln_args
-Rule 38    writeln_args -> type
+Rule 15    assignment -> IDENTIFIER ASSIGNMENT type
+Rule 16    assignment -> IDENTIFIER ASSIGNMENT expression
+Rule 17    expression -> type operation type
+Rule 18    expression -> expression_paren
+Rule 19    expression -> expression operation expression
+Rule 20    expression_paren -> LPAREN expression RPAREN
+Rule 21    operation -> plus
+Rule 22    operation -> minus
+Rule 23    operation -> times
+Rule 24    operation -> division
+Rule 25    operation -> DIV
+Rule 26    operation -> MOD
+Rule 27    operation -> RANGE
+Rule 28    type_name -> NINTEGER
+Rule 29    type_name -> NREAL
+Rule 30    type_name -> NSTRING
+Rule 31    type_name -> NCHAR
+Rule 32    type_name -> NBOOLEAN
+Rule 33    type_name -> array_type
+Rule 34    type -> integer
+Rule 35    type -> real
+Rule 36    type -> string
+Rule 37    type -> char
+Rule 38    type -> boolean
+Rule 39    type -> identifier
+Rule 40    integer -> INTEGER
+Rule 41    real -> REAL
+Rule 42    string -> STRING
+Rule 43    char -> CHAR
+Rule 44    boolean -> BOOLEAN
+Rule 45    identifier -> IDENTIFIER
+Rule 46    plus -> PLUS
+Rule 47    minus -> MINUS
+Rule 48    times -> TIMES
+Rule 49    division -> DIVISION
+Rule 50    writeln -> WRITELN LPAREN writeln_args RPAREN
+Rule 51    writeln_args -> type COMMA writeln_args
+Rule 52    writeln_args -> type
 
 Terminals, with rules where they appear
 
 AND                  : 
 ARRAY                : 9
-ASSIGNMENT           : 15
+ASSIGNMENT           : 15 16
 BEGIN                : 10
-BOOLEAN              : 34
-CHAR                 : 33
+BOOLEAN              : 44
+CHAR                 : 43
 COLON                : 5 6
-COMMA                : 7 37
+COMMA                : 7 51
 COMMENT              : 
-DIV                  : 21
-DIVISION             : 20
+DIV                  : 25
+DIVISION             : 49
 DO                   : 
 DOT                  : 1
 DOWNTO               : 
@@ -91,62 +105,73 @@ FOR                  :
 FUNCTION             : 
 GT                   : 
 GTE                  : 
-IDENTIFIER           : 2 7 8 15 35
+IDENTIFIER           : 2 7 8 15 16 45
 IF                   : 
-INTEGER              : 30
+INTEGER              : 40
 LBRACKET             : 9
-LPAREN               : 36
+LPAREN               : 20 50
 LT                   : 
 LTE                  : 
-MINUS                : 18
-MOD                  : 22
-NBOOLEAN             : 28
-NCHAR                : 27
+MINUS                : 47
+MOD                  : 26
+NBOOLEAN             : 32
+NCHAR                : 31
 NEQ                  : 
-NINTEGER             : 24
+NINTEGER             : 28
 NOT                  : 
-NREAL                : 25
-NSTRING              : 26
+NREAL                : 29
+NSTRING              : 30
 OF                   : 9
 OR                   : 
-PLUS                 : 17
+PLUS                 : 46
 PROCEDURE            : 
 PROGRAM              : 2
-RANGE                : 9 23
+RANGE                : 9 27
 RBRACKET             : 9
 READLN               : 
-REAL                 : 31
+REAL                 : 41
 REPEAT               : 
-RPAREN               : 36
+RPAREN               : 20 50
 SEMICOLON            : 2 5 6 11 12
-STRING               : 32
+STRING               : 42
 THEN                 : 
-TIMES                : 19
+TIMES                : 48
 TO                   : 
 UNTIL                : 
 VAR                  : 3
 WHILE                : 
-WRITELN              : 36
+WRITELN              : 50
 error                : 
 
 Nonterminals, with rules where they appear
 
-array_type           : 29
+array_type           : 33
 assignment           : 14
 block                : 1
 body                 : 3 4
-expression           : 15
+boolean              : 38
+char                 : 37
+division             : 24
+expression           : 16 19 19 20
+expression_paren     : 18
 header               : 1
+identifier           : 39
 identifier_list      : 5 6 7
-operation            : 
+integer              : 34
+minus                : 22
+operation            : 17 19
+plus                 : 21
 program              : 0
+real                 : 35
 statement            : 11 12
 statements           : 10 11
-type                 : 9 9 16 37 38
+string               : 36
+times                : 23
+type                 : 9 9 15 17 17 51 52
 type_name            : 5 6 9
 variable_declaration : 3 5
 writeln              : 13
-writeln_args         : 36 37
+writeln_args         : 50 51
 
 Parsing method: LALR
 
@@ -221,8 +246,9 @@ state 7
     (12) statements -> . statement SEMICOLON
     (13) statement -> . writeln
     (14) statement -> . assignment
-    (36) writeln -> . WRITELN LPAREN writeln_args RPAREN
-    (15) assignment -> . IDENTIFIER ASSIGNMENT expression
+    (50) writeln -> . WRITELN LPAREN writeln_args RPAREN
+    (15) assignment -> . IDENTIFIER ASSIGNMENT type
+    (16) assignment -> . IDENTIFIER ASSIGNMENT expression
 
     WRITELN         shift and go to state 17
     IDENTIFIER      shift and go to state 18
@@ -303,14 +329,15 @@ state 16
 
 state 17
 
-    (36) writeln -> WRITELN . LPAREN writeln_args RPAREN
+    (50) writeln -> WRITELN . LPAREN writeln_args RPAREN
 
     LPAREN          shift and go to state 25
 
 
 state 18
 
-    (15) assignment -> IDENTIFIER . ASSIGNMENT expression
+    (15) assignment -> IDENTIFIER . ASSIGNMENT type
+    (16) assignment -> IDENTIFIER . ASSIGNMENT expression
 
     ASSIGNMENT      shift and go to state 26
 
@@ -334,12 +361,12 @@ state 21
 
     (5) variable_declaration -> identifier_list COLON . type_name SEMICOLON variable_declaration
     (6) variable_declaration -> identifier_list COLON . type_name SEMICOLON
-    (24) type_name -> . NINTEGER
-    (25) type_name -> . NREAL
-    (26) type_name -> . NSTRING
-    (27) type_name -> . NCHAR
-    (28) type_name -> . NBOOLEAN
-    (29) type_name -> . array_type
+    (28) type_name -> . NINTEGER
+    (29) type_name -> . NREAL
+    (30) type_name -> . NSTRING
+    (31) type_name -> . NCHAR
+    (32) type_name -> . NBOOLEAN
+    (33) type_name -> . array_type
     (9) array_type -> . ARRAY LBRACKET type RANGE type RBRACKET OF type_name
 
     NINTEGER        shift and go to state 28
@@ -377,8 +404,9 @@ state 24
     (12) statements -> . statement SEMICOLON
     (13) statement -> . writeln
     (14) statement -> . assignment
-    (36) writeln -> . WRITELN LPAREN writeln_args RPAREN
-    (15) assignment -> . IDENTIFIER ASSIGNMENT expression
+    (50) writeln -> . WRITELN LPAREN writeln_args RPAREN
+    (15) assignment -> . IDENTIFIER ASSIGNMENT type
+    (16) assignment -> . IDENTIFIER ASSIGNMENT expression
 
     END             reduce using rule 12 (statements -> statement SEMICOLON .)
     WRITELN         shift and go to state 17
@@ -391,102 +419,132 @@ state 24
 
 state 25
 
-    (36) writeln -> WRITELN LPAREN . writeln_args RPAREN
-    (37) writeln_args -> . type COMMA writeln_args
-    (38) writeln_args -> . type
-    (30) type -> . INTEGER
-    (31) type -> . REAL
-    (32) type -> . STRING
-    (33) type -> . CHAR
-    (34) type -> . BOOLEAN
-    (35) type -> . IDENTIFIER
+    (50) writeln -> WRITELN LPAREN . writeln_args RPAREN
+    (51) writeln_args -> . type COMMA writeln_args
+    (52) writeln_args -> . type
+    (34) type -> . integer
+    (35) type -> . real
+    (36) type -> . string
+    (37) type -> . char
+    (38) type -> . boolean
+    (39) type -> . identifier
+    (40) integer -> . INTEGER
+    (41) real -> . REAL
+    (42) string -> . STRING
+    (43) char -> . CHAR
+    (44) boolean -> . BOOLEAN
+    (45) identifier -> . IDENTIFIER
 
-    INTEGER         shift and go to state 39
-    REAL            shift and go to state 40
-    STRING          shift and go to state 41
-    CHAR            shift and go to state 42
-    BOOLEAN         shift and go to state 43
-    IDENTIFIER      shift and go to state 44
+    INTEGER         shift and go to state 45
+    REAL            shift and go to state 46
+    STRING          shift and go to state 47
+    CHAR            shift and go to state 48
+    BOOLEAN         shift and go to state 49
+    IDENTIFIER      shift and go to state 50
 
     writeln_args                   shift and go to state 37
     type                           shift and go to state 38
+    integer                        shift and go to state 39
+    real                           shift and go to state 40
+    string                         shift and go to state 41
+    char                           shift and go to state 42
+    boolean                        shift and go to state 43
+    identifier                     shift and go to state 44
 
 state 26
 
-    (15) assignment -> IDENTIFIER ASSIGNMENT . expression
-    (16) expression -> . type
-    (30) type -> . INTEGER
-    (31) type -> . REAL
-    (32) type -> . STRING
-    (33) type -> . CHAR
-    (34) type -> . BOOLEAN
-    (35) type -> . IDENTIFIER
+    (15) assignment -> IDENTIFIER ASSIGNMENT . type
+    (16) assignment -> IDENTIFIER ASSIGNMENT . expression
+    (34) type -> . integer
+    (35) type -> . real
+    (36) type -> . string
+    (37) type -> . char
+    (38) type -> . boolean
+    (39) type -> . identifier
+    (17) expression -> . type operation type
+    (18) expression -> . expression_paren
+    (19) expression -> . expression operation expression
+    (40) integer -> . INTEGER
+    (41) real -> . REAL
+    (42) string -> . STRING
+    (43) char -> . CHAR
+    (44) boolean -> . BOOLEAN
+    (45) identifier -> . IDENTIFIER
+    (20) expression_paren -> . LPAREN expression RPAREN
 
-    INTEGER         shift and go to state 39
-    REAL            shift and go to state 40
-    STRING          shift and go to state 41
-    CHAR            shift and go to state 42
-    BOOLEAN         shift and go to state 43
-    IDENTIFIER      shift and go to state 44
+    INTEGER         shift and go to state 45
+    REAL            shift and go to state 46
+    STRING          shift and go to state 47
+    CHAR            shift and go to state 48
+    BOOLEAN         shift and go to state 49
+    IDENTIFIER      shift and go to state 50
+    LPAREN          shift and go to state 54
 
-    expression                     shift and go to state 45
-    type                           shift and go to state 46
+    type                           shift and go to state 51
+    expression                     shift and go to state 52
+    integer                        shift and go to state 39
+    real                           shift and go to state 40
+    string                         shift and go to state 41
+    char                           shift and go to state 42
+    boolean                        shift and go to state 43
+    identifier                     shift and go to state 44
+    expression_paren               shift and go to state 53
 
 state 27
 
     (5) variable_declaration -> identifier_list COLON type_name . SEMICOLON variable_declaration
     (6) variable_declaration -> identifier_list COLON type_name . SEMICOLON
 
-    SEMICOLON       shift and go to state 47
+    SEMICOLON       shift and go to state 55
 
 
 state 28
 
-    (24) type_name -> NINTEGER .
+    (28) type_name -> NINTEGER .
 
-    SEMICOLON       reduce using rule 24 (type_name -> NINTEGER .)
+    SEMICOLON       reduce using rule 28 (type_name -> NINTEGER .)
 
 
 state 29
 
-    (25) type_name -> NREAL .
+    (29) type_name -> NREAL .
 
-    SEMICOLON       reduce using rule 25 (type_name -> NREAL .)
+    SEMICOLON       reduce using rule 29 (type_name -> NREAL .)
 
 
 state 30
 
-    (26) type_name -> NSTRING .
+    (30) type_name -> NSTRING .
 
-    SEMICOLON       reduce using rule 26 (type_name -> NSTRING .)
+    SEMICOLON       reduce using rule 30 (type_name -> NSTRING .)
 
 
 state 31
 
-    (27) type_name -> NCHAR .
+    (31) type_name -> NCHAR .
 
-    SEMICOLON       reduce using rule 27 (type_name -> NCHAR .)
+    SEMICOLON       reduce using rule 31 (type_name -> NCHAR .)
 
 
 state 32
 
-    (28) type_name -> NBOOLEAN .
+    (32) type_name -> NBOOLEAN .
 
-    SEMICOLON       reduce using rule 28 (type_name -> NBOOLEAN .)
+    SEMICOLON       reduce using rule 32 (type_name -> NBOOLEAN .)
 
 
 state 33
 
-    (29) type_name -> array_type .
+    (33) type_name -> array_type .
 
-    SEMICOLON       reduce using rule 29 (type_name -> array_type .)
+    SEMICOLON       reduce using rule 33 (type_name -> array_type .)
 
 
 state 34
 
     (9) array_type -> ARRAY . LBRACKET type RANGE type RBRACKET OF type_name
 
-    LBRACKET        shift and go to state 48
+    LBRACKET        shift and go to state 56
 
 
 state 35
@@ -505,101 +563,340 @@ state 36
 
 state 37
 
-    (36) writeln -> WRITELN LPAREN writeln_args . RPAREN
+    (50) writeln -> WRITELN LPAREN writeln_args . RPAREN
 
-    RPAREN          shift and go to state 49
+    RPAREN          shift and go to state 57
 
 
 state 38
 
-    (37) writeln_args -> type . COMMA writeln_args
-    (38) writeln_args -> type .
+    (51) writeln_args -> type . COMMA writeln_args
+    (52) writeln_args -> type .
 
-    COMMA           shift and go to state 50
-    RPAREN          reduce using rule 38 (writeln_args -> type .)
+    COMMA           shift and go to state 58
+    RPAREN          reduce using rule 52 (writeln_args -> type .)
 
 
 state 39
 
-    (30) type -> INTEGER .
+    (34) type -> integer .
 
-    COMMA           reduce using rule 30 (type -> INTEGER .)
-    RPAREN          reduce using rule 30 (type -> INTEGER .)
-    SEMICOLON       reduce using rule 30 (type -> INTEGER .)
-    RANGE           reduce using rule 30 (type -> INTEGER .)
-    RBRACKET        reduce using rule 30 (type -> INTEGER .)
+    COMMA           reduce using rule 34 (type -> integer .)
+    RPAREN          reduce using rule 34 (type -> integer .)
+    DIV             reduce using rule 34 (type -> integer .)
+    MOD             reduce using rule 34 (type -> integer .)
+    RANGE           reduce using rule 34 (type -> integer .)
+    PLUS            reduce using rule 34 (type -> integer .)
+    MINUS           reduce using rule 34 (type -> integer .)
+    TIMES           reduce using rule 34 (type -> integer .)
+    DIVISION        reduce using rule 34 (type -> integer .)
+    SEMICOLON       reduce using rule 34 (type -> integer .)
+    RBRACKET        reduce using rule 34 (type -> integer .)
 
 
 state 40
 
-    (31) type -> REAL .
+    (35) type -> real .
 
-    COMMA           reduce using rule 31 (type -> REAL .)
-    RPAREN          reduce using rule 31 (type -> REAL .)
-    SEMICOLON       reduce using rule 31 (type -> REAL .)
-    RANGE           reduce using rule 31 (type -> REAL .)
-    RBRACKET        reduce using rule 31 (type -> REAL .)
+    COMMA           reduce using rule 35 (type -> real .)
+    RPAREN          reduce using rule 35 (type -> real .)
+    DIV             reduce using rule 35 (type -> real .)
+    MOD             reduce using rule 35 (type -> real .)
+    RANGE           reduce using rule 35 (type -> real .)
+    PLUS            reduce using rule 35 (type -> real .)
+    MINUS           reduce using rule 35 (type -> real .)
+    TIMES           reduce using rule 35 (type -> real .)
+    DIVISION        reduce using rule 35 (type -> real .)
+    SEMICOLON       reduce using rule 35 (type -> real .)
+    RBRACKET        reduce using rule 35 (type -> real .)
 
 
 state 41
 
-    (32) type -> STRING .
+    (36) type -> string .
 
-    COMMA           reduce using rule 32 (type -> STRING .)
-    RPAREN          reduce using rule 32 (type -> STRING .)
-    SEMICOLON       reduce using rule 32 (type -> STRING .)
-    RANGE           reduce using rule 32 (type -> STRING .)
-    RBRACKET        reduce using rule 32 (type -> STRING .)
+    COMMA           reduce using rule 36 (type -> string .)
+    RPAREN          reduce using rule 36 (type -> string .)
+    DIV             reduce using rule 36 (type -> string .)
+    MOD             reduce using rule 36 (type -> string .)
+    RANGE           reduce using rule 36 (type -> string .)
+    PLUS            reduce using rule 36 (type -> string .)
+    MINUS           reduce using rule 36 (type -> string .)
+    TIMES           reduce using rule 36 (type -> string .)
+    DIVISION        reduce using rule 36 (type -> string .)
+    SEMICOLON       reduce using rule 36 (type -> string .)
+    RBRACKET        reduce using rule 36 (type -> string .)
 
 
 state 42
 
-    (33) type -> CHAR .
+    (37) type -> char .
 
-    COMMA           reduce using rule 33 (type -> CHAR .)
-    RPAREN          reduce using rule 33 (type -> CHAR .)
-    SEMICOLON       reduce using rule 33 (type -> CHAR .)
-    RANGE           reduce using rule 33 (type -> CHAR .)
-    RBRACKET        reduce using rule 33 (type -> CHAR .)
+    COMMA           reduce using rule 37 (type -> char .)
+    RPAREN          reduce using rule 37 (type -> char .)
+    DIV             reduce using rule 37 (type -> char .)
+    MOD             reduce using rule 37 (type -> char .)
+    RANGE           reduce using rule 37 (type -> char .)
+    PLUS            reduce using rule 37 (type -> char .)
+    MINUS           reduce using rule 37 (type -> char .)
+    TIMES           reduce using rule 37 (type -> char .)
+    DIVISION        reduce using rule 37 (type -> char .)
+    SEMICOLON       reduce using rule 37 (type -> char .)
+    RBRACKET        reduce using rule 37 (type -> char .)
 
 
 state 43
 
-    (34) type -> BOOLEAN .
+    (38) type -> boolean .
 
-    COMMA           reduce using rule 34 (type -> BOOLEAN .)
-    RPAREN          reduce using rule 34 (type -> BOOLEAN .)
-    SEMICOLON       reduce using rule 34 (type -> BOOLEAN .)
-    RANGE           reduce using rule 34 (type -> BOOLEAN .)
-    RBRACKET        reduce using rule 34 (type -> BOOLEAN .)
+    COMMA           reduce using rule 38 (type -> boolean .)
+    RPAREN          reduce using rule 38 (type -> boolean .)
+    DIV             reduce using rule 38 (type -> boolean .)
+    MOD             reduce using rule 38 (type -> boolean .)
+    RANGE           reduce using rule 38 (type -> boolean .)
+    PLUS            reduce using rule 38 (type -> boolean .)
+    MINUS           reduce using rule 38 (type -> boolean .)
+    TIMES           reduce using rule 38 (type -> boolean .)
+    DIVISION        reduce using rule 38 (type -> boolean .)
+    SEMICOLON       reduce using rule 38 (type -> boolean .)
+    RBRACKET        reduce using rule 38 (type -> boolean .)
 
 
 state 44
 
-    (35) type -> IDENTIFIER .
+    (39) type -> identifier .
 
-    COMMA           reduce using rule 35 (type -> IDENTIFIER .)
-    RPAREN          reduce using rule 35 (type -> IDENTIFIER .)
-    SEMICOLON       reduce using rule 35 (type -> IDENTIFIER .)
-    RANGE           reduce using rule 35 (type -> IDENTIFIER .)
-    RBRACKET        reduce using rule 35 (type -> IDENTIFIER .)
+    COMMA           reduce using rule 39 (type -> identifier .)
+    RPAREN          reduce using rule 39 (type -> identifier .)
+    DIV             reduce using rule 39 (type -> identifier .)
+    MOD             reduce using rule 39 (type -> identifier .)
+    RANGE           reduce using rule 39 (type -> identifier .)
+    PLUS            reduce using rule 39 (type -> identifier .)
+    MINUS           reduce using rule 39 (type -> identifier .)
+    TIMES           reduce using rule 39 (type -> identifier .)
+    DIVISION        reduce using rule 39 (type -> identifier .)
+    SEMICOLON       reduce using rule 39 (type -> identifier .)
+    RBRACKET        reduce using rule 39 (type -> identifier .)
 
 
 state 45
 
-    (15) assignment -> IDENTIFIER ASSIGNMENT expression .
+    (40) integer -> INTEGER .
 
-    SEMICOLON       reduce using rule 15 (assignment -> IDENTIFIER ASSIGNMENT expression .)
+    COMMA           reduce using rule 40 (integer -> INTEGER .)
+    RPAREN          reduce using rule 40 (integer -> INTEGER .)
+    DIV             reduce using rule 40 (integer -> INTEGER .)
+    MOD             reduce using rule 40 (integer -> INTEGER .)
+    RANGE           reduce using rule 40 (integer -> INTEGER .)
+    PLUS            reduce using rule 40 (integer -> INTEGER .)
+    MINUS           reduce using rule 40 (integer -> INTEGER .)
+    TIMES           reduce using rule 40 (integer -> INTEGER .)
+    DIVISION        reduce using rule 40 (integer -> INTEGER .)
+    SEMICOLON       reduce using rule 40 (integer -> INTEGER .)
+    RBRACKET        reduce using rule 40 (integer -> INTEGER .)
 
 
 state 46
 
-    (16) expression -> type .
+    (41) real -> REAL .
 
-    SEMICOLON       reduce using rule 16 (expression -> type .)
+    COMMA           reduce using rule 41 (real -> REAL .)
+    RPAREN          reduce using rule 41 (real -> REAL .)
+    DIV             reduce using rule 41 (real -> REAL .)
+    MOD             reduce using rule 41 (real -> REAL .)
+    RANGE           reduce using rule 41 (real -> REAL .)
+    PLUS            reduce using rule 41 (real -> REAL .)
+    MINUS           reduce using rule 41 (real -> REAL .)
+    TIMES           reduce using rule 41 (real -> REAL .)
+    DIVISION        reduce using rule 41 (real -> REAL .)
+    SEMICOLON       reduce using rule 41 (real -> REAL .)
+    RBRACKET        reduce using rule 41 (real -> REAL .)
 
 
 state 47
+
+    (42) string -> STRING .
+
+    COMMA           reduce using rule 42 (string -> STRING .)
+    RPAREN          reduce using rule 42 (string -> STRING .)
+    DIV             reduce using rule 42 (string -> STRING .)
+    MOD             reduce using rule 42 (string -> STRING .)
+    RANGE           reduce using rule 42 (string -> STRING .)
+    PLUS            reduce using rule 42 (string -> STRING .)
+    MINUS           reduce using rule 42 (string -> STRING .)
+    TIMES           reduce using rule 42 (string -> STRING .)
+    DIVISION        reduce using rule 42 (string -> STRING .)
+    SEMICOLON       reduce using rule 42 (string -> STRING .)
+    RBRACKET        reduce using rule 42 (string -> STRING .)
+
+
+state 48
+
+    (43) char -> CHAR .
+
+    COMMA           reduce using rule 43 (char -> CHAR .)
+    RPAREN          reduce using rule 43 (char -> CHAR .)
+    DIV             reduce using rule 43 (char -> CHAR .)
+    MOD             reduce using rule 43 (char -> CHAR .)
+    RANGE           reduce using rule 43 (char -> CHAR .)
+    PLUS            reduce using rule 43 (char -> CHAR .)
+    MINUS           reduce using rule 43 (char -> CHAR .)
+    TIMES           reduce using rule 43 (char -> CHAR .)
+    DIVISION        reduce using rule 43 (char -> CHAR .)
+    SEMICOLON       reduce using rule 43 (char -> CHAR .)
+    RBRACKET        reduce using rule 43 (char -> CHAR .)
+
+
+state 49
+
+    (44) boolean -> BOOLEAN .
+
+    COMMA           reduce using rule 44 (boolean -> BOOLEAN .)
+    RPAREN          reduce using rule 44 (boolean -> BOOLEAN .)
+    DIV             reduce using rule 44 (boolean -> BOOLEAN .)
+    MOD             reduce using rule 44 (boolean -> BOOLEAN .)
+    RANGE           reduce using rule 44 (boolean -> BOOLEAN .)
+    PLUS            reduce using rule 44 (boolean -> BOOLEAN .)
+    MINUS           reduce using rule 44 (boolean -> BOOLEAN .)
+    TIMES           reduce using rule 44 (boolean -> BOOLEAN .)
+    DIVISION        reduce using rule 44 (boolean -> BOOLEAN .)
+    SEMICOLON       reduce using rule 44 (boolean -> BOOLEAN .)
+    RBRACKET        reduce using rule 44 (boolean -> BOOLEAN .)
+
+
+state 50
+
+    (45) identifier -> IDENTIFIER .
+
+    COMMA           reduce using rule 45 (identifier -> IDENTIFIER .)
+    RPAREN          reduce using rule 45 (identifier -> IDENTIFIER .)
+    DIV             reduce using rule 45 (identifier -> IDENTIFIER .)
+    MOD             reduce using rule 45 (identifier -> IDENTIFIER .)
+    RANGE           reduce using rule 45 (identifier -> IDENTIFIER .)
+    PLUS            reduce using rule 45 (identifier -> IDENTIFIER .)
+    MINUS           reduce using rule 45 (identifier -> IDENTIFIER .)
+    TIMES           reduce using rule 45 (identifier -> IDENTIFIER .)
+    DIVISION        reduce using rule 45 (identifier -> IDENTIFIER .)
+    SEMICOLON       reduce using rule 45 (identifier -> IDENTIFIER .)
+    RBRACKET        reduce using rule 45 (identifier -> IDENTIFIER .)
+
+
+state 51
+
+    (15) assignment -> IDENTIFIER ASSIGNMENT type .
+    (17) expression -> type . operation type
+    (21) operation -> . plus
+    (22) operation -> . minus
+    (23) operation -> . times
+    (24) operation -> . division
+    (25) operation -> . DIV
+    (26) operation -> . MOD
+    (27) operation -> . RANGE
+    (46) plus -> . PLUS
+    (47) minus -> . MINUS
+    (48) times -> . TIMES
+    (49) division -> . DIVISION
+
+    SEMICOLON       reduce using rule 15 (assignment -> IDENTIFIER ASSIGNMENT type .)
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    RANGE           shift and go to state 66
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    TIMES           shift and go to state 69
+    DIVISION        shift and go to state 70
+
+    operation                      shift and go to state 59
+    plus                           shift and go to state 60
+    minus                          shift and go to state 61
+    times                          shift and go to state 62
+    division                       shift and go to state 63
+
+state 52
+
+    (16) assignment -> IDENTIFIER ASSIGNMENT expression .
+    (19) expression -> expression . operation expression
+    (21) operation -> . plus
+    (22) operation -> . minus
+    (23) operation -> . times
+    (24) operation -> . division
+    (25) operation -> . DIV
+    (26) operation -> . MOD
+    (27) operation -> . RANGE
+    (46) plus -> . PLUS
+    (47) minus -> . MINUS
+    (48) times -> . TIMES
+    (49) division -> . DIVISION
+
+    SEMICOLON       reduce using rule 16 (assignment -> IDENTIFIER ASSIGNMENT expression .)
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    RANGE           shift and go to state 66
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    TIMES           shift and go to state 69
+    DIVISION        shift and go to state 70
+
+    operation                      shift and go to state 71
+    plus                           shift and go to state 60
+    minus                          shift and go to state 61
+    times                          shift and go to state 62
+    division                       shift and go to state 63
+
+state 53
+
+    (18) expression -> expression_paren .
+
+    DIV             reduce using rule 18 (expression -> expression_paren .)
+    MOD             reduce using rule 18 (expression -> expression_paren .)
+    RANGE           reduce using rule 18 (expression -> expression_paren .)
+    PLUS            reduce using rule 18 (expression -> expression_paren .)
+    MINUS           reduce using rule 18 (expression -> expression_paren .)
+    TIMES           reduce using rule 18 (expression -> expression_paren .)
+    DIVISION        reduce using rule 18 (expression -> expression_paren .)
+    SEMICOLON       reduce using rule 18 (expression -> expression_paren .)
+    RPAREN          reduce using rule 18 (expression -> expression_paren .)
+
+
+state 54
+
+    (20) expression_paren -> LPAREN . expression RPAREN
+    (17) expression -> . type operation type
+    (18) expression -> . expression_paren
+    (19) expression -> . expression operation expression
+    (34) type -> . integer
+    (35) type -> . real
+    (36) type -> . string
+    (37) type -> . char
+    (38) type -> . boolean
+    (39) type -> . identifier
+    (20) expression_paren -> . LPAREN expression RPAREN
+    (40) integer -> . INTEGER
+    (41) real -> . REAL
+    (42) string -> . STRING
+    (43) char -> . CHAR
+    (44) boolean -> . BOOLEAN
+    (45) identifier -> . IDENTIFIER
+
+    LPAREN          shift and go to state 54
+    INTEGER         shift and go to state 45
+    REAL            shift and go to state 46
+    STRING          shift and go to state 47
+    CHAR            shift and go to state 48
+    BOOLEAN         shift and go to state 49
+    IDENTIFIER      shift and go to state 50
+
+    expression                     shift and go to state 72
+    type                           shift and go to state 73
+    expression_paren               shift and go to state 53
+    integer                        shift and go to state 39
+    real                           shift and go to state 40
+    string                         shift and go to state 41
+    char                           shift and go to state 42
+    boolean                        shift and go to state 43
+    identifier                     shift and go to state 44
+
+state 55
 
     (5) variable_declaration -> identifier_list COLON type_name SEMICOLON . variable_declaration
     (6) variable_declaration -> identifier_list COLON type_name SEMICOLON .
@@ -612,119 +909,504 @@ state 47
     IDENTIFIER      shift and go to state 12
 
     identifier_list                shift and go to state 11
-    variable_declaration           shift and go to state 51
+    variable_declaration           shift and go to state 74
 
-state 48
+state 56
 
     (9) array_type -> ARRAY LBRACKET . type RANGE type RBRACKET OF type_name
-    (30) type -> . INTEGER
-    (31) type -> . REAL
-    (32) type -> . STRING
-    (33) type -> . CHAR
-    (34) type -> . BOOLEAN
-    (35) type -> . IDENTIFIER
+    (34) type -> . integer
+    (35) type -> . real
+    (36) type -> . string
+    (37) type -> . char
+    (38) type -> . boolean
+    (39) type -> . identifier
+    (40) integer -> . INTEGER
+    (41) real -> . REAL
+    (42) string -> . STRING
+    (43) char -> . CHAR
+    (44) boolean -> . BOOLEAN
+    (45) identifier -> . IDENTIFIER
 
-    INTEGER         shift and go to state 39
-    REAL            shift and go to state 40
-    STRING          shift and go to state 41
-    CHAR            shift and go to state 42
-    BOOLEAN         shift and go to state 43
-    IDENTIFIER      shift and go to state 44
+    INTEGER         shift and go to state 45
+    REAL            shift and go to state 46
+    STRING          shift and go to state 47
+    CHAR            shift and go to state 48
+    BOOLEAN         shift and go to state 49
+    IDENTIFIER      shift and go to state 50
 
-    type                           shift and go to state 52
+    type                           shift and go to state 75
+    integer                        shift and go to state 39
+    real                           shift and go to state 40
+    string                         shift and go to state 41
+    char                           shift and go to state 42
+    boolean                        shift and go to state 43
+    identifier                     shift and go to state 44
 
-state 49
+state 57
 
-    (36) writeln -> WRITELN LPAREN writeln_args RPAREN .
+    (50) writeln -> WRITELN LPAREN writeln_args RPAREN .
 
-    SEMICOLON       reduce using rule 36 (writeln -> WRITELN LPAREN writeln_args RPAREN .)
+    SEMICOLON       reduce using rule 50 (writeln -> WRITELN LPAREN writeln_args RPAREN .)
 
 
-state 50
+state 58
 
-    (37) writeln_args -> type COMMA . writeln_args
-    (37) writeln_args -> . type COMMA writeln_args
-    (38) writeln_args -> . type
-    (30) type -> . INTEGER
-    (31) type -> . REAL
-    (32) type -> . STRING
-    (33) type -> . CHAR
-    (34) type -> . BOOLEAN
-    (35) type -> . IDENTIFIER
+    (51) writeln_args -> type COMMA . writeln_args
+    (51) writeln_args -> . type COMMA writeln_args
+    (52) writeln_args -> . type
+    (34) type -> . integer
+    (35) type -> . real
+    (36) type -> . string
+    (37) type -> . char
+    (38) type -> . boolean
+    (39) type -> . identifier
+    (40) integer -> . INTEGER
+    (41) real -> . REAL
+    (42) string -> . STRING
+    (43) char -> . CHAR
+    (44) boolean -> . BOOLEAN
+    (45) identifier -> . IDENTIFIER
 
-    INTEGER         shift and go to state 39
-    REAL            shift and go to state 40
-    STRING          shift and go to state 41
-    CHAR            shift and go to state 42
-    BOOLEAN         shift and go to state 43
-    IDENTIFIER      shift and go to state 44
+    INTEGER         shift and go to state 45
+    REAL            shift and go to state 46
+    STRING          shift and go to state 47
+    CHAR            shift and go to state 48
+    BOOLEAN         shift and go to state 49
+    IDENTIFIER      shift and go to state 50
 
     type                           shift and go to state 38
-    writeln_args                   shift and go to state 53
+    writeln_args                   shift and go to state 76
+    integer                        shift and go to state 39
+    real                           shift and go to state 40
+    string                         shift and go to state 41
+    char                           shift and go to state 42
+    boolean                        shift and go to state 43
+    identifier                     shift and go to state 44
 
-state 51
+state 59
+
+    (17) expression -> type operation . type
+    (34) type -> . integer
+    (35) type -> . real
+    (36) type -> . string
+    (37) type -> . char
+    (38) type -> . boolean
+    (39) type -> . identifier
+    (40) integer -> . INTEGER
+    (41) real -> . REAL
+    (42) string -> . STRING
+    (43) char -> . CHAR
+    (44) boolean -> . BOOLEAN
+    (45) identifier -> . IDENTIFIER
+
+    INTEGER         shift and go to state 45
+    REAL            shift and go to state 46
+    STRING          shift and go to state 47
+    CHAR            shift and go to state 48
+    BOOLEAN         shift and go to state 49
+    IDENTIFIER      shift and go to state 50
+
+    type                           shift and go to state 77
+    integer                        shift and go to state 39
+    real                           shift and go to state 40
+    string                         shift and go to state 41
+    char                           shift and go to state 42
+    boolean                        shift and go to state 43
+    identifier                     shift and go to state 44
+
+state 60
+
+    (21) operation -> plus .
+
+    INTEGER         reduce using rule 21 (operation -> plus .)
+    REAL            reduce using rule 21 (operation -> plus .)
+    STRING          reduce using rule 21 (operation -> plus .)
+    CHAR            reduce using rule 21 (operation -> plus .)
+    BOOLEAN         reduce using rule 21 (operation -> plus .)
+    IDENTIFIER      reduce using rule 21 (operation -> plus .)
+    LPAREN          reduce using rule 21 (operation -> plus .)
+
+
+state 61
+
+    (22) operation -> minus .
+
+    INTEGER         reduce using rule 22 (operation -> minus .)
+    REAL            reduce using rule 22 (operation -> minus .)
+    STRING          reduce using rule 22 (operation -> minus .)
+    CHAR            reduce using rule 22 (operation -> minus .)
+    BOOLEAN         reduce using rule 22 (operation -> minus .)
+    IDENTIFIER      reduce using rule 22 (operation -> minus .)
+    LPAREN          reduce using rule 22 (operation -> minus .)
+
+
+state 62
+
+    (23) operation -> times .
+
+    INTEGER         reduce using rule 23 (operation -> times .)
+    REAL            reduce using rule 23 (operation -> times .)
+    STRING          reduce using rule 23 (operation -> times .)
+    CHAR            reduce using rule 23 (operation -> times .)
+    BOOLEAN         reduce using rule 23 (operation -> times .)
+    IDENTIFIER      reduce using rule 23 (operation -> times .)
+    LPAREN          reduce using rule 23 (operation -> times .)
+
+
+state 63
+
+    (24) operation -> division .
+
+    INTEGER         reduce using rule 24 (operation -> division .)
+    REAL            reduce using rule 24 (operation -> division .)
+    STRING          reduce using rule 24 (operation -> division .)
+    CHAR            reduce using rule 24 (operation -> division .)
+    BOOLEAN         reduce using rule 24 (operation -> division .)
+    IDENTIFIER      reduce using rule 24 (operation -> division .)
+    LPAREN          reduce using rule 24 (operation -> division .)
+
+
+state 64
+
+    (25) operation -> DIV .
+
+    INTEGER         reduce using rule 25 (operation -> DIV .)
+    REAL            reduce using rule 25 (operation -> DIV .)
+    STRING          reduce using rule 25 (operation -> DIV .)
+    CHAR            reduce using rule 25 (operation -> DIV .)
+    BOOLEAN         reduce using rule 25 (operation -> DIV .)
+    IDENTIFIER      reduce using rule 25 (operation -> DIV .)
+    LPAREN          reduce using rule 25 (operation -> DIV .)
+
+
+state 65
+
+    (26) operation -> MOD .
+
+    INTEGER         reduce using rule 26 (operation -> MOD .)
+    REAL            reduce using rule 26 (operation -> MOD .)
+    STRING          reduce using rule 26 (operation -> MOD .)
+    CHAR            reduce using rule 26 (operation -> MOD .)
+    BOOLEAN         reduce using rule 26 (operation -> MOD .)
+    IDENTIFIER      reduce using rule 26 (operation -> MOD .)
+    LPAREN          reduce using rule 26 (operation -> MOD .)
+
+
+state 66
+
+    (27) operation -> RANGE .
+
+    INTEGER         reduce using rule 27 (operation -> RANGE .)
+    REAL            reduce using rule 27 (operation -> RANGE .)
+    STRING          reduce using rule 27 (operation -> RANGE .)
+    CHAR            reduce using rule 27 (operation -> RANGE .)
+    BOOLEAN         reduce using rule 27 (operation -> RANGE .)
+    IDENTIFIER      reduce using rule 27 (operation -> RANGE .)
+    LPAREN          reduce using rule 27 (operation -> RANGE .)
+
+
+state 67
+
+    (46) plus -> PLUS .
+
+    INTEGER         reduce using rule 46 (plus -> PLUS .)
+    REAL            reduce using rule 46 (plus -> PLUS .)
+    STRING          reduce using rule 46 (plus -> PLUS .)
+    CHAR            reduce using rule 46 (plus -> PLUS .)
+    BOOLEAN         reduce using rule 46 (plus -> PLUS .)
+    IDENTIFIER      reduce using rule 46 (plus -> PLUS .)
+    LPAREN          reduce using rule 46 (plus -> PLUS .)
+
+
+state 68
+
+    (47) minus -> MINUS .
+
+    INTEGER         reduce using rule 47 (minus -> MINUS .)
+    REAL            reduce using rule 47 (minus -> MINUS .)
+    STRING          reduce using rule 47 (minus -> MINUS .)
+    CHAR            reduce using rule 47 (minus -> MINUS .)
+    BOOLEAN         reduce using rule 47 (minus -> MINUS .)
+    IDENTIFIER      reduce using rule 47 (minus -> MINUS .)
+    LPAREN          reduce using rule 47 (minus -> MINUS .)
+
+
+state 69
+
+    (48) times -> TIMES .
+
+    INTEGER         reduce using rule 48 (times -> TIMES .)
+    REAL            reduce using rule 48 (times -> TIMES .)
+    STRING          reduce using rule 48 (times -> TIMES .)
+    CHAR            reduce using rule 48 (times -> TIMES .)
+    BOOLEAN         reduce using rule 48 (times -> TIMES .)
+    IDENTIFIER      reduce using rule 48 (times -> TIMES .)
+    LPAREN          reduce using rule 48 (times -> TIMES .)
+
+
+state 70
+
+    (49) division -> DIVISION .
+
+    INTEGER         reduce using rule 49 (division -> DIVISION .)
+    REAL            reduce using rule 49 (division -> DIVISION .)
+    STRING          reduce using rule 49 (division -> DIVISION .)
+    CHAR            reduce using rule 49 (division -> DIVISION .)
+    BOOLEAN         reduce using rule 49 (division -> DIVISION .)
+    IDENTIFIER      reduce using rule 49 (division -> DIVISION .)
+    LPAREN          reduce using rule 49 (division -> DIVISION .)
+
+
+state 71
+
+    (19) expression -> expression operation . expression
+    (17) expression -> . type operation type
+    (18) expression -> . expression_paren
+    (19) expression -> . expression operation expression
+    (34) type -> . integer
+    (35) type -> . real
+    (36) type -> . string
+    (37) type -> . char
+    (38) type -> . boolean
+    (39) type -> . identifier
+    (20) expression_paren -> . LPAREN expression RPAREN
+    (40) integer -> . INTEGER
+    (41) real -> . REAL
+    (42) string -> . STRING
+    (43) char -> . CHAR
+    (44) boolean -> . BOOLEAN
+    (45) identifier -> . IDENTIFIER
+
+    LPAREN          shift and go to state 54
+    INTEGER         shift and go to state 45
+    REAL            shift and go to state 46
+    STRING          shift and go to state 47
+    CHAR            shift and go to state 48
+    BOOLEAN         shift and go to state 49
+    IDENTIFIER      shift and go to state 50
+
+    expression                     shift and go to state 78
+    type                           shift and go to state 73
+    expression_paren               shift and go to state 53
+    integer                        shift and go to state 39
+    real                           shift and go to state 40
+    string                         shift and go to state 41
+    char                           shift and go to state 42
+    boolean                        shift and go to state 43
+    identifier                     shift and go to state 44
+
+state 72
+
+    (20) expression_paren -> LPAREN expression . RPAREN
+    (19) expression -> expression . operation expression
+    (21) operation -> . plus
+    (22) operation -> . minus
+    (23) operation -> . times
+    (24) operation -> . division
+    (25) operation -> . DIV
+    (26) operation -> . MOD
+    (27) operation -> . RANGE
+    (46) plus -> . PLUS
+    (47) minus -> . MINUS
+    (48) times -> . TIMES
+    (49) division -> . DIVISION
+
+    RPAREN          shift and go to state 79
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    RANGE           shift and go to state 66
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    TIMES           shift and go to state 69
+    DIVISION        shift and go to state 70
+
+    operation                      shift and go to state 71
+    plus                           shift and go to state 60
+    minus                          shift and go to state 61
+    times                          shift and go to state 62
+    division                       shift and go to state 63
+
+state 73
+
+    (17) expression -> type . operation type
+    (21) operation -> . plus
+    (22) operation -> . minus
+    (23) operation -> . times
+    (24) operation -> . division
+    (25) operation -> . DIV
+    (26) operation -> . MOD
+    (27) operation -> . RANGE
+    (46) plus -> . PLUS
+    (47) minus -> . MINUS
+    (48) times -> . TIMES
+    (49) division -> . DIVISION
+
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    RANGE           shift and go to state 66
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    TIMES           shift and go to state 69
+    DIVISION        shift and go to state 70
+
+    operation                      shift and go to state 59
+    plus                           shift and go to state 60
+    minus                          shift and go to state 61
+    times                          shift and go to state 62
+    division                       shift and go to state 63
+
+state 74
 
     (5) variable_declaration -> identifier_list COLON type_name SEMICOLON variable_declaration .
 
     BEGIN           reduce using rule 5 (variable_declaration -> identifier_list COLON type_name SEMICOLON variable_declaration .)
 
 
-state 52
+state 75
 
     (9) array_type -> ARRAY LBRACKET type . RANGE type RBRACKET OF type_name
 
-    RANGE           shift and go to state 54
+    RANGE           shift and go to state 80
 
 
-state 53
+state 76
 
-    (37) writeln_args -> type COMMA writeln_args .
+    (51) writeln_args -> type COMMA writeln_args .
 
-    RPAREN          reduce using rule 37 (writeln_args -> type COMMA writeln_args .)
+    RPAREN          reduce using rule 51 (writeln_args -> type COMMA writeln_args .)
 
 
-state 54
+state 77
+
+    (17) expression -> type operation type .
+
+    DIV             reduce using rule 17 (expression -> type operation type .)
+    MOD             reduce using rule 17 (expression -> type operation type .)
+    RANGE           reduce using rule 17 (expression -> type operation type .)
+    PLUS            reduce using rule 17 (expression -> type operation type .)
+    MINUS           reduce using rule 17 (expression -> type operation type .)
+    TIMES           reduce using rule 17 (expression -> type operation type .)
+    DIVISION        reduce using rule 17 (expression -> type operation type .)
+    SEMICOLON       reduce using rule 17 (expression -> type operation type .)
+    RPAREN          reduce using rule 17 (expression -> type operation type .)
+
+
+state 78
+
+    (19) expression -> expression operation expression .
+    (19) expression -> expression . operation expression
+    (21) operation -> . plus
+    (22) operation -> . minus
+    (23) operation -> . times
+    (24) operation -> . division
+    (25) operation -> . DIV
+    (26) operation -> . MOD
+    (27) operation -> . RANGE
+    (46) plus -> . PLUS
+    (47) minus -> . MINUS
+    (48) times -> . TIMES
+    (49) division -> . DIVISION
+
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for MOD resolved as shift
+  ! shift/reduce conflict for RANGE resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVISION resolved as shift
+    SEMICOLON       reduce using rule 19 (expression -> expression operation expression .)
+    RPAREN          reduce using rule 19 (expression -> expression operation expression .)
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    RANGE           shift and go to state 66
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    TIMES           shift and go to state 69
+    DIVISION        shift and go to state 70
+
+  ! DIV             [ reduce using rule 19 (expression -> expression operation expression .) ]
+  ! MOD             [ reduce using rule 19 (expression -> expression operation expression .) ]
+  ! RANGE           [ reduce using rule 19 (expression -> expression operation expression .) ]
+  ! PLUS            [ reduce using rule 19 (expression -> expression operation expression .) ]
+  ! MINUS           [ reduce using rule 19 (expression -> expression operation expression .) ]
+  ! TIMES           [ reduce using rule 19 (expression -> expression operation expression .) ]
+  ! DIVISION        [ reduce using rule 19 (expression -> expression operation expression .) ]
+
+    operation                      shift and go to state 71
+    plus                           shift and go to state 60
+    minus                          shift and go to state 61
+    times                          shift and go to state 62
+    division                       shift and go to state 63
+
+state 79
+
+    (20) expression_paren -> LPAREN expression RPAREN .
+
+    DIV             reduce using rule 20 (expression_paren -> LPAREN expression RPAREN .)
+    MOD             reduce using rule 20 (expression_paren -> LPAREN expression RPAREN .)
+    RANGE           reduce using rule 20 (expression_paren -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 20 (expression_paren -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 20 (expression_paren -> LPAREN expression RPAREN .)
+    TIMES           reduce using rule 20 (expression_paren -> LPAREN expression RPAREN .)
+    DIVISION        reduce using rule 20 (expression_paren -> LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 20 (expression_paren -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 20 (expression_paren -> LPAREN expression RPAREN .)
+
+
+state 80
 
     (9) array_type -> ARRAY LBRACKET type RANGE . type RBRACKET OF type_name
-    (30) type -> . INTEGER
-    (31) type -> . REAL
-    (32) type -> . STRING
-    (33) type -> . CHAR
-    (34) type -> . BOOLEAN
-    (35) type -> . IDENTIFIER
+    (34) type -> . integer
+    (35) type -> . real
+    (36) type -> . string
+    (37) type -> . char
+    (38) type -> . boolean
+    (39) type -> . identifier
+    (40) integer -> . INTEGER
+    (41) real -> . REAL
+    (42) string -> . STRING
+    (43) char -> . CHAR
+    (44) boolean -> . BOOLEAN
+    (45) identifier -> . IDENTIFIER
 
-    INTEGER         shift and go to state 39
-    REAL            shift and go to state 40
-    STRING          shift and go to state 41
-    CHAR            shift and go to state 42
-    BOOLEAN         shift and go to state 43
-    IDENTIFIER      shift and go to state 44
+    INTEGER         shift and go to state 45
+    REAL            shift and go to state 46
+    STRING          shift and go to state 47
+    CHAR            shift and go to state 48
+    BOOLEAN         shift and go to state 49
+    IDENTIFIER      shift and go to state 50
 
-    type                           shift and go to state 55
+    type                           shift and go to state 81
+    integer                        shift and go to state 39
+    real                           shift and go to state 40
+    string                         shift and go to state 41
+    char                           shift and go to state 42
+    boolean                        shift and go to state 43
+    identifier                     shift and go to state 44
 
-state 55
+state 81
 
     (9) array_type -> ARRAY LBRACKET type RANGE type . RBRACKET OF type_name
 
-    RBRACKET        shift and go to state 56
+    RBRACKET        shift and go to state 82
 
 
-state 56
+state 82
 
     (9) array_type -> ARRAY LBRACKET type RANGE type RBRACKET . OF type_name
 
-    OF              shift and go to state 57
+    OF              shift and go to state 83
 
 
-state 57
+state 83
 
     (9) array_type -> ARRAY LBRACKET type RANGE type RBRACKET OF . type_name
-    (24) type_name -> . NINTEGER
-    (25) type_name -> . NREAL
-    (26) type_name -> . NSTRING
-    (27) type_name -> . NCHAR
-    (28) type_name -> . NBOOLEAN
-    (29) type_name -> . array_type
+    (28) type_name -> . NINTEGER
+    (29) type_name -> . NREAL
+    (30) type_name -> . NSTRING
+    (31) type_name -> . NCHAR
+    (32) type_name -> . NBOOLEAN
+    (33) type_name -> . array_type
     (9) array_type -> . ARRAY LBRACKET type RANGE type RBRACKET OF type_name
 
     NINTEGER        shift and go to state 28
@@ -734,12 +1416,22 @@ state 57
     NBOOLEAN        shift and go to state 32
     ARRAY           shift and go to state 34
 
-    type_name                      shift and go to state 58
+    type_name                      shift and go to state 84
     array_type                     shift and go to state 33
 
-state 58
+state 84
 
     (9) array_type -> ARRAY LBRACKET type RANGE type RBRACKET OF type_name .
 
     SEMICOLON       reduce using rule 9 (array_type -> ARRAY LBRACKET type RANGE type RBRACKET OF type_name .)
 
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for DIV in state 78 resolved as shift
+WARNING: shift/reduce conflict for MOD in state 78 resolved as shift
+WARNING: shift/reduce conflict for RANGE in state 78 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 78 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 78 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 78 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 78 resolved as shift

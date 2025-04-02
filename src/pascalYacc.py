@@ -6,6 +6,10 @@ functions = {}
 variables = {}
 variables_assigned = {}
 
+# Esta função era auxiliar e já não é mais usada. Mesmo assim vou deixar aqui porque pode vir a ser precisa
+def checkIfString(string):
+    return string.startswith(" ") or (string.endswith(":") or string.endswith(" ") or len(string.split(" ")) > 1)
+
 def p_program(p):
     'program : header block DOT'
     p[0] = ('program', p[1], p[2])
@@ -85,43 +89,61 @@ def p_statement(p):
     p[0] = p[1]
 
 def p_assignment(p):
-    """assignment : IDENTIFIER ASSIGNMENT expression"""
+    """assignment : IDENTIFIER ASSIGNMENT type
+                  | IDENTIFIER ASSIGNMENT expression"""
     global variables_assigned, variables
+    # Caso para lidar com tentativas de assignment a variáveis que não fora declaradas
     if p[1] in variables.keys():
-        var = (p[1], p[3])
         var_type = variables[p[1]]
-        variables_assigned[var] = var_type
-
-        if var_type == 'integer':
-            p[0] = [f'PUSHI {p[3]}']  # Empilha inteiro
-        elif var_type == 'real':
-            p[0] = [f'PUSHF {p[3]}']  # Empilha real
-        elif var_type == 'string':
-            p[0] = [f'PUSHS "{p[3]}"']  # Empilha string
-        elif var_type == 'char':
-            p[0] = [f'PUSHS "{p[3]}"']  # Empilha caractere
-        elif var_type == 'boolean':
-            p[0] = [f'PUSHS {str(p[3]).lower()}']  # Empilha booleano (true/false)
-        else:
-            raise Exception(f"Erro: Tipo inválido para variável '{p[1]}'.")
+        variables_assigned[p[1]] = var_type
+        index_destiny = list(variables.keys()).index(p[1])
+        if isinstance(p[3], list): # Caso em que são valores elementares ou previamente processados e podem ser imediatamente atribuidos
+            p[0] = p[3]
+        else: # Caso em que é um identifier
+            index_source = list(variables.keys()).index(p[3])
+            if p[3] not in variables.keys():
+                raise Exception(f"Erro: Variável '{p[3]}' não declarada.")
+            if p[3] not in variables_assigned.keys():
+                raise Exception(f"Erro: Variável '{p[3]}' não atribuida.")
+            p[0] = [f'PUSHG {index_source}']
         
+        p[0] += [f'STOREG {index_destiny}']
     else:
-        #TODO: Lidar com assigmnents a variaveis que nao foram declaradas
-        pass
+        raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
 
 def p_expression(p):
-    """expression : type"""
+    """expression : type operation type
+                  | expression_paren
+                  | expression operation expression"""
+    global variables_assigned, variables
     if len(p) == 4:
-        # TODO: Tratar do caso "type operation type"
-        pass
+        if not isinstance(p[1], str) and not isinstance(p[3], str):
+            p[0] = p[1] + p[3] + p[2]
+        else:
+            p[0] = []
+            if not isinstance(p[1], str):
+                p[0] += p[1]
+            else:
+                index_source1 = list(variables.keys()).index(p[1])
+                p[0] += [f'PUSHG {index_source1}']
+            if not isinstance(p[3], str):
+                p[0] += p[3]
+            else:
+                index_source2 = list(variables.keys()).index(p[3])
+                p[0] += [f'PUSHG {index_source2}']
+            p[0] += p[2]
     else:
         p[0] = p[1]
 
+def p_expression_paren(p):
+    """expression_paren : LPAREN expression RPAREN"""
+    p[0] = p[2]
+
 def p_operation(p):
-    """operation : PLUS
-                 | MINUS
-                 | TIMES
-                 | DIVISION
+    """operation : plus
+                 | minus
+                 | times
+                 | division
                  | DIV
                  | MOD
                  | RANGE"""
@@ -137,57 +159,98 @@ def p_type_name(p):
     p[0] = p[1]
     
 def p_type(p):
-    """type : INTEGER
-            | REAL
-            | STRING
-            | CHAR
-            | BOOLEAN
-            | IDENTIFIER""" 
+    """type : integer
+            | real
+            | string
+            | char
+            | boolean
+            | identifier""" 
     p[0] = p[1]
+
+# TIPOS ELEMENTARES
+
+def p_integer(p):
+    """integer : INTEGER"""
+    p[0] = [f'PUSHI {p[1]}']
+
+def p_real(p):
+    """real : REAL"""
+    p[0] = [f'PUSHF {p[1]}']
+
+def p_string(p):
+    """string : STRING"""
+    p[0] = [f'PUSHS "{p[1]}"']
+
+def p_char(p):
+    """char : CHAR"""
+    p[0] = [f'PUSHS "{p[1]}"']
+
+def p_boolean(p):
+    """boolean : BOOLEAN"""
+    p[0] = [f'PUSHS {str(p[3]).lower()}']
+
+def p_identifier(p):
+    """identifier : IDENTIFIER"""
+    p[0] = p[1]
+
+# OPERAÇÕES ELEMENTARES
+
+def p_plus(p):
+    """plus : PLUS"""
+    p[0] = ['ADD']
+
+def p_minus(p):
+    """minus : MINUS"""
+    p[0] = ['SUB']
+
+def p_times(p):
+    """times : TIMES"""
+    p[0] = ['MUL']
+
+def p_division(p):
+    """division : DIVISION"""
+    p[0] = ['DIV']
 
 def p_writeln(p):
     """writeln : WRITELN LPAREN writeln_args RPAREN"""        
-    """if isinstance(p[3], str): 
-        p[0] = [f'PUSHS "{p[3]}"', "WRITES", "WRITELN"]
-    elif isinstance(p[3], int):
-        p[0] = [f'PUSHI {p[3]}', "WRITEI", "WRITELN"]
-    elif isinstance(p[3], float):
-        p[0] = [f'PUSHF {p[3]}', "WRITEF", "WRITELN"]
-    elif isinstance(p[3], chr):
-        p[0] = [f'PUSHI {ord(p[3])}', "WRITECHR", "WRITELN"]
-    if len(p) > 5:"""
     p[0] = p[3] + ["WRITELN"] 
     
 def p_writeln_args(p):
     """writeln_args : type COMMA writeln_args 
                     | type"""
-    # TODO: Handle IDENTIFIERS. Ainda crasha porque os IDENTIFIERS não fazem parte do type
     global variables
     
-    if isinstance(p[1], str) and p[1] not in variables:
-        p[0] = [f'PUSHS "{p[1]}"', "WRITES"] + (p[3] if len(p) == 4 else [])
-    elif isinstance(p[1], int):
-        p[0] = [f'PUSHI {p[1]}', "WRITEI"] + (p[3] if len(p) == 4 else [])
-    elif isinstance(p[1], float):
-        p[0] = [f'PUSHF {p[1]}', "WRITEF"] + (p[3] if len(p) == 4 else [])
-    elif p[1] in variables:
+    # Caso em que é um valor explicito, pode ser imediatamente escrito
+    if isinstance(p[1], list):
+        if "PUSHS" in p[1][0]:
+            p[0] = p[1] + ["WRITES"]
+        elif "PUSHI" in p[1][0]:
+            p[0] = p[1] + ["WRITEI"]
+        elif "PUSHF" in p[1][0]:
+            p[0] = p[1] + ["WRITEF"]
+    # Caso em que é um identifier
+    elif p[1] not in variables: # Pode ser um array ou função para o futuro. Para já apenas casos em que variáveis não declaradas são chamadas
+        raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
+    else:
         var_type = variables[p[1]]
         index = list(variables.keys()).index(p[1])
         
+        push_instruction = [f'PUSHG {index}']
         if var_type == 'integer':
-            p[0] = [f'PUSHG {index}', "WRITEI"] + (p[3] if len(p) == 4 else [])
+            p[0] = push_instruction + ["WRITEI"]
         elif var_type == 'real':
-            p[0] = [f'PUSHG {index}', "WRITEF"] + (p[3] if len(p) == 4 else [])
+            p[0] = push_instruction + ["WRITEF"]
         elif var_type == 'string':
-            p[0] = [f'PUSHG {index}', "WRITES"] + (p[3] if len(p) == 4 else [])
+            p[0] = push_instruction + ["WRITES"]
         elif var_type == 'char':
-            p[0] = [f'PUSHG {index}', "WRITECHR"] + (p[3] if len(p) == 4 else [])
+            p[0] = push_instruction + ["WRITECHR"]
         elif var_type == 'boolean':
-            p[0] = [f'PUSHG {index}', "WRITES"] + (p[3] if len(p) == 4 else [])
+            p[0] = push_instruction + ["WRITES"]
         else:
             raise Exception(f"Erro: Tipo inválido para a variável '{p[1]}'.")
-    else:
-        raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
+    
+    if len(p) == 4:
+        p[0] += p[3]
 
 def p_error(p):
     if p:
