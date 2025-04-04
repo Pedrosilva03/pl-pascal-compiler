@@ -1,36 +1,12 @@
 import ply.yacc as yacc
 from pascalLexer import tokens
 
+import utils
+
 vm_code = ""
 functions = {}
 variables = {}
 variables_assigned = {}
-
-# Esta função era auxiliar e já não é mais usada. Mesmo assim vou deixar aqui porque pode vir a ser precisa
-def checkIfString(string):
-    return string.startswith(" ") or (string.endswith(":") or string.endswith(" ") or len(string.split(" ")) > 1)
-
-def print_funcs():
-    funcs_code = ""
-    for func in functions.items():
-        func_vm_array = func[1][1]
-        funcs_code += "\n" + "\n".join(func_vm_array) + "\n" + "\n"
-    return funcs_code
-
-def get_nth_element_dict(dict: dict, nth, typ):
-    i = 0
-    for element in dict.keys():
-        if i == nth:
-            return (dict[element] if typ == 0 else element)
-    return -1
-
-def get_name_from_pusha(instructions):
-    name = ""
-    for instruction in instructions:
-        if instruction.startswith("PUSHA"):
-            splitted_inst = instruction.split(" ")
-            name = splitted_inst[1]
-    return name
 
 def p_program(p):
     'program : header block DOT'
@@ -165,7 +141,7 @@ def p_expression(p):
             p[0] += p[2]
     else:
         if "CALL" in p[1]: # Caso em que é uma function call visto que tem o mesmo numero de tokens que a expressao entre parentises
-            func_index = get_name_from_pusha(p[1])
+            func_index = utils.get_name_from_pusha(p[1])
             p[0] = p[1] + [f'PUSHG {list(variables.keys()).index(func_index)}']
         else:
             p[0] = p[1]
@@ -296,7 +272,7 @@ def p_arg_list(p):
                 | """
     global functions, variables
     index_arg = list(variables.keys()).index(p[1])
-    index_func_arg = list(variables.keys()).index(get_nth_element_dict(functions, 0, 0)[0][0]) # Brute force partindo do princípio que apenas existe uma função definida e essa função só tem um argumento
+    index_func_arg = list(variables.keys()).index(utils.get_nth_element_dict(functions, 0, 0)[0][0]) # Brute force partindo do princípio que apenas existe uma função definida e essa função só tem um argumento
 
     vm = [f'PUSHG {index_arg}'] + [f'STOREG {index_func_arg}']
     if len(p) == 4:
@@ -313,9 +289,9 @@ def p_procedure(p):
 
 def writeln_for_function(caller):
     writer = []
-    index_arg = list(variables.keys()).index(get_nth_element_dict(functions, 0, 1))
+    index_arg = list(variables.keys()).index(utils.get_nth_element_dict(functions, 0, 1))
     push_instruction = caller + [f'PUSHG {index_arg}']
-    var_type = variables[get_nth_element_dict(functions, 0, 1)]
+    var_type = variables[utils.get_nth_element_dict(functions, 0, 1)]
     if var_type == 'integer':
         writer = push_instruction + ["WRITEI"]
     elif var_type == 'real':
@@ -383,7 +359,7 @@ def parse_input(input_string):
     parser.parse(input_string)
 
     global vm_code
-    vm_code += print_funcs()
+    vm_code += utils.print_funcs(functions)
 
     print(variables)
     print(variables_assigned)
