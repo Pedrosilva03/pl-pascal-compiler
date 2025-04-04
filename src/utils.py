@@ -9,6 +9,14 @@ def print_funcs(functions):
         funcs_code += "\n" + "\n".join(func_vm_array) + "\n" + "\n"
     return funcs_code
 
+def print_procedures(procedures):
+    procedures_code = ""
+    for procedure in procedures.items():
+        procedures_vm_array = procedure[1]
+        print(procedure)
+        procedures_code += "\n" + "\n".join(procedures_vm_array) + "\n" + "\n"
+    return procedures_code
+
 def get_nth_element_dict(dict: dict, nth, typ):
     i = 0
     for element in dict.keys():

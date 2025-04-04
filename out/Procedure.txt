@@ -1,0 +1,11 @@
+START
+PUSHA Saudacao
+CALL
+STOP
+
+Saudacao:
+PUSHS "Olá, mundo!"
+WRITES
+WRITELN
+RETURN
+

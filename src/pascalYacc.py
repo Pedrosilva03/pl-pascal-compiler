@@ -7,6 +7,7 @@ vm_code = ""
 functions = {}
 variables = {}
 variables_assigned = {}
+procedures = {}
 
 def p_program(p):
     'program : header block DOT'
@@ -19,7 +20,8 @@ def p_header(p):
 def p_block(p):
     """block : VAR variable_declaration body
              | body
-             | function block"""
+             | function block
+             | procedure block"""
             #| variable_declaration procedure_function body"""
     # Um bloco contém declarações de variáveis, definições de funções/procedimentos e comandos dentro do 'begin ... end'.
     if len(p) == 4:
@@ -81,7 +83,8 @@ def p_statements(p):
 
 def p_statement(p):
     """statement : writeln
-                 | assignment"""
+                 | assignment
+                 | procedure_call"""
 #                 | readln
     p[0] = p[1]
 
@@ -259,7 +262,7 @@ def p_func_arg(p):
     p[0] = (p[1], p[3])
 
 def p_func_body(p):
-    'func_body : BEGIN statements END'
+    """func_body : BEGIN statements END"""
     p[0] = p[2] + ["RETURN"]
 
 def p_func_call(p):
@@ -283,7 +286,17 @@ def p_arg_list(p):
 # PROCEDURES
 
 def p_procedure(p):
-    pass
+    """procedure : PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON"""
+    p[0] = [f'{p[2]}:'] + p[4]
+    procedures[p[2]] = p[0]
+
+def p_procedure_body(p):
+    """procedure_body : BEGIN statements END"""
+    p[0] = p[2] + ["RETURN"]
+
+def p_procedure_call(p):
+    """procedure_call : IDENTIFIER"""
+    p[0] = [f'PUSHA {p[1]}'] + [f'CALL']
 
 # WRITELN
 
@@ -360,6 +373,7 @@ def parse_input(input_string):
 
     global vm_code
     vm_code += utils.print_funcs(functions)
+    vm_code += utils.print_procedures(procedures)
 
     print(variables)
     print(variables_assigned)
