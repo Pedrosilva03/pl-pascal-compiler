@@ -10,6 +10,28 @@ variables_assigned = {}
 def checkIfString(string):
     return string.startswith(" ") or (string.endswith(":") or string.endswith(" ") or len(string.split(" ")) > 1)
 
+def print_funcs():
+    funcs_code = ""
+    for func in functions.items():
+        func_vm_array = func[1][1]
+        funcs_code += "\n" + "\n".join(func_vm_array) + "\n" + "\n"
+    return funcs_code
+
+def get_nth_element_dict(dict: dict, nth, typ):
+    i = 0
+    for element in dict.keys():
+        if i == nth:
+            return (dict[element] if typ == 0 else element)
+    return -1
+
+def get_name_from_pusha(instructions):
+    name = ""
+    for instruction in instructions:
+        if instruction.startswith("PUSHA"):
+            splitted_inst = instruction.split(" ")
+            name = splitted_inst[1]
+    return name
+
 def p_program(p):
     'program : header block DOT'
     p[0] = ('program', p[1], p[2])
@@ -20,7 +42,8 @@ def p_header(p):
     
 def p_block(p):
     """block : VAR variable_declaration body
-             | body"""
+             | body
+             | function block"""
             #| variable_declaration procedure_function body"""
     # Um bloco contém declarações de variáveis, definições de funções/procedimentos e comandos dentro do 'begin ... end'.
     if len(p) == 4:
@@ -39,10 +62,8 @@ def p_variable_declaration(p):
     # Exemplo: 'n, i, fat: integer;' será interpretado como [('n', 'NINTEGER'), ('i', 'NINTEGER'), ('fat', 'NINTEGER')]
     # O símbolo '+' é utilizado para concatenar listas.
     global variables
-    variables_aux = {}
     for var in p[1]:  # Para cada variável declarada
-        variables_aux[var] = p[3]  # Associa à tabela de símbolos com seu tipo
-    variables = {**variables_aux, **variables}
+        variables[var] = p[3]  # Associa à tabela de símbolos com seu tipo
     if len(p) == 6:
         p[0] = [(var, p[3]) for var in p[1]] + p[5]
     else:
@@ -91,9 +112,9 @@ def p_statement(p):
 def p_assignment(p):
     """assignment : IDENTIFIER ASSIGNMENT type
                   | IDENTIFIER ASSIGNMENT expression"""
-    global variables_assigned, variables
+    global variables_assigned, variables, functions
     # Caso para lidar com tentativas de assignment a variáveis que não fora declaradas
-    if p[1] in variables.keys():
+    if p[1] in variables.keys() or p[1] in functions.keys():
         var_type = variables[p[1]]
         variables_assigned[p[1]] = var_type
         index_destiny = list(variables.keys()).index(p[1])
@@ -104,7 +125,7 @@ def p_assignment(p):
             if p[3] not in variables.keys():
                 raise Exception(f"Erro: Variável '{p[3]}' não declarada.")
             if p[3] not in variables_assigned.keys():
-                raise Exception(f"Erro: Variável '{p[3]}' não atribuida.")
+                print(f"Erro: Variável '{p[3]}' não atribuida.")
             p[0] = [f'PUSHG {index_source}']
         
         p[0] += [f'STOREG {index_destiny}']
@@ -114,12 +135,22 @@ def p_assignment(p):
 def p_expression(p):
     """expression : type operation type
                   | expression_paren
-                  | expression operation expression"""
+                  | expression operation expression
+                  | func_call"""
     global variables_assigned, variables
     if len(p) == 4:
         if not isinstance(p[1], str) and not isinstance(p[3], str):
             p[0] = p[1] + p[3] + p[2]
         else:
+            if p[1] not in variables.keys():
+                raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
+            if p[1] not in variables_assigned.keys():
+                print(f"Warning: Variável '{p[1]}' não atribuida.")
+            if p[3] not in variables.keys():
+                raise Exception(f"Erro: Variável '{p[3]}' não declarada.")
+            if p[3] not in variables_assigned.keys():
+                print(f"Warning: Variável '{p[3]}' não atribuida.")
+            
             p[0] = []
             if not isinstance(p[1], str):
                 p[0] += p[1]
@@ -133,7 +164,11 @@ def p_expression(p):
                 p[0] += [f'PUSHG {index_source2}']
             p[0] += p[2]
     else:
-        p[0] = p[1]
+        if "CALL" in p[1]: # Caso em que é uma function call visto que tem o mesmo numero de tokens que a expressao entre parentises
+            func_index = get_name_from_pusha(p[1])
+            p[0] = p[1] + [f'PUSHG {list(variables.keys()).index(func_index)}']
+        else:
+            p[0] = p[1]
 
 def p_expression_paren(p):
     """expression_paren : LPAREN expression RPAREN"""
@@ -164,7 +199,8 @@ def p_type(p):
             | string
             | char
             | boolean
-            | identifier""" 
+            | identifier
+            | func_call""" 
     p[0] = p[1]
 
 # TIPOS ELEMENTARES
@@ -215,6 +251,86 @@ def p_writeln(p):
     """writeln : WRITELN LPAREN writeln_args RPAREN"""        
     p[0] = p[3] + ["WRITELN"] 
     
+# FUNCOES
+
+def p_function(p):
+    """function : func_header SEMICOLON func_body SEMICOLON"""
+    global vm_code, functions
+    p[0] = [f'{p[1]}:'] + p[3]
+    functions[p[1]] = (functions[p[1]][0], p[0])
+
+def p_function_header(p):
+    """func_header : FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON type_name
+                   | FUNCTION IDENTIFIER LPAREN RPAREN COLON type_name"""
+    global variables, functions
+    functions[p[2]] = ((p[4] if len(p) == 8 else []), [])
+    variables[p[2]] = (p[7] if len(p) == 8 else p[6])
+    p[0] = p[2]
+
+def p_function_args(p):
+    """func_args : func_arg COMMA func_args
+                 | func_arg"""
+    global variables
+    variables[p[1][0]] = p[1][1]  # Associa à tabela de símbolos com seu tipo
+    if len(p) == 4:
+        p[0] = [p[1]] + p[3]
+    else:
+        p[0] = p[1]
+
+    
+def p_func_arg(p):
+    """func_arg : IDENTIFIER COLON type_name"""
+    p[0] = (p[1], p[3])
+
+def p_func_body(p):
+    'func_body : BEGIN statements END'
+    p[0] = p[2] + ["RETURN"]
+
+def p_func_call(p):
+    """func_call : IDENTIFIER LPAREN arg_list RPAREN"""
+    p[0] = p[3] + [f'PUSHA {p[1]}', 'CALL']
+
+def p_arg_list(p):
+    """arg_list : IDENTIFIER COMMA arg_list
+                | IDENTIFIER
+                | """
+    global functions, variables
+    index_arg = list(variables.keys()).index(p[1])
+    index_func_arg = list(variables.keys()).index(get_nth_element_dict(functions, 0, 0)[0][0]) # Brute force partindo do princípio que apenas existe uma função definida e essa função só tem um argumento
+
+    vm = [f'PUSHG {index_arg}'] + [f'STOREG {index_func_arg}']
+    if len(p) == 4:
+        p[0] = vm + p[3]
+    elif len(p) == 2:
+        p[0] = vm
+
+# PROCEDURES
+
+def p_procedure(p):
+    pass
+
+# WRITELN
+
+def writeln_for_function(caller):
+    writer = []
+    index_arg = list(variables.keys()).index(get_nth_element_dict(functions, 0, 1))
+    push_instruction = caller + [f'PUSHG {index_arg}']
+    var_type = variables[get_nth_element_dict(functions, 0, 1)]
+    if var_type == 'integer':
+        writer = push_instruction + ["WRITEI"]
+    elif var_type == 'real':
+        writer = push_instruction + ["WRITEF"]
+    elif var_type == 'string':
+        writer = push_instruction + ["WRITES"]
+    elif var_type == 'char':
+        writer = push_instruction + ["WRITECHR"]
+    elif var_type == 'boolean':
+        writer = push_instruction + ["WRITES"]
+    else:
+        raise Exception(f"Erro: Tipo inválido.")
+    
+    return writer
+    
 def p_writeln_args(p):
     """writeln_args : type COMMA writeln_args 
                     | type"""
@@ -228,6 +344,8 @@ def p_writeln_args(p):
             p[0] = p[1] + ["WRITEI"]
         elif "PUSHF" in p[1][0]:
             p[0] = p[1] + ["WRITEF"]
+        else: # Caso em que é uma função, vai dar write à variável onde o return foi colocado
+            p[0] = writeln_for_function(p[1])
     # Caso em que é um identifier
     elif p[1] not in variables: # Pode ser um array ou função para o futuro. Para já apenas casos em que variáveis não declaradas são chamadas
         raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
@@ -263,6 +381,12 @@ parser = yacc.yacc()
 
 def parse_input(input_string):
     parser.parse(input_string)
+
+    global vm_code
+    vm_code += print_funcs()
+
     print(variables)
     print(variables_assigned)
+    print(functions)
+
     return vm_code
