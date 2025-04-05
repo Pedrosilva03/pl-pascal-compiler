@@ -31,3 +31,11 @@ def get_name_from_pusha(instructions):
             splitted_inst = instruction.split(" ")
             name = splitted_inst[1]
     return name
+
+def get_index_from_storeg(instructions):
+    index = ""
+    for instruction in instructions:
+        if instruction.startswith("STOREG"):
+            splitted_inst = instruction.split(" ")
+            index = splitted_inst[1]
+    return index

@@ -96,7 +96,8 @@ def p_statement(p):
 
 def p_assignment(p):
     """assignment : IDENTIFIER ASSIGNMENT type
-                  | IDENTIFIER ASSIGNMENT expression"""
+                  | IDENTIFIER ASSIGNMENT expression
+                  | IDENTIFIER ASSIGNMENT length"""
     global variables_assigned, variables, functions
     # Caso para lidar com tentativas de assignment a variáveis que não fora declaradas
     if p[1] in variables.keys() or p[1] in functions.keys():
@@ -299,8 +300,17 @@ def p_not(p):
     
 # FUNCOES
 
+def p_length(p):
+    """length : LENGTH LPAREN type RPAREN"""
+    if not isinstance(p[3], str):
+        raise Exception("Length apenas compatível com tipo: str")
+    
+    str_index = list(variables.keys()).index(p[3])
+    p[0] = [f'PUSHG {str_index}'] + ["STRLEN"]
+
 def p_function(p):
-    """function : func_header SEMICOLON func_body SEMICOLON"""
+    """function : func_header SEMICOLON VAR variable_declaration func_body SEMICOLON
+                | func_header SEMICOLON func_body SEMICOLON"""
     global vm_code, functions
     p[0] = [f'{p[1]}:'] + p[3]
     functions[p[1]] = (functions[p[1]][0], p[0])
@@ -429,7 +439,7 @@ def p_for(p):
                 | FOR assignment downto type DO statement
                 | FOR assignment downto type DO if_body"""
     global loop_counter
-    index = p[2][1].split(" ")[1]
+    index = utils.get_index_from_storeg(p[2])
     p[0] = p[2]
     p[0] += [f'FOR{loop_counter}:']
 

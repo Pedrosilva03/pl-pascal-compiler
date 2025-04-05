@@ -16,7 +16,7 @@ tokens = (
 	# Comparations
 	'EQ', 'NEQ', 'LT', 'GT', 'LTE', 'GTE',
 	# Functions
-	'LPAREN', 'RPAREN', 'LBRACKET', 'RBRACKET', 'PROCEDURE', 'FUNCTION', 'ARRAY', 'OF', 'WRITELN', 'READLN',
+	'LPAREN', 'RPAREN', 'LBRACKET', 'RBRACKET', 'PROCEDURE', 'FUNCTION', 'ARRAY', 'OF', 'WRITELN', 'READLN', 'LENGTH',
 	# Types Names
 	'NREAL', 'NINTEGER', 'NSTRING', 'NCHAR', 'NBOOLEAN',
 	# Types
@@ -36,7 +36,7 @@ reserved_keywords = {
 	
 	'procedure': 'PROCEDURE', 'function': 'FUNCTION', 
  
-	'array': 'ARRAY', 'of': 'OF', 'writeln': 'WRITELN', 'readln': 'READLN',
+	'array': 'ARRAY', 'of': 'OF', 'writeln': 'WRITELN', 'readln': 'READLN', 'length': 'LENGTH',
 	
 	'real': 'NREAL', 'integer': 'NINTEGER', 'string': 'NSTRING', 'char': 'NCHAR', 'boolean': 'NBOOLEAN'
 }
