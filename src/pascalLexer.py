@@ -65,8 +65,10 @@ t_RPAREN = r"\)"
 t_LBRACKET = r"\["
 t_RBRACKET = r"\]"
 
-t_BOOLEAN = r"true|false"
-
+def t_BOOLEAN(t):
+    r"true|false"
+    return t
+    
 def t_REAL(t):
     r"(\-)?\d+\.\d+"
     t.value = float(t.value)

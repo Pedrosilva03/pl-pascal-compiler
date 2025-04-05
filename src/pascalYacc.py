@@ -121,7 +121,8 @@ def p_expression(p):
     """expression : type operation type
                   | expression_paren
                   | expression operation expression
-                  | func_call"""
+                  | func_call
+                  | condition"""
     global variables_assigned, variables
     if len(p) == 4:
         if not isinstance(p[1], str) and not isinstance(p[3], str):
@@ -164,7 +165,7 @@ def p_operation(p):
                  | minus
                  | times
                  | division
-                 | DIV
+                 | div
                  | mod
                  | RANGE"""
     p[0] = p[1]
@@ -208,7 +209,10 @@ def p_char(p):
 
 def p_boolean(p):
     """boolean : BOOLEAN"""
-    p[0] = [f'PUSHS {str(p[3]).lower()}']
+    if str(p[1]).lower() == "true":
+        p[0] = [f'PUSHI 1']
+    else:
+        p[0] = [f'PUSHI 0']
 
 def p_identifier(p):
     """identifier : IDENTIFIER"""
@@ -232,6 +236,10 @@ def p_division(p):
     """division : DIVISION"""
     p[0] = ['DIV']
 
+def p_div(p):
+    """div : DIV"""
+    p[0] = ['DIV'] + ['FTOI']
+
 def p_mod(p):
     """mod : MOD"""
     p[0] = ['MOD']
@@ -245,7 +253,10 @@ def p_comparators(p):
                   | lt
                   | gt
                   | lte
-                  | gte"""
+                  | gte
+                  | and
+                  | or
+                  | not"""
     p[0] = p[1]
 
 def p_eq(p):
@@ -271,6 +282,20 @@ def p_lte(p):
 def p_gte(p):
     """gte : GTE"""
     p[0] = ["FSUPEQ"]
+
+# LOGIC
+
+def p_and(p):
+    """and : AND"""
+    p[0] = ['AND']
+
+def p_or(p):
+    """or : OR"""
+    p[0] = ['OR']
+
+def p_not(p):
+    """not : NOT"""
+    p[0] = ['NOT']
     
 # FUNCOES
 
@@ -363,22 +388,26 @@ def p_condition(p):
     """condition : expression comparator expression
                  | type comparator expression
                  | type comparator type
-                 | expression comparator type"""
-    if isinstance(p[1], list) and isinstance(p[1], list):
-        p[0] = p[1] + p[3] + p[2]
-    else: # Casos em que um dos fatores da comparacao e uma variavel
-        p[0] = []
-        if not isinstance(p[1], str):
-            p[0] += p[1]
-        else:
-            index_source1 = list(variables.keys()).index(p[1])
-            p[0] += [f'PUSHG {index_source1}']
-        if not isinstance(p[3], str):
-            p[0] += p[3]
-        else:
-            index_source2 = list(variables.keys()).index(p[3])
-            p[0] += [f'PUSHG {index_source2}']
-        p[0] += p[2]
+                 | expression comparator type
+                 | type"""
+    if len(p) == 2: # Caso em que um boolean é usado para a condição
+        p[0] = [f'PUSHG {list(variables.keys()).index(p[1])}']
+    else:
+        if isinstance(p[1], list) and isinstance(p[3], list):
+            p[0] = p[1] + p[3] + p[2]
+        else: # Casos em que um dos fatores da comparacao e uma variavel
+            p[0] = []
+            if not isinstance(p[1], str):
+                p[0] += p[1]
+            else:
+                index_source1 = list(variables.keys()).index(p[1])
+                p[0] += [f'PUSHG {index_source1}']
+            if not isinstance(p[3], str):
+                p[0] += p[3]
+            else:
+                index_source2 = list(variables.keys()).index(p[3])
+                p[0] += [f'PUSHG {index_source2}']
+            p[0] += p[2]
     
 def p_if_body(p):
     """if_body : BEGIN statements END"""
@@ -448,7 +477,7 @@ def p_readln(p):
     elif var_type == "float":
         p[0] += ["ATOF"]
     
-    p[0] += [f'PUSHG {var_index}']
+    p[0] += [f'STOREG {var_index}']
 
 # WRITELN
 
