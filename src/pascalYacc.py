@@ -90,8 +90,8 @@ def p_statement(p):
                  | procedure_call
                  | cond_if
                  | while_loop
-                 | for_loop"""
-#                 | readln
+                 | for_loop
+                 | readln"""
     p[0] = p[1]
 
 def p_assignment(p):
@@ -423,7 +423,6 @@ def p_for(p):
     
     p[0] += [f'JUMP FOR{loop_counter}']
     p[0] += [f'ENDFOR{loop_counter}:']
-    print(p[0])
     loop_counter += 1
 
 def p_while(p):
@@ -434,6 +433,22 @@ def p_while(p):
     p[0] += [f'JUMP WHILE{loop_counter}']
     p[0] += [f'ENDWHILE{loop_counter}:']
     loop_counter += 1
+
+# READLN
+
+def p_readln(p):
+    """readln : READLN LPAREN type RPAREN"""
+    global variables
+    var_index = list(variables.keys()).index(p[3])
+    var_type = variables[p[3]]
+
+    p[0] = ['READ']
+    if var_type == "integer":
+        p[0] += ["ATOI"]
+    elif var_type == "float":
+        p[0] += ["ATOF"]
+    
+    p[0] += [f'PUSHG {var_index}']
 
 # WRITELN
 

@@ -2,8 +2,9 @@ START
 PUSHS "Introduza um número inteiro positivo:"
 WRITES
 WRITELN
-PUSHI 5
-STOREG 0
+READ
+ATOI
+PUSHG 0
 PUSHI 1
 STOREG 2
 PUSHI 1
