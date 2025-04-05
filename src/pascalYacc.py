@@ -88,7 +88,9 @@ def p_statement(p):
     """statement : writeln
                  | assignment
                  | procedure_call
-                 | cond_if"""
+                 | cond_if
+                 | while_loop
+                 | for_loop"""
 #                 | readln
     p[0] = p[1]
 
@@ -362,7 +364,6 @@ def p_condition(p):
                  | type comparator expression
                  | type comparator type
                  | expression comparator type"""
-    print(f'{[pp for pp in p]}')
     if isinstance(p[1], list) and isinstance(p[1], list):
         p[0] = p[1] + p[3] + p[2]
     else: # Casos em que um dos fatores da comparacao e uma variavel
@@ -378,13 +379,61 @@ def p_condition(p):
             index_source2 = list(variables.keys()).index(p[3])
             p[0] += [f'PUSHG {index_source2}']
         p[0] += p[2]
-    print(p[0])
     
 def p_if_body(p):
     """if_body : BEGIN statements END"""
     p[0] = p[2]
 
 # CYCLES
+
+def p_to(p):
+    """to : TO"""
+    p[0] = ["FINFEQ"]
+
+def p_downTo(p):
+    """downto : DOWNTO"""
+    p[0] = ["FSUPEQ"]
+
+def p_for(p):
+    """for_loop : FOR assignment to type DO statement
+                | FOR assignment to type DO if_body
+                | FOR assignment downto type DO statement
+                | FOR assignment downto type DO if_body"""
+    global loop_counter
+    index = p[2][1].split(" ")[1]
+    p[0] = p[2]
+    p[0] += [f'FOR{loop_counter}:']
+
+    # Condição
+    if not isinstance(p[4], str):
+        p[0] += [f'PUSHG {index}'] + p[4] + p[3] + [f'JZ ENDFOR{loop_counter}']
+    else:
+        p[0] += [f'PUSHG {index}'] + [f'PUSHG {list(variables.keys()).index(p[4])}'] + p[3] + [f'JZ ENDFOR{loop_counter}']
+
+    # Conteúdo do loop
+    p[0] += p[6]
+
+    # Se respeitar a condição então incrementa/decrementa o valor
+    p[0] += [f'PUSHG {index}'] + [f'PUSHI 1']
+    if p[3] == "FINFEQ":
+        p[0] += ["SUB"]
+    else:
+        p[0] += ["ADD"]
+    p[0] += [f'STOREG {index}']
+    
+    p[0] += [f'JUMP FOR{loop_counter}']
+    p[0] += [f'ENDFOR{loop_counter}:']
+    print(p[0])
+    loop_counter += 1
+
+def p_while(p):
+    """while_loop : WHILE condition DO statement
+                  | WHILE condition DO if_body"""
+    global loop_counter
+    p[0] = [f'WHILE{loop_counter}:'] + p[2] + [f'JZ ENDWHILE{loop_counter}'] + p[4]
+    p[0] += [f'JUMP WHILE{loop_counter}']
+    p[0] += [f'ENDWHILE{loop_counter}:']
+    loop_counter += 1
 
 # WRITELN
 
