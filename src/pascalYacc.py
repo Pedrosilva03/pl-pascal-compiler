@@ -9,6 +9,9 @@ variables = {}
 variables_assigned = {}
 procedures = {}
 
+if_counter  = 0
+loop_counter = 0
+
 def p_program(p):
     'program : header block DOT'
     p[0] = ('program', p[1], p[2])
@@ -84,7 +87,8 @@ def p_statements(p):
 def p_statement(p):
     """statement : writeln
                  | assignment
-                 | procedure_call"""
+                 | procedure_call
+                 | cond_if"""
 #                 | readln
     p[0] = p[1]
 
@@ -121,13 +125,13 @@ def p_expression(p):
         if not isinstance(p[1], str) and not isinstance(p[3], str):
             p[0] = p[1] + p[3] + p[2]
         else:
-            if p[1] not in variables.keys():
+            if not isinstance(p[1], list) and p[1] not in variables.keys():
                 raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
-            if p[1] not in variables_assigned.keys():
+            if not isinstance(p[1], list) and p[1] not in variables_assigned.keys():
                 print(f"Warning: Variável '{p[1]}' não atribuida.")
-            if p[3] not in variables.keys():
+            if not isinstance(p[3], list) and p[3] not in variables.keys():
                 raise Exception(f"Erro: Variável '{p[3]}' não declarada.")
-            if p[3] not in variables_assigned.keys():
+            if not isinstance(p[3], list) and p[3] not in variables_assigned.keys():
                 print(f"Warning: Variável '{p[3]}' não atribuida.")
             
             p[0] = []
@@ -159,7 +163,7 @@ def p_operation(p):
                  | times
                  | division
                  | DIV
-                 | MOD
+                 | mod
                  | RANGE"""
     p[0] = p[1]
 
@@ -226,9 +230,45 @@ def p_division(p):
     """division : DIVISION"""
     p[0] = ['DIV']
 
-def p_writeln(p):
-    """writeln : WRITELN LPAREN writeln_args RPAREN"""        
-    p[0] = p[3] + ["WRITELN"] 
+def p_mod(p):
+    """mod : MOD"""
+    p[0] = ['MOD']
+
+# COMPARATORS
+
+def p_comparators(p):
+    #'EQ', 'NEQ', 'LT', 'GT', 'LTE', 'GTE',
+    """comparator : eq
+                  | neq
+                  | lt
+                  | gt
+                  | lte
+                  | gte"""
+    p[0] = p[1]
+
+def p_eq(p):
+    """eq : EQ"""
+    p[0] = ["EQUAL"]
+
+def p_neq(p):
+    """neq : NEQ"""
+    pass
+
+def p_lt(p):
+    """lt : LT"""
+    p[0] = ["FINF"]
+
+def p_gt(p):
+    """gt : GT"""
+    p[0] = ["FSUP"]
+
+def p_lte(p):
+    """lte : LTE"""
+    p[0] = ["FINFEQ"]
+
+def p_gte(p):
+    """gte : GTE"""
+    p[0] = ["FSUPEQ"]
     
 # FUNCOES
 
@@ -298,6 +338,54 @@ def p_procedure_call(p):
     """procedure_call : IDENTIFIER"""
     p[0] = [f'PUSHA {p[1]}'] + [f'CALL']
 
+# CONDITIONS
+
+def p_if(p):
+    """cond_if : IF condition THEN statement
+               | IF condition THEN statement ELSE statement
+               | IF condition THEN if_body
+               | IF condition THEN if_body ELSE if_body"""
+    global if_counter
+    else_label = f'ELSE{if_counter}'
+    p[0] = [f'IF{if_counter}:'] + p[2] + [f'JZ {else_label}'] + p[4] + [f'JUMP ENDIF{if_counter}']
+    p[0] += [f'{else_label}:']
+    if len(p) == 7:
+        p[0] += p[6]
+    p[0] += [f'ENDIF{if_counter}:']
+
+    # TODO: Generalizar para vários tipos de if bodys
+
+    if_counter += 1
+    
+def p_condition(p):
+    """condition : expression comparator expression
+                 | type comparator expression
+                 | type comparator type
+                 | expression comparator type"""
+    print(f'{[pp for pp in p]}')
+    if isinstance(p[1], list) and isinstance(p[1], list):
+        p[0] = p[1] + p[3] + p[2]
+    else: # Casos em que um dos fatores da comparacao e uma variavel
+        p[0] = []
+        if not isinstance(p[1], str):
+            p[0] += p[1]
+        else:
+            index_source1 = list(variables.keys()).index(p[1])
+            p[0] += [f'PUSHG {index_source1}']
+        if not isinstance(p[3], str):
+            p[0] += p[3]
+        else:
+            index_source2 = list(variables.keys()).index(p[3])
+            p[0] += [f'PUSHG {index_source2}']
+        p[0] += p[2]
+    print(p[0])
+    
+def p_if_body(p):
+    """if_body : BEGIN statements END"""
+    p[0] = p[2]
+
+# CYCLES
+
 # WRITELN
 
 def writeln_for_function(caller):
@@ -319,6 +407,10 @@ def writeln_for_function(caller):
         raise Exception(f"Erro: Tipo inválido.")
     
     return writer
+
+def p_writeln(p):
+    """writeln : WRITELN LPAREN writeln_args RPAREN"""        
+    p[0] = p[3] + ["WRITELN"] 
     
 def p_writeln_args(p):
     """writeln_args : type COMMA writeln_args 
