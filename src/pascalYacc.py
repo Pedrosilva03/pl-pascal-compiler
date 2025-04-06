@@ -309,11 +309,15 @@ def p_length(p):
     p[0] = [f'PUSHG {str_index}'] + ["STRLEN"]
 
 def p_function(p):
-    """function : func_header SEMICOLON VAR variable_declaration func_body SEMICOLON
+    """function : func_header SEMICOLON VAR func_variable_declaration func_body SEMICOLON
                 | func_header SEMICOLON func_body SEMICOLON"""
     global vm_code, functions
-    p[0] = [f'{p[1]}:'] + p[3]
-    functions[p[1]] = (functions[p[1]][0], p[0])
+    if len(p) == 5:
+        p[0] = [f'{p[1]}:'] + p[3]
+        functions[p[1]] = (functions[p[1]][0], p[0])
+    else: # Caso em que a função tem variáveis
+        p[0] = [f'{p[1]}:'] + p[5]
+        functions[p[1]] = (functions[p[1]][0], p[0])
 
 def p_function_header(p):
     """func_header : FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON type_name
@@ -332,11 +336,19 @@ def p_function_args(p):
         p[0] = [p[1]] + p[3]
     else:
         p[0] = p[1]
-
     
 def p_func_arg(p):
     """func_arg : IDENTIFIER COLON type_name"""
     p[0] = (p[1], p[3])
+
+def p_func_variable_declaration(p):
+    """func_variable_declaration : identifier_list COLON type_name SEMICOLON func_variable_declaration
+                                 | identifier_list COLON type_name SEMICOLON"""
+    p[0] = [(var, p[3]) for var in p[1]]
+    for var in p[0]:
+        variables[var[0]] = var[1]
+    if len(p) == 6:
+        p[0] += p[5]
 
 def p_func_body(p):
     """func_body : BEGIN statements END"""
@@ -454,7 +466,7 @@ def p_for(p):
 
     # Se respeitar a condição então incrementa/decrementa o valor
     p[0] += [f'PUSHG {index}'] + [f'PUSHI 1']
-    if p[3] == "FINFEQ":
+    if p[3][0] == "FSUPEQ":
         p[0] += ["SUB"]
     else:
         p[0] += ["ADD"]

@@ -90,73 +90,75 @@ Rule 78    and -> AND
 Rule 79    or -> OR
 Rule 80    not -> NOT
 Rule 81    length -> LENGTH LPAREN type RPAREN
-Rule 82    function -> func_header SEMICOLON VAR variable_declaration func_body SEMICOLON
+Rule 82    function -> func_header SEMICOLON VAR func_variable_declaration func_body SEMICOLON
 Rule 83    function -> func_header SEMICOLON func_body SEMICOLON
 Rule 84    func_header -> FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON type_name
 Rule 85    func_header -> FUNCTION IDENTIFIER LPAREN RPAREN COLON type_name
 Rule 86    func_args -> func_arg COMMA func_args
 Rule 87    func_args -> func_arg
 Rule 88    func_arg -> IDENTIFIER COLON type_name
-Rule 89    func_body -> BEGIN statements END
-Rule 90    func_call -> IDENTIFIER LPAREN arg_list RPAREN
-Rule 91    arg_list -> IDENTIFIER COMMA arg_list
-Rule 92    arg_list -> IDENTIFIER
-Rule 93    arg_list -> <empty>
-Rule 94    procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON
-Rule 95    procedure_body -> BEGIN statements END
-Rule 96    procedure_call -> IDENTIFIER
-Rule 97    cond_if -> IF condition THEN statement
-Rule 98    cond_if -> IF condition THEN statement ELSE statement
-Rule 99    cond_if -> IF condition THEN if_body
-Rule 100   cond_if -> IF condition THEN if_body ELSE if_body
-Rule 101   condition -> expression comparator expression
-Rule 102   condition -> type comparator expression
-Rule 103   condition -> type comparator type
-Rule 104   condition -> expression comparator type
-Rule 105   condition -> type
-Rule 106   if_body -> BEGIN statements END
-Rule 107   to -> TO
-Rule 108   downto -> DOWNTO
-Rule 109   for_loop -> FOR assignment to type DO statement
-Rule 110   for_loop -> FOR assignment to type DO if_body
-Rule 111   for_loop -> FOR assignment downto type DO statement
-Rule 112   for_loop -> FOR assignment downto type DO if_body
-Rule 113   while_loop -> WHILE condition DO statement
-Rule 114   while_loop -> WHILE condition DO if_body
-Rule 115   readln -> READLN LPAREN type RPAREN
-Rule 116   writeln -> WRITELN LPAREN writeln_args RPAREN
-Rule 117   writeln_args -> type COMMA writeln_args
-Rule 118   writeln_args -> type
+Rule 89    func_variable_declaration -> identifier_list COLON type_name SEMICOLON func_variable_declaration
+Rule 90    func_variable_declaration -> identifier_list COLON type_name SEMICOLON
+Rule 91    func_body -> BEGIN statements END
+Rule 92    func_call -> IDENTIFIER LPAREN arg_list RPAREN
+Rule 93    arg_list -> IDENTIFIER COMMA arg_list
+Rule 94    arg_list -> IDENTIFIER
+Rule 95    arg_list -> <empty>
+Rule 96    procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON
+Rule 97    procedure_body -> BEGIN statements END
+Rule 98    procedure_call -> IDENTIFIER
+Rule 99    cond_if -> IF condition THEN statement
+Rule 100   cond_if -> IF condition THEN statement ELSE statement
+Rule 101   cond_if -> IF condition THEN if_body
+Rule 102   cond_if -> IF condition THEN if_body ELSE if_body
+Rule 103   condition -> expression comparator expression
+Rule 104   condition -> type comparator expression
+Rule 105   condition -> type comparator type
+Rule 106   condition -> expression comparator type
+Rule 107   condition -> type
+Rule 108   if_body -> BEGIN statements END
+Rule 109   to -> TO
+Rule 110   downto -> DOWNTO
+Rule 111   for_loop -> FOR assignment to type DO statement
+Rule 112   for_loop -> FOR assignment to type DO if_body
+Rule 113   for_loop -> FOR assignment downto type DO statement
+Rule 114   for_loop -> FOR assignment downto type DO if_body
+Rule 115   while_loop -> WHILE condition DO statement
+Rule 116   while_loop -> WHILE condition DO if_body
+Rule 117   readln -> READLN LPAREN type RPAREN
+Rule 118   writeln -> WRITELN LPAREN writeln_args RPAREN
+Rule 119   writeln_args -> type COMMA writeln_args
+Rule 120   writeln_args -> type
 
 Terminals, with rules where they appear
 
 AND                  : 78
 ARRAY                : 11
 ASSIGNMENT           : 22 23 24
-BEGIN                : 12 89 95 106
+BEGIN                : 12 91 97 108
 BOOLEAN              : 55
 CHAR                 : 54
-COLON                : 7 8 84 85 88
-COMMA                : 9 86 91 117
+COLON                : 7 8 84 85 88 89 90
+COMMA                : 9 86 93 119
 COMMENT              : 
 DIV                  : 61
 DIVISION             : 60
-DO                   : 109 110 111 112 113 114
+DO                   : 111 112 113 114 115 116
 DOT                  : 1
-DOWNTO               : 108
-ELSE                 : 98 100
-END                  : 12 89 95 106
+DOWNTO               : 110
+ELSE                 : 100 102
+END                  : 12 91 97 108
 EQ                   : 72
-FOR                  : 109 110 111 112
+FOR                  : 111 112 113 114
 FUNCTION             : 84 85
 GT                   : 75
 GTE                  : 77
-IDENTIFIER           : 2 9 10 22 23 24 56 84 85 88 90 91 92 94 96
-IF                   : 97 98 99 100
+IDENTIFIER           : 2 9 10 22 23 24 56 84 85 88 92 93 94 96 98
+IF                   : 99 100 101 102
 INTEGER              : 51
 LBRACKET             : 11
 LENGTH               : 81
-LPAREN               : 30 81 84 85 90 115 116
+LPAREN               : 30 81 84 85 92 117 118
 LT                   : 74
 LTE                  : 76
 MINUS                : 58
@@ -171,43 +173,43 @@ NSTRING              : 40
 OF                   : 11
 OR                   : 79
 PLUS                 : 57
-PROCEDURE            : 94
+PROCEDURE            : 96
 PROGRAM              : 2
 RANGE                : 11 37
 RBRACKET             : 11
-READLN               : 115
+READLN               : 117
 REAL                 : 52
 REPEAT               : 
-RPAREN               : 30 81 84 85 90 115 116
-SEMICOLON            : 2 7 8 13 14 82 82 83 83 94 94
+RPAREN               : 30 81 84 85 92 117 118
+SEMICOLON            : 2 7 8 13 14 82 82 83 83 89 90 96 96
 STRING               : 53
-THEN                 : 97 98 99 100
+THEN                 : 99 100 101 102
 TIMES                : 59
-TO                   : 107
+TO                   : 109
 UNTIL                : 
 VAR                  : 3 82
-WHILE                : 113 114
-WRITELN              : 116
+WHILE                : 115 116
+WRITELN              : 118
 error                : 
 
 Nonterminals, with rules where they appear
 
 and                  : 69
-arg_list             : 90 91
+arg_list             : 92 93
 array_type           : 43
-assignment           : 16 109 110 111 112
+assignment           : 16 111 112 113 114
 block                : 1 5 6
 body                 : 3 4
 boolean              : 48
 char                 : 47
-comparator           : 101 102 103 104
+comparator           : 103 104 105 106
 cond_if              : 18
-condition            : 29 97 98 99 100 113 114
+condition            : 29 99 100 101 102 115 116
 div                  : 35
 division             : 34
-downto               : 111 112
+downto               : 113 114
 eq                   : 63
-expression           : 23 27 27 30 101 101 102 104
+expression           : 23 27 27 30 103 103 104 106
 expression_paren     : 26
 for_loop             : 20
 func_arg             : 86 87
@@ -215,13 +217,14 @@ func_args            : 84 86
 func_body            : 82 83
 func_call            : 28 50
 func_header          : 82 83
+func_variable_declaration : 82 89
 function             : 5
 gt                   : 66
 gte                  : 68
 header               : 1
 identifier           : 49
-identifier_list      : 7 8 9
-if_body              : 99 100 100 110 112 114
+identifier_list      : 7 8 9 89 90
+if_body              : 101 102 102 112 114 116
 integer              : 44
 length               : 24
 lt                   : 65
@@ -234,22 +237,22 @@ operation            : 25 27
 or                   : 70
 plus                 : 31
 procedure            : 6
-procedure_body       : 94
+procedure_body       : 96
 procedure_call       : 17
 program              : 0
 readln               : 21
 real                 : 45
-statement            : 13 14 97 98 98 109 111 113
-statements           : 12 13 89 95 106
+statement            : 13 14 99 100 100 111 113 115
+statements           : 12 13 91 97 108
 string               : 46
 times                : 33
-to                   : 109 110
-type                 : 11 11 22 25 25 81 102 103 103 104 105 109 110 111 112 115 117 118
-type_name            : 7 8 11 84 85 88
-variable_declaration : 3 7 82
+to                   : 111 112
+type                 : 11 11 22 25 25 81 104 105 105 106 107 111 112 113 114 117 119 120
+type_name            : 7 8 11 84 85 88 89 90
+variable_declaration : 3 7
 while_loop           : 19
 writeln              : 15
-writeln_args         : 116 117
+writeln_args         : 118 119
 
 Parsing method: LALR
 
@@ -278,9 +281,9 @@ state 2
     (5) block -> . function block
     (6) block -> . procedure block
     (12) body -> . BEGIN statements END
-    (82) function -> . func_header SEMICOLON VAR variable_declaration func_body SEMICOLON
+    (82) function -> . func_header SEMICOLON VAR func_variable_declaration func_body SEMICOLON
     (83) function -> . func_header SEMICOLON func_body SEMICOLON
-    (94) procedure -> . PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON
+    (96) procedure -> . PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON
     (84) func_header -> . FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON type_name
     (85) func_header -> . FUNCTION IDENTIFIER LPAREN RPAREN COLON type_name
 
@@ -337,9 +340,9 @@ state 7
     (5) block -> . function block
     (6) block -> . procedure block
     (12) body -> . BEGIN statements END
-    (82) function -> . func_header SEMICOLON VAR variable_declaration func_body SEMICOLON
+    (82) function -> . func_header SEMICOLON VAR func_variable_declaration func_body SEMICOLON
     (83) function -> . func_header SEMICOLON func_body SEMICOLON
-    (94) procedure -> . PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON
+    (96) procedure -> . PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON
     (84) func_header -> . FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON type_name
     (85) func_header -> . FUNCTION IDENTIFIER LPAREN RPAREN COLON type_name
 
@@ -362,9 +365,9 @@ state 8
     (5) block -> . function block
     (6) block -> . procedure block
     (12) body -> . BEGIN statements END
-    (82) function -> . func_header SEMICOLON VAR variable_declaration func_body SEMICOLON
+    (82) function -> . func_header SEMICOLON VAR func_variable_declaration func_body SEMICOLON
     (83) function -> . func_header SEMICOLON func_body SEMICOLON
-    (94) procedure -> . PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON
+    (96) procedure -> . PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON
     (84) func_header -> . FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON type_name
     (85) func_header -> . FUNCTION IDENTIFIER LPAREN RPAREN COLON type_name
 
@@ -391,22 +394,22 @@ state 9
     (19) statement -> . while_loop
     (20) statement -> . for_loop
     (21) statement -> . readln
-    (116) writeln -> . WRITELN LPAREN writeln_args RPAREN
+    (118) writeln -> . WRITELN LPAREN writeln_args RPAREN
     (22) assignment -> . IDENTIFIER ASSIGNMENT type
     (23) assignment -> . IDENTIFIER ASSIGNMENT expression
     (24) assignment -> . IDENTIFIER ASSIGNMENT length
-    (96) procedure_call -> . IDENTIFIER
-    (97) cond_if -> . IF condition THEN statement
-    (98) cond_if -> . IF condition THEN statement ELSE statement
-    (99) cond_if -> . IF condition THEN if_body
-    (100) cond_if -> . IF condition THEN if_body ELSE if_body
-    (113) while_loop -> . WHILE condition DO statement
-    (114) while_loop -> . WHILE condition DO if_body
-    (109) for_loop -> . FOR assignment to type DO statement
-    (110) for_loop -> . FOR assignment to type DO if_body
-    (111) for_loop -> . FOR assignment downto type DO statement
-    (112) for_loop -> . FOR assignment downto type DO if_body
-    (115) readln -> . READLN LPAREN type RPAREN
+    (98) procedure_call -> . IDENTIFIER
+    (99) cond_if -> . IF condition THEN statement
+    (100) cond_if -> . IF condition THEN statement ELSE statement
+    (101) cond_if -> . IF condition THEN if_body
+    (102) cond_if -> . IF condition THEN if_body ELSE if_body
+    (115) while_loop -> . WHILE condition DO statement
+    (116) while_loop -> . WHILE condition DO if_body
+    (111) for_loop -> . FOR assignment to type DO statement
+    (112) for_loop -> . FOR assignment to type DO if_body
+    (113) for_loop -> . FOR assignment downto type DO statement
+    (114) for_loop -> . FOR assignment downto type DO if_body
+    (117) readln -> . READLN LPAREN type RPAREN
 
     WRITELN         shift and go to state 29
     IDENTIFIER      shift and go to state 30
@@ -427,7 +430,7 @@ state 9
 
 state 10
 
-    (82) function -> func_header . SEMICOLON VAR variable_declaration func_body SEMICOLON
+    (82) function -> func_header . SEMICOLON VAR func_variable_declaration func_body SEMICOLON
     (83) function -> func_header . SEMICOLON func_body SEMICOLON
 
     SEMICOLON       shift and go to state 35
@@ -435,7 +438,7 @@ state 10
 
 state 11
 
-    (94) procedure -> PROCEDURE . IDENTIFIER SEMICOLON procedure_body SEMICOLON
+    (96) procedure -> PROCEDURE . IDENTIFIER SEMICOLON procedure_body SEMICOLON
 
     IDENTIFIER      shift and go to state 36
 
@@ -575,7 +578,7 @@ state 28
 
 state 29
 
-    (116) writeln -> WRITELN . LPAREN writeln_args RPAREN
+    (118) writeln -> WRITELN . LPAREN writeln_args RPAREN
 
     LPAREN          shift and go to state 44
 
@@ -585,24 +588,24 @@ state 30
     (22) assignment -> IDENTIFIER . ASSIGNMENT type
     (23) assignment -> IDENTIFIER . ASSIGNMENT expression
     (24) assignment -> IDENTIFIER . ASSIGNMENT length
-    (96) procedure_call -> IDENTIFIER .
+    (98) procedure_call -> IDENTIFIER .
 
     ASSIGNMENT      shift and go to state 45
-    SEMICOLON       reduce using rule 96 (procedure_call -> IDENTIFIER .)
-    ELSE            reduce using rule 96 (procedure_call -> IDENTIFIER .)
+    SEMICOLON       reduce using rule 98 (procedure_call -> IDENTIFIER .)
+    ELSE            reduce using rule 98 (procedure_call -> IDENTIFIER .)
 
 
 state 31
 
-    (97) cond_if -> IF . condition THEN statement
-    (98) cond_if -> IF . condition THEN statement ELSE statement
-    (99) cond_if -> IF . condition THEN if_body
-    (100) cond_if -> IF . condition THEN if_body ELSE if_body
-    (101) condition -> . expression comparator expression
-    (102) condition -> . type comparator expression
-    (103) condition -> . type comparator type
-    (104) condition -> . expression comparator type
-    (105) condition -> . type
+    (99) cond_if -> IF . condition THEN statement
+    (100) cond_if -> IF . condition THEN statement ELSE statement
+    (101) cond_if -> IF . condition THEN if_body
+    (102) cond_if -> IF . condition THEN if_body ELSE if_body
+    (103) condition -> . expression comparator expression
+    (104) condition -> . type comparator expression
+    (105) condition -> . type comparator type
+    (106) condition -> . expression comparator type
+    (107) condition -> . type
     (25) expression -> . type operation type
     (26) expression -> . expression_paren
     (27) expression -> . expression operation expression
@@ -616,7 +619,7 @@ state 31
     (49) type -> . identifier
     (50) type -> . func_call
     (30) expression_paren -> . LPAREN expression RPAREN
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
     (51) integer -> . INTEGER
     (52) real -> . REAL
     (53) string -> . STRING
@@ -646,13 +649,13 @@ state 31
 
 state 32
 
-    (113) while_loop -> WHILE . condition DO statement
-    (114) while_loop -> WHILE . condition DO if_body
-    (101) condition -> . expression comparator expression
-    (102) condition -> . type comparator expression
-    (103) condition -> . type comparator type
-    (104) condition -> . expression comparator type
-    (105) condition -> . type
+    (115) while_loop -> WHILE . condition DO statement
+    (116) while_loop -> WHILE . condition DO if_body
+    (103) condition -> . expression comparator expression
+    (104) condition -> . type comparator expression
+    (105) condition -> . type comparator type
+    (106) condition -> . expression comparator type
+    (107) condition -> . type
     (25) expression -> . type operation type
     (26) expression -> . expression_paren
     (27) expression -> . expression operation expression
@@ -666,7 +669,7 @@ state 32
     (49) type -> . identifier
     (50) type -> . func_call
     (30) expression_paren -> . LPAREN expression RPAREN
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
     (51) integer -> . INTEGER
     (52) real -> . REAL
     (53) string -> . STRING
@@ -696,10 +699,10 @@ state 32
 
 state 33
 
-    (109) for_loop -> FOR . assignment to type DO statement
-    (110) for_loop -> FOR . assignment to type DO if_body
-    (111) for_loop -> FOR . assignment downto type DO statement
-    (112) for_loop -> FOR . assignment downto type DO if_body
+    (111) for_loop -> FOR . assignment to type DO statement
+    (112) for_loop -> FOR . assignment to type DO if_body
+    (113) for_loop -> FOR . assignment downto type DO statement
+    (114) for_loop -> FOR . assignment downto type DO if_body
     (22) assignment -> . IDENTIFIER ASSIGNMENT type
     (23) assignment -> . IDENTIFIER ASSIGNMENT expression
     (24) assignment -> . IDENTIFIER ASSIGNMENT length
@@ -710,16 +713,16 @@ state 33
 
 state 34
 
-    (115) readln -> READLN . LPAREN type RPAREN
+    (117) readln -> READLN . LPAREN type RPAREN
 
     LPAREN          shift and go to state 67
 
 
 state 35
 
-    (82) function -> func_header SEMICOLON . VAR variable_declaration func_body SEMICOLON
+    (82) function -> func_header SEMICOLON . VAR func_variable_declaration func_body SEMICOLON
     (83) function -> func_header SEMICOLON . func_body SEMICOLON
-    (89) func_body -> . BEGIN statements END
+    (91) func_body -> . BEGIN statements END
 
     VAR             shift and go to state 68
     BEGIN           shift and go to state 70
@@ -728,7 +731,7 @@ state 35
 
 state 36
 
-    (94) procedure -> PROCEDURE IDENTIFIER . SEMICOLON procedure_body SEMICOLON
+    (96) procedure -> PROCEDURE IDENTIFIER . SEMICOLON procedure_body SEMICOLON
 
     SEMICOLON       shift and go to state 71
 
@@ -810,22 +813,22 @@ state 43
     (19) statement -> . while_loop
     (20) statement -> . for_loop
     (21) statement -> . readln
-    (116) writeln -> . WRITELN LPAREN writeln_args RPAREN
+    (118) writeln -> . WRITELN LPAREN writeln_args RPAREN
     (22) assignment -> . IDENTIFIER ASSIGNMENT type
     (23) assignment -> . IDENTIFIER ASSIGNMENT expression
     (24) assignment -> . IDENTIFIER ASSIGNMENT length
-    (96) procedure_call -> . IDENTIFIER
-    (97) cond_if -> . IF condition THEN statement
-    (98) cond_if -> . IF condition THEN statement ELSE statement
-    (99) cond_if -> . IF condition THEN if_body
-    (100) cond_if -> . IF condition THEN if_body ELSE if_body
-    (113) while_loop -> . WHILE condition DO statement
-    (114) while_loop -> . WHILE condition DO if_body
-    (109) for_loop -> . FOR assignment to type DO statement
-    (110) for_loop -> . FOR assignment to type DO if_body
-    (111) for_loop -> . FOR assignment downto type DO statement
-    (112) for_loop -> . FOR assignment downto type DO if_body
-    (115) readln -> . READLN LPAREN type RPAREN
+    (98) procedure_call -> . IDENTIFIER
+    (99) cond_if -> . IF condition THEN statement
+    (100) cond_if -> . IF condition THEN statement ELSE statement
+    (101) cond_if -> . IF condition THEN if_body
+    (102) cond_if -> . IF condition THEN if_body ELSE if_body
+    (115) while_loop -> . WHILE condition DO statement
+    (116) while_loop -> . WHILE condition DO if_body
+    (111) for_loop -> . FOR assignment to type DO statement
+    (112) for_loop -> . FOR assignment to type DO if_body
+    (113) for_loop -> . FOR assignment downto type DO statement
+    (114) for_loop -> . FOR assignment downto type DO if_body
+    (117) readln -> . READLN LPAREN type RPAREN
 
     END             reduce using rule 14 (statements -> statement SEMICOLON .)
     WRITELN         shift and go to state 29
@@ -847,9 +850,9 @@ state 43
 
 state 44
 
-    (116) writeln -> WRITELN LPAREN . writeln_args RPAREN
-    (117) writeln_args -> . type COMMA writeln_args
-    (118) writeln_args -> . type
+    (118) writeln -> WRITELN LPAREN . writeln_args RPAREN
+    (119) writeln_args -> . type COMMA writeln_args
+    (120) writeln_args -> . type
     (44) type -> . integer
     (45) type -> . real
     (46) type -> . string
@@ -863,7 +866,7 @@ state 44
     (54) char -> . CHAR
     (55) boolean -> . BOOLEAN
     (56) identifier -> . IDENTIFIER
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     INTEGER         shift and go to state 59
     REAL            shift and go to state 60
@@ -906,13 +909,13 @@ state 45
     (54) char -> . CHAR
     (55) boolean -> . BOOLEAN
     (56) identifier -> . IDENTIFIER
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
     (30) expression_paren -> . LPAREN expression RPAREN
-    (101) condition -> . expression comparator expression
-    (102) condition -> . type comparator expression
-    (103) condition -> . type comparator type
-    (104) condition -> . expression comparator type
-    (105) condition -> . type
+    (103) condition -> . expression comparator expression
+    (104) condition -> . type comparator expression
+    (105) condition -> . type comparator type
+    (106) condition -> . expression comparator type
+    (107) condition -> . type
 
     LENGTH          shift and go to state 92
     INTEGER         shift and go to state 59
@@ -938,10 +941,10 @@ state 45
 
 state 46
 
-    (97) cond_if -> IF condition . THEN statement
-    (98) cond_if -> IF condition . THEN statement ELSE statement
-    (99) cond_if -> IF condition . THEN if_body
-    (100) cond_if -> IF condition . THEN if_body ELSE if_body
+    (99) cond_if -> IF condition . THEN statement
+    (100) cond_if -> IF condition . THEN statement ELSE statement
+    (101) cond_if -> IF condition . THEN if_body
+    (102) cond_if -> IF condition . THEN if_body ELSE if_body
     (29) expression -> condition .
 
     THEN            shift and go to state 93
@@ -965,8 +968,8 @@ state 46
 
 state 47
 
-    (101) condition -> expression . comparator expression
-    (104) condition -> expression . comparator type
+    (103) condition -> expression . comparator expression
+    (106) condition -> expression . comparator type
     (27) expression -> expression . operation expression
     (63) comparator -> . eq
     (64) comparator -> . neq
@@ -1037,9 +1040,9 @@ state 47
 
 state 48
 
-    (102) condition -> type . comparator expression
-    (103) condition -> type . comparator type
-    (105) condition -> type .
+    (104) condition -> type . comparator expression
+    (105) condition -> type . comparator type
+    (107) condition -> type .
     (25) expression -> type . operation type
     (63) comparator -> . eq
     (64) comparator -> . neq
@@ -1089,8 +1092,8 @@ state 48
   ! shift/reduce conflict for DIVISION resolved as shift
   ! shift/reduce conflict for DIV resolved as shift
   ! shift/reduce conflict for MOD resolved as shift
-    THEN            reduce using rule 105 (condition -> type .)
-    DO              reduce using rule 105 (condition -> type .)
+    THEN            reduce using rule 107 (condition -> type .)
+    DO              reduce using rule 107 (condition -> type .)
     RANGE           shift and go to state 111
     EQ              shift and go to state 112
     NEQ             shift and go to state 113
@@ -1108,22 +1111,22 @@ state 48
     DIV             shift and go to state 125
     MOD             shift and go to state 126
 
-  ! RANGE           [ reduce using rule 105 (condition -> type .) ]
-  ! EQ              [ reduce using rule 105 (condition -> type .) ]
-  ! NEQ             [ reduce using rule 105 (condition -> type .) ]
-  ! LT              [ reduce using rule 105 (condition -> type .) ]
-  ! GT              [ reduce using rule 105 (condition -> type .) ]
-  ! LTE             [ reduce using rule 105 (condition -> type .) ]
-  ! GTE             [ reduce using rule 105 (condition -> type .) ]
-  ! AND             [ reduce using rule 105 (condition -> type .) ]
-  ! OR              [ reduce using rule 105 (condition -> type .) ]
-  ! NOT             [ reduce using rule 105 (condition -> type .) ]
-  ! PLUS            [ reduce using rule 105 (condition -> type .) ]
-  ! MINUS           [ reduce using rule 105 (condition -> type .) ]
-  ! TIMES           [ reduce using rule 105 (condition -> type .) ]
-  ! DIVISION        [ reduce using rule 105 (condition -> type .) ]
-  ! DIV             [ reduce using rule 105 (condition -> type .) ]
-  ! MOD             [ reduce using rule 105 (condition -> type .) ]
+  ! RANGE           [ reduce using rule 107 (condition -> type .) ]
+  ! EQ              [ reduce using rule 107 (condition -> type .) ]
+  ! NEQ             [ reduce using rule 107 (condition -> type .) ]
+  ! LT              [ reduce using rule 107 (condition -> type .) ]
+  ! GT              [ reduce using rule 107 (condition -> type .) ]
+  ! LTE             [ reduce using rule 107 (condition -> type .) ]
+  ! GTE             [ reduce using rule 107 (condition -> type .) ]
+  ! AND             [ reduce using rule 107 (condition -> type .) ]
+  ! OR              [ reduce using rule 107 (condition -> type .) ]
+  ! NOT             [ reduce using rule 107 (condition -> type .) ]
+  ! PLUS            [ reduce using rule 107 (condition -> type .) ]
+  ! MINUS           [ reduce using rule 107 (condition -> type .) ]
+  ! TIMES           [ reduce using rule 107 (condition -> type .) ]
+  ! DIVISION        [ reduce using rule 107 (condition -> type .) ]
+  ! DIV             [ reduce using rule 107 (condition -> type .) ]
+  ! MOD             [ reduce using rule 107 (condition -> type .) ]
 
     comparator                     shift and go to state 127
     operation                      shift and go to state 128
@@ -1451,12 +1454,12 @@ state 57
     (49) type -> . identifier
     (50) type -> . func_call
     (30) expression_paren -> . LPAREN expression RPAREN
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
-    (101) condition -> . expression comparator expression
-    (102) condition -> . type comparator expression
-    (103) condition -> . type comparator type
-    (104) condition -> . expression comparator type
-    (105) condition -> . type
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+    (103) condition -> . expression comparator expression
+    (104) condition -> . type comparator expression
+    (105) condition -> . type comparator type
+    (106) condition -> . expression comparator type
+    (107) condition -> . type
     (51) integer -> . INTEGER
     (52) real -> . REAL
     (53) string -> . STRING
@@ -1486,7 +1489,7 @@ state 57
 
 state 58
 
-    (90) func_call -> IDENTIFIER . LPAREN arg_list RPAREN
+    (92) func_call -> IDENTIFIER . LPAREN arg_list RPAREN
     (56) identifier -> IDENTIFIER .
 
     LPAREN          shift and go to state 131
@@ -1672,8 +1675,8 @@ state 63
 
 state 64
 
-    (113) while_loop -> WHILE condition . DO statement
-    (114) while_loop -> WHILE condition . DO if_body
+    (115) while_loop -> WHILE condition . DO statement
+    (116) while_loop -> WHILE condition . DO if_body
     (29) expression -> condition .
 
     DO              shift and go to state 132
@@ -1697,12 +1700,12 @@ state 64
 
 state 65
 
-    (109) for_loop -> FOR assignment . to type DO statement
-    (110) for_loop -> FOR assignment . to type DO if_body
-    (111) for_loop -> FOR assignment . downto type DO statement
-    (112) for_loop -> FOR assignment . downto type DO if_body
-    (107) to -> . TO
-    (108) downto -> . DOWNTO
+    (111) for_loop -> FOR assignment . to type DO statement
+    (112) for_loop -> FOR assignment . to type DO if_body
+    (113) for_loop -> FOR assignment . downto type DO statement
+    (114) for_loop -> FOR assignment . downto type DO if_body
+    (109) to -> . TO
+    (110) downto -> . DOWNTO
 
     TO              shift and go to state 135
     DOWNTO          shift and go to state 136
@@ -1721,7 +1724,7 @@ state 66
 
 state 67
 
-    (115) readln -> READLN LPAREN . type RPAREN
+    (117) readln -> READLN LPAREN . type RPAREN
     (44) type -> . integer
     (45) type -> . real
     (46) type -> . string
@@ -1735,7 +1738,7 @@ state 67
     (54) char -> . CHAR
     (55) boolean -> . BOOLEAN
     (56) identifier -> . IDENTIFIER
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     INTEGER         shift and go to state 59
     REAL            shift and go to state 60
@@ -1755,27 +1758,27 @@ state 67
 
 state 68
 
-    (82) function -> func_header SEMICOLON VAR . variable_declaration func_body SEMICOLON
-    (7) variable_declaration -> . identifier_list COLON type_name SEMICOLON variable_declaration
-    (8) variable_declaration -> . identifier_list COLON type_name SEMICOLON
+    (82) function -> func_header SEMICOLON VAR . func_variable_declaration func_body SEMICOLON
+    (89) func_variable_declaration -> . identifier_list COLON type_name SEMICOLON func_variable_declaration
+    (90) func_variable_declaration -> . identifier_list COLON type_name SEMICOLON
     (9) identifier_list -> . IDENTIFIER COMMA identifier_list
     (10) identifier_list -> . IDENTIFIER
 
     IDENTIFIER      shift and go to state 17
 
-    variable_declaration           shift and go to state 138
-    identifier_list                shift and go to state 16
+    func_variable_declaration      shift and go to state 138
+    identifier_list                shift and go to state 139
 
 state 69
 
     (83) function -> func_header SEMICOLON func_body . SEMICOLON
 
-    SEMICOLON       shift and go to state 139
+    SEMICOLON       shift and go to state 140
 
 
 state 70
 
-    (89) func_body -> BEGIN . statements END
+    (91) func_body -> BEGIN . statements END
     (13) statements -> . statement SEMICOLON statements
     (14) statements -> . statement SEMICOLON
     (15) statement -> . writeln
@@ -1785,22 +1788,22 @@ state 70
     (19) statement -> . while_loop
     (20) statement -> . for_loop
     (21) statement -> . readln
-    (116) writeln -> . WRITELN LPAREN writeln_args RPAREN
+    (118) writeln -> . WRITELN LPAREN writeln_args RPAREN
     (22) assignment -> . IDENTIFIER ASSIGNMENT type
     (23) assignment -> . IDENTIFIER ASSIGNMENT expression
     (24) assignment -> . IDENTIFIER ASSIGNMENT length
-    (96) procedure_call -> . IDENTIFIER
-    (97) cond_if -> . IF condition THEN statement
-    (98) cond_if -> . IF condition THEN statement ELSE statement
-    (99) cond_if -> . IF condition THEN if_body
-    (100) cond_if -> . IF condition THEN if_body ELSE if_body
-    (113) while_loop -> . WHILE condition DO statement
-    (114) while_loop -> . WHILE condition DO if_body
-    (109) for_loop -> . FOR assignment to type DO statement
-    (110) for_loop -> . FOR assignment to type DO if_body
-    (111) for_loop -> . FOR assignment downto type DO statement
-    (112) for_loop -> . FOR assignment downto type DO if_body
-    (115) readln -> . READLN LPAREN type RPAREN
+    (98) procedure_call -> . IDENTIFIER
+    (99) cond_if -> . IF condition THEN statement
+    (100) cond_if -> . IF condition THEN statement ELSE statement
+    (101) cond_if -> . IF condition THEN if_body
+    (102) cond_if -> . IF condition THEN if_body ELSE if_body
+    (115) while_loop -> . WHILE condition DO statement
+    (116) while_loop -> . WHILE condition DO if_body
+    (111) for_loop -> . FOR assignment to type DO statement
+    (112) for_loop -> . FOR assignment to type DO if_body
+    (113) for_loop -> . FOR assignment downto type DO statement
+    (114) for_loop -> . FOR assignment downto type DO if_body
+    (117) readln -> . READLN LPAREN type RPAREN
 
     WRITELN         shift and go to state 29
     IDENTIFIER      shift and go to state 30
@@ -1809,7 +1812,7 @@ state 70
     FOR             shift and go to state 33
     READLN          shift and go to state 34
 
-    statements                     shift and go to state 140
+    statements                     shift and go to state 141
     statement                      shift and go to state 21
     writeln                        shift and go to state 22
     assignment                     shift and go to state 23
@@ -1821,12 +1824,12 @@ state 70
 
 state 71
 
-    (94) procedure -> PROCEDURE IDENTIFIER SEMICOLON . procedure_body SEMICOLON
-    (95) procedure_body -> . BEGIN statements END
+    (96) procedure -> PROCEDURE IDENTIFIER SEMICOLON . procedure_body SEMICOLON
+    (97) procedure_body -> . BEGIN statements END
 
-    BEGIN           shift and go to state 142
+    BEGIN           shift and go to state 143
 
-    procedure_body                 shift and go to state 141
+    procedure_body                 shift and go to state 142
 
 state 72
 
@@ -1836,18 +1839,18 @@ state 72
     (87) func_args -> . func_arg
     (88) func_arg -> . IDENTIFIER COLON type_name
 
-    RPAREN          shift and go to state 145
-    IDENTIFIER      shift and go to state 143
+    RPAREN          shift and go to state 146
+    IDENTIFIER      shift and go to state 144
 
-    func_args                      shift and go to state 144
-    func_arg                       shift and go to state 146
+    func_args                      shift and go to state 145
+    func_arg                       shift and go to state 147
 
 state 73
 
     (7) variable_declaration -> identifier_list COLON type_name . SEMICOLON variable_declaration
     (8) variable_declaration -> identifier_list COLON type_name . SEMICOLON
 
-    SEMICOLON       shift and go to state 147
+    SEMICOLON       shift and go to state 148
 
 
 state 74
@@ -1908,7 +1911,7 @@ state 80
 
     (11) array_type -> ARRAY . LBRACKET type RANGE type RBRACKET OF type_name
 
-    LBRACKET        shift and go to state 148
+    LBRACKET        shift and go to state 149
 
 
 state 81
@@ -1927,18 +1930,18 @@ state 82
 
 state 83
 
-    (116) writeln -> WRITELN LPAREN writeln_args . RPAREN
+    (118) writeln -> WRITELN LPAREN writeln_args . RPAREN
 
-    RPAREN          shift and go to state 149
+    RPAREN          shift and go to state 150
 
 
 state 84
 
-    (117) writeln_args -> type . COMMA writeln_args
-    (118) writeln_args -> type .
+    (119) writeln_args -> type . COMMA writeln_args
+    (120) writeln_args -> type .
 
-    COMMA           shift and go to state 150
-    RPAREN          reduce using rule 118 (writeln_args -> type .)
+    COMMA           shift and go to state 151
+    RPAREN          reduce using rule 120 (writeln_args -> type .)
 
 
 state 85
@@ -1975,7 +1978,7 @@ state 85
 state 86
 
     (56) identifier -> IDENTIFIER .
-    (90) func_call -> IDENTIFIER . LPAREN arg_list RPAREN
+    (92) func_call -> IDENTIFIER . LPAREN arg_list RPAREN
 
     COMMA           reduce using rule 56 (identifier -> IDENTIFIER .)
     RPAREN          reduce using rule 56 (identifier -> IDENTIFIER .)
@@ -2009,9 +2012,9 @@ state 87
 
     (22) assignment -> IDENTIFIER ASSIGNMENT type .
     (25) expression -> type . operation type
-    (102) condition -> type . comparator expression
-    (103) condition -> type . comparator type
-    (105) condition -> type .
+    (104) condition -> type . comparator expression
+    (105) condition -> type . comparator type
+    (107) condition -> type .
     (31) operation -> . plus
     (32) operation -> . minus
     (33) operation -> . times
@@ -2085,26 +2088,26 @@ state 87
     OR              shift and go to state 119
     NOT             shift and go to state 120
 
-  ! RANGE           [ reduce using rule 105 (condition -> type .) ]
-  ! PLUS            [ reduce using rule 105 (condition -> type .) ]
-  ! MINUS           [ reduce using rule 105 (condition -> type .) ]
-  ! TIMES           [ reduce using rule 105 (condition -> type .) ]
-  ! DIVISION        [ reduce using rule 105 (condition -> type .) ]
-  ! DIV             [ reduce using rule 105 (condition -> type .) ]
-  ! MOD             [ reduce using rule 105 (condition -> type .) ]
-  ! EQ              [ reduce using rule 105 (condition -> type .) ]
-  ! NEQ             [ reduce using rule 105 (condition -> type .) ]
-  ! LT              [ reduce using rule 105 (condition -> type .) ]
-  ! GT              [ reduce using rule 105 (condition -> type .) ]
-  ! LTE             [ reduce using rule 105 (condition -> type .) ]
-  ! GTE             [ reduce using rule 105 (condition -> type .) ]
-  ! AND             [ reduce using rule 105 (condition -> type .) ]
-  ! OR              [ reduce using rule 105 (condition -> type .) ]
-  ! NOT             [ reduce using rule 105 (condition -> type .) ]
-  ! SEMICOLON       [ reduce using rule 105 (condition -> type .) ]
-  ! TO              [ reduce using rule 105 (condition -> type .) ]
-  ! DOWNTO          [ reduce using rule 105 (condition -> type .) ]
-  ! ELSE            [ reduce using rule 105 (condition -> type .) ]
+  ! RANGE           [ reduce using rule 107 (condition -> type .) ]
+  ! PLUS            [ reduce using rule 107 (condition -> type .) ]
+  ! MINUS           [ reduce using rule 107 (condition -> type .) ]
+  ! TIMES           [ reduce using rule 107 (condition -> type .) ]
+  ! DIVISION        [ reduce using rule 107 (condition -> type .) ]
+  ! DIV             [ reduce using rule 107 (condition -> type .) ]
+  ! MOD             [ reduce using rule 107 (condition -> type .) ]
+  ! EQ              [ reduce using rule 107 (condition -> type .) ]
+  ! NEQ             [ reduce using rule 107 (condition -> type .) ]
+  ! LT              [ reduce using rule 107 (condition -> type .) ]
+  ! GT              [ reduce using rule 107 (condition -> type .) ]
+  ! LTE             [ reduce using rule 107 (condition -> type .) ]
+  ! GTE             [ reduce using rule 107 (condition -> type .) ]
+  ! AND             [ reduce using rule 107 (condition -> type .) ]
+  ! OR              [ reduce using rule 107 (condition -> type .) ]
+  ! NOT             [ reduce using rule 107 (condition -> type .) ]
+  ! SEMICOLON       [ reduce using rule 107 (condition -> type .) ]
+  ! TO              [ reduce using rule 107 (condition -> type .) ]
+  ! DOWNTO          [ reduce using rule 107 (condition -> type .) ]
+  ! ELSE            [ reduce using rule 107 (condition -> type .) ]
 
     operation                      shift and go to state 128
     comparator                     shift and go to state 127
@@ -2128,8 +2131,8 @@ state 88
 
     (23) assignment -> IDENTIFIER ASSIGNMENT expression .
     (27) expression -> expression . operation expression
-    (101) condition -> expression . comparator expression
-    (104) condition -> expression . comparator type
+    (103) condition -> expression . comparator expression
+    (106) condition -> expression . comparator type
     (31) operation -> . plus
     (32) operation -> . minus
     (33) operation -> . times
@@ -2312,15 +2315,15 @@ state 92
 
     (81) length -> LENGTH . LPAREN type RPAREN
 
-    LPAREN          shift and go to state 151
+    LPAREN          shift and go to state 152
 
 
 state 93
 
-    (97) cond_if -> IF condition THEN . statement
-    (98) cond_if -> IF condition THEN . statement ELSE statement
-    (99) cond_if -> IF condition THEN . if_body
-    (100) cond_if -> IF condition THEN . if_body ELSE if_body
+    (99) cond_if -> IF condition THEN . statement
+    (100) cond_if -> IF condition THEN . statement ELSE statement
+    (101) cond_if -> IF condition THEN . if_body
+    (102) cond_if -> IF condition THEN . if_body ELSE if_body
     (15) statement -> . writeln
     (16) statement -> . assignment
     (17) statement -> . procedure_call
@@ -2328,25 +2331,25 @@ state 93
     (19) statement -> . while_loop
     (20) statement -> . for_loop
     (21) statement -> . readln
-    (106) if_body -> . BEGIN statements END
-    (116) writeln -> . WRITELN LPAREN writeln_args RPAREN
+    (108) if_body -> . BEGIN statements END
+    (118) writeln -> . WRITELN LPAREN writeln_args RPAREN
     (22) assignment -> . IDENTIFIER ASSIGNMENT type
     (23) assignment -> . IDENTIFIER ASSIGNMENT expression
     (24) assignment -> . IDENTIFIER ASSIGNMENT length
-    (96) procedure_call -> . IDENTIFIER
-    (97) cond_if -> . IF condition THEN statement
-    (98) cond_if -> . IF condition THEN statement ELSE statement
-    (99) cond_if -> . IF condition THEN if_body
-    (100) cond_if -> . IF condition THEN if_body ELSE if_body
-    (113) while_loop -> . WHILE condition DO statement
-    (114) while_loop -> . WHILE condition DO if_body
-    (109) for_loop -> . FOR assignment to type DO statement
-    (110) for_loop -> . FOR assignment to type DO if_body
-    (111) for_loop -> . FOR assignment downto type DO statement
-    (112) for_loop -> . FOR assignment downto type DO if_body
-    (115) readln -> . READLN LPAREN type RPAREN
+    (98) procedure_call -> . IDENTIFIER
+    (99) cond_if -> . IF condition THEN statement
+    (100) cond_if -> . IF condition THEN statement ELSE statement
+    (101) cond_if -> . IF condition THEN if_body
+    (102) cond_if -> . IF condition THEN if_body ELSE if_body
+    (115) while_loop -> . WHILE condition DO statement
+    (116) while_loop -> . WHILE condition DO if_body
+    (111) for_loop -> . FOR assignment to type DO statement
+    (112) for_loop -> . FOR assignment to type DO if_body
+    (113) for_loop -> . FOR assignment downto type DO statement
+    (114) for_loop -> . FOR assignment downto type DO if_body
+    (117) readln -> . READLN LPAREN type RPAREN
 
-    BEGIN           shift and go to state 154
+    BEGIN           shift and go to state 155
     WRITELN         shift and go to state 29
     IDENTIFIER      shift and go to state 30
     IF              shift and go to state 31
@@ -2354,8 +2357,8 @@ state 93
     FOR             shift and go to state 33
     READLN          shift and go to state 34
 
-    statement                      shift and go to state 152
-    if_body                        shift and go to state 153
+    statement                      shift and go to state 153
+    if_body                        shift and go to state 154
     writeln                        shift and go to state 22
     assignment                     shift and go to state 23
     procedure_call                 shift and go to state 24
@@ -2366,8 +2369,8 @@ state 93
 
 state 94
 
-    (101) condition -> expression comparator . expression
-    (104) condition -> expression comparator . type
+    (103) condition -> expression comparator . expression
+    (106) condition -> expression comparator . type
     (25) expression -> . type operation type
     (26) expression -> . expression_paren
     (27) expression -> . expression operation expression
@@ -2381,12 +2384,12 @@ state 94
     (49) type -> . identifier
     (50) type -> . func_call
     (30) expression_paren -> . LPAREN expression RPAREN
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
-    (101) condition -> . expression comparator expression
-    (102) condition -> . type comparator expression
-    (103) condition -> . type comparator type
-    (104) condition -> . expression comparator type
-    (105) condition -> . type
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+    (103) condition -> . expression comparator expression
+    (104) condition -> . type comparator expression
+    (105) condition -> . type comparator type
+    (106) condition -> . expression comparator type
+    (107) condition -> . type
     (51) integer -> . INTEGER
     (52) real -> . REAL
     (53) string -> . STRING
@@ -2402,8 +2405,8 @@ state 94
     CHAR            shift and go to state 62
     BOOLEAN         shift and go to state 63
 
-    expression                     shift and go to state 155
-    type                           shift and go to state 156
+    expression                     shift and go to state 156
+    type                           shift and go to state 157
     expression_paren               shift and go to state 49
     func_call                      shift and go to state 50
     condition                      shift and go to state 91
@@ -2430,12 +2433,12 @@ state 95
     (49) type -> . identifier
     (50) type -> . func_call
     (30) expression_paren -> . LPAREN expression RPAREN
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
-    (101) condition -> . expression comparator expression
-    (102) condition -> . type comparator expression
-    (103) condition -> . type comparator type
-    (104) condition -> . expression comparator type
-    (105) condition -> . type
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+    (103) condition -> . expression comparator expression
+    (104) condition -> . type comparator expression
+    (105) condition -> . type comparator type
+    (106) condition -> . expression comparator type
+    (107) condition -> . type
     (51) integer -> . INTEGER
     (52) real -> . REAL
     (53) string -> . STRING
@@ -2451,7 +2454,7 @@ state 95
     CHAR            shift and go to state 62
     BOOLEAN         shift and go to state 63
 
-    expression                     shift and go to state 157
+    expression                     shift and go to state 158
     type                           shift and go to state 130
     expression_paren               shift and go to state 49
     func_call                      shift and go to state 50
@@ -2868,8 +2871,8 @@ state 126
 
 state 127
 
-    (102) condition -> type comparator . expression
-    (103) condition -> type comparator . type
+    (104) condition -> type comparator . expression
+    (105) condition -> type comparator . type
     (25) expression -> . type operation type
     (26) expression -> . expression_paren
     (27) expression -> . expression operation expression
@@ -2883,12 +2886,12 @@ state 127
     (49) type -> . identifier
     (50) type -> . func_call
     (30) expression_paren -> . LPAREN expression RPAREN
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
-    (101) condition -> . expression comparator expression
-    (102) condition -> . type comparator expression
-    (103) condition -> . type comparator type
-    (104) condition -> . expression comparator type
-    (105) condition -> . type
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+    (103) condition -> . expression comparator expression
+    (104) condition -> . type comparator expression
+    (105) condition -> . type comparator type
+    (106) condition -> . expression comparator type
+    (107) condition -> . type
     (51) integer -> . INTEGER
     (52) real -> . REAL
     (53) string -> . STRING
@@ -2904,8 +2907,8 @@ state 127
     CHAR            shift and go to state 62
     BOOLEAN         shift and go to state 63
 
-    type                           shift and go to state 158
-    expression                     shift and go to state 159
+    type                           shift and go to state 159
+    expression                     shift and go to state 160
     expression_paren               shift and go to state 49
     func_call                      shift and go to state 50
     condition                      shift and go to state 91
@@ -2932,7 +2935,7 @@ state 128
     (54) char -> . CHAR
     (55) boolean -> . BOOLEAN
     (56) identifier -> . IDENTIFIER
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     INTEGER         shift and go to state 59
     REAL            shift and go to state 60
@@ -2941,7 +2944,7 @@ state 128
     BOOLEAN         shift and go to state 63
     IDENTIFIER      shift and go to state 86
 
-    type                           shift and go to state 160
+    type                           shift and go to state 161
     integer                        shift and go to state 51
     real                           shift and go to state 52
     string                         shift and go to state 53
@@ -2954,8 +2957,8 @@ state 129
 
     (30) expression_paren -> LPAREN expression . RPAREN
     (27) expression -> expression . operation expression
-    (101) condition -> expression . comparator expression
-    (104) condition -> expression . comparator type
+    (103) condition -> expression . comparator expression
+    (106) condition -> expression . comparator type
     (31) operation -> . plus
     (32) operation -> . minus
     (33) operation -> . times
@@ -2988,7 +2991,7 @@ state 129
     (79) or -> . OR
     (80) not -> . NOT
 
-    RPAREN          shift and go to state 161
+    RPAREN          shift and go to state 162
     RANGE           shift and go to state 111
     PLUS            shift and go to state 121
     MINUS           shift and go to state 122
@@ -3027,9 +3030,9 @@ state 129
 state 130
 
     (25) expression -> type . operation type
-    (102) condition -> type . comparator expression
-    (103) condition -> type . comparator type
-    (105) condition -> type .
+    (104) condition -> type . comparator expression
+    (105) condition -> type . comparator type
+    (107) condition -> type .
     (31) operation -> . plus
     (32) operation -> . minus
     (33) operation -> . times
@@ -3078,13 +3081,13 @@ state 130
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for NOT resolved as shift
-    RPAREN          reduce using rule 105 (condition -> type .)
-    THEN            reduce using rule 105 (condition -> type .)
-    DO              reduce using rule 105 (condition -> type .)
-    SEMICOLON       reduce using rule 105 (condition -> type .)
-    TO              reduce using rule 105 (condition -> type .)
-    DOWNTO          reduce using rule 105 (condition -> type .)
-    ELSE            reduce using rule 105 (condition -> type .)
+    RPAREN          reduce using rule 107 (condition -> type .)
+    THEN            reduce using rule 107 (condition -> type .)
+    DO              reduce using rule 107 (condition -> type .)
+    SEMICOLON       reduce using rule 107 (condition -> type .)
+    TO              reduce using rule 107 (condition -> type .)
+    DOWNTO          reduce using rule 107 (condition -> type .)
+    ELSE            reduce using rule 107 (condition -> type .)
     RANGE           shift and go to state 111
     PLUS            shift and go to state 121
     MINUS           shift and go to state 122
@@ -3102,22 +3105,22 @@ state 130
     OR              shift and go to state 119
     NOT             shift and go to state 120
 
-  ! RANGE           [ reduce using rule 105 (condition -> type .) ]
-  ! PLUS            [ reduce using rule 105 (condition -> type .) ]
-  ! MINUS           [ reduce using rule 105 (condition -> type .) ]
-  ! TIMES           [ reduce using rule 105 (condition -> type .) ]
-  ! DIVISION        [ reduce using rule 105 (condition -> type .) ]
-  ! DIV             [ reduce using rule 105 (condition -> type .) ]
-  ! MOD             [ reduce using rule 105 (condition -> type .) ]
-  ! EQ              [ reduce using rule 105 (condition -> type .) ]
-  ! NEQ             [ reduce using rule 105 (condition -> type .) ]
-  ! LT              [ reduce using rule 105 (condition -> type .) ]
-  ! GT              [ reduce using rule 105 (condition -> type .) ]
-  ! LTE             [ reduce using rule 105 (condition -> type .) ]
-  ! GTE             [ reduce using rule 105 (condition -> type .) ]
-  ! AND             [ reduce using rule 105 (condition -> type .) ]
-  ! OR              [ reduce using rule 105 (condition -> type .) ]
-  ! NOT             [ reduce using rule 105 (condition -> type .) ]
+  ! RANGE           [ reduce using rule 107 (condition -> type .) ]
+  ! PLUS            [ reduce using rule 107 (condition -> type .) ]
+  ! MINUS           [ reduce using rule 107 (condition -> type .) ]
+  ! TIMES           [ reduce using rule 107 (condition -> type .) ]
+  ! DIVISION        [ reduce using rule 107 (condition -> type .) ]
+  ! DIV             [ reduce using rule 107 (condition -> type .) ]
+  ! MOD             [ reduce using rule 107 (condition -> type .) ]
+  ! EQ              [ reduce using rule 107 (condition -> type .) ]
+  ! NEQ             [ reduce using rule 107 (condition -> type .) ]
+  ! LT              [ reduce using rule 107 (condition -> type .) ]
+  ! GT              [ reduce using rule 107 (condition -> type .) ]
+  ! LTE             [ reduce using rule 107 (condition -> type .) ]
+  ! GTE             [ reduce using rule 107 (condition -> type .) ]
+  ! AND             [ reduce using rule 107 (condition -> type .) ]
+  ! OR              [ reduce using rule 107 (condition -> type .) ]
+  ! NOT             [ reduce using rule 107 (condition -> type .) ]
 
     operation                      shift and go to state 128
     comparator                     shift and go to state 127
@@ -3139,20 +3142,20 @@ state 130
 
 state 131
 
-    (90) func_call -> IDENTIFIER LPAREN . arg_list RPAREN
-    (91) arg_list -> . IDENTIFIER COMMA arg_list
-    (92) arg_list -> . IDENTIFIER
-    (93) arg_list -> .
+    (92) func_call -> IDENTIFIER LPAREN . arg_list RPAREN
+    (93) arg_list -> . IDENTIFIER COMMA arg_list
+    (94) arg_list -> . IDENTIFIER
+    (95) arg_list -> .
 
-    IDENTIFIER      shift and go to state 162
-    RPAREN          reduce using rule 93 (arg_list -> .)
+    IDENTIFIER      shift and go to state 163
+    RPAREN          reduce using rule 95 (arg_list -> .)
 
-    arg_list                       shift and go to state 163
+    arg_list                       shift and go to state 164
 
 state 132
 
-    (113) while_loop -> WHILE condition DO . statement
-    (114) while_loop -> WHILE condition DO . if_body
+    (115) while_loop -> WHILE condition DO . statement
+    (116) while_loop -> WHILE condition DO . if_body
     (15) statement -> . writeln
     (16) statement -> . assignment
     (17) statement -> . procedure_call
@@ -3160,25 +3163,25 @@ state 132
     (19) statement -> . while_loop
     (20) statement -> . for_loop
     (21) statement -> . readln
-    (106) if_body -> . BEGIN statements END
-    (116) writeln -> . WRITELN LPAREN writeln_args RPAREN
+    (108) if_body -> . BEGIN statements END
+    (118) writeln -> . WRITELN LPAREN writeln_args RPAREN
     (22) assignment -> . IDENTIFIER ASSIGNMENT type
     (23) assignment -> . IDENTIFIER ASSIGNMENT expression
     (24) assignment -> . IDENTIFIER ASSIGNMENT length
-    (96) procedure_call -> . IDENTIFIER
-    (97) cond_if -> . IF condition THEN statement
-    (98) cond_if -> . IF condition THEN statement ELSE statement
-    (99) cond_if -> . IF condition THEN if_body
-    (100) cond_if -> . IF condition THEN if_body ELSE if_body
-    (113) while_loop -> . WHILE condition DO statement
-    (114) while_loop -> . WHILE condition DO if_body
-    (109) for_loop -> . FOR assignment to type DO statement
-    (110) for_loop -> . FOR assignment to type DO if_body
-    (111) for_loop -> . FOR assignment downto type DO statement
-    (112) for_loop -> . FOR assignment downto type DO if_body
-    (115) readln -> . READLN LPAREN type RPAREN
+    (98) procedure_call -> . IDENTIFIER
+    (99) cond_if -> . IF condition THEN statement
+    (100) cond_if -> . IF condition THEN statement ELSE statement
+    (101) cond_if -> . IF condition THEN if_body
+    (102) cond_if -> . IF condition THEN if_body ELSE if_body
+    (115) while_loop -> . WHILE condition DO statement
+    (116) while_loop -> . WHILE condition DO if_body
+    (111) for_loop -> . FOR assignment to type DO statement
+    (112) for_loop -> . FOR assignment to type DO if_body
+    (113) for_loop -> . FOR assignment downto type DO statement
+    (114) for_loop -> . FOR assignment downto type DO if_body
+    (117) readln -> . READLN LPAREN type RPAREN
 
-    BEGIN           shift and go to state 154
+    BEGIN           shift and go to state 155
     WRITELN         shift and go to state 29
     IDENTIFIER      shift and go to state 30
     IF              shift and go to state 31
@@ -3186,8 +3189,8 @@ state 132
     FOR             shift and go to state 33
     READLN          shift and go to state 34
 
-    statement                      shift and go to state 164
-    if_body                        shift and go to state 165
+    statement                      shift and go to state 165
+    if_body                        shift and go to state 166
     writeln                        shift and go to state 22
     assignment                     shift and go to state 23
     procedure_call                 shift and go to state 24
@@ -3198,8 +3201,8 @@ state 132
 
 state 133
 
-    (109) for_loop -> FOR assignment to . type DO statement
-    (110) for_loop -> FOR assignment to . type DO if_body
+    (111) for_loop -> FOR assignment to . type DO statement
+    (112) for_loop -> FOR assignment to . type DO if_body
     (44) type -> . integer
     (45) type -> . real
     (46) type -> . string
@@ -3213,42 +3216,7 @@ state 133
     (54) char -> . CHAR
     (55) boolean -> . BOOLEAN
     (56) identifier -> . IDENTIFIER
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
-
-    INTEGER         shift and go to state 59
-    REAL            shift and go to state 60
-    STRING          shift and go to state 61
-    CHAR            shift and go to state 62
-    BOOLEAN         shift and go to state 63
-    IDENTIFIER      shift and go to state 86
-
-    type                           shift and go to state 166
-    integer                        shift and go to state 51
-    real                           shift and go to state 52
-    string                         shift and go to state 53
-    char                           shift and go to state 54
-    boolean                        shift and go to state 55
-    identifier                     shift and go to state 56
-    func_call                      shift and go to state 85
-
-state 134
-
-    (111) for_loop -> FOR assignment downto . type DO statement
-    (112) for_loop -> FOR assignment downto . type DO if_body
-    (44) type -> . integer
-    (45) type -> . real
-    (46) type -> . string
-    (47) type -> . char
-    (48) type -> . boolean
-    (49) type -> . identifier
-    (50) type -> . func_call
-    (51) integer -> . INTEGER
-    (52) real -> . REAL
-    (53) string -> . STRING
-    (54) char -> . CHAR
-    (55) boolean -> . BOOLEAN
-    (56) identifier -> . IDENTIFIER
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     INTEGER         shift and go to state 59
     REAL            shift and go to state 60
@@ -3266,47 +3234,90 @@ state 134
     identifier                     shift and go to state 56
     func_call                      shift and go to state 85
 
+state 134
+
+    (113) for_loop -> FOR assignment downto . type DO statement
+    (114) for_loop -> FOR assignment downto . type DO if_body
+    (44) type -> . integer
+    (45) type -> . real
+    (46) type -> . string
+    (47) type -> . char
+    (48) type -> . boolean
+    (49) type -> . identifier
+    (50) type -> . func_call
+    (51) integer -> . INTEGER
+    (52) real -> . REAL
+    (53) string -> . STRING
+    (54) char -> . CHAR
+    (55) boolean -> . BOOLEAN
+    (56) identifier -> . IDENTIFIER
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+
+    INTEGER         shift and go to state 59
+    REAL            shift and go to state 60
+    STRING          shift and go to state 61
+    CHAR            shift and go to state 62
+    BOOLEAN         shift and go to state 63
+    IDENTIFIER      shift and go to state 86
+
+    type                           shift and go to state 168
+    integer                        shift and go to state 51
+    real                           shift and go to state 52
+    string                         shift and go to state 53
+    char                           shift and go to state 54
+    boolean                        shift and go to state 55
+    identifier                     shift and go to state 56
+    func_call                      shift and go to state 85
+
 state 135
 
-    (107) to -> TO .
+    (109) to -> TO .
 
-    INTEGER         reduce using rule 107 (to -> TO .)
-    REAL            reduce using rule 107 (to -> TO .)
-    STRING          reduce using rule 107 (to -> TO .)
-    CHAR            reduce using rule 107 (to -> TO .)
-    BOOLEAN         reduce using rule 107 (to -> TO .)
-    IDENTIFIER      reduce using rule 107 (to -> TO .)
+    INTEGER         reduce using rule 109 (to -> TO .)
+    REAL            reduce using rule 109 (to -> TO .)
+    STRING          reduce using rule 109 (to -> TO .)
+    CHAR            reduce using rule 109 (to -> TO .)
+    BOOLEAN         reduce using rule 109 (to -> TO .)
+    IDENTIFIER      reduce using rule 109 (to -> TO .)
 
 
 state 136
 
-    (108) downto -> DOWNTO .
+    (110) downto -> DOWNTO .
 
-    INTEGER         reduce using rule 108 (downto -> DOWNTO .)
-    REAL            reduce using rule 108 (downto -> DOWNTO .)
-    STRING          reduce using rule 108 (downto -> DOWNTO .)
-    CHAR            reduce using rule 108 (downto -> DOWNTO .)
-    BOOLEAN         reduce using rule 108 (downto -> DOWNTO .)
-    IDENTIFIER      reduce using rule 108 (downto -> DOWNTO .)
+    INTEGER         reduce using rule 110 (downto -> DOWNTO .)
+    REAL            reduce using rule 110 (downto -> DOWNTO .)
+    STRING          reduce using rule 110 (downto -> DOWNTO .)
+    CHAR            reduce using rule 110 (downto -> DOWNTO .)
+    BOOLEAN         reduce using rule 110 (downto -> DOWNTO .)
+    IDENTIFIER      reduce using rule 110 (downto -> DOWNTO .)
 
 
 state 137
 
-    (115) readln -> READLN LPAREN type . RPAREN
+    (117) readln -> READLN LPAREN type . RPAREN
 
-    RPAREN          shift and go to state 168
+    RPAREN          shift and go to state 169
 
 
 state 138
 
-    (82) function -> func_header SEMICOLON VAR variable_declaration . func_body SEMICOLON
-    (89) func_body -> . BEGIN statements END
+    (82) function -> func_header SEMICOLON VAR func_variable_declaration . func_body SEMICOLON
+    (91) func_body -> . BEGIN statements END
 
     BEGIN           shift and go to state 70
 
-    func_body                      shift and go to state 169
+    func_body                      shift and go to state 170
 
 state 139
+
+    (89) func_variable_declaration -> identifier_list . COLON type_name SEMICOLON func_variable_declaration
+    (90) func_variable_declaration -> identifier_list . COLON type_name SEMICOLON
+
+    COLON           shift and go to state 171
+
+
+state 140
 
     (83) function -> func_header SEMICOLON func_body SEMICOLON .
 
@@ -3316,23 +3327,23 @@ state 139
     FUNCTION        reduce using rule 83 (function -> func_header SEMICOLON func_body SEMICOLON .)
 
 
-state 140
-
-    (89) func_body -> BEGIN statements . END
-
-    END             shift and go to state 170
-
-
 state 141
 
-    (94) procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body . SEMICOLON
+    (91) func_body -> BEGIN statements . END
 
-    SEMICOLON       shift and go to state 171
+    END             shift and go to state 172
 
 
 state 142
 
-    (95) procedure_body -> BEGIN . statements END
+    (96) procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body . SEMICOLON
+
+    SEMICOLON       shift and go to state 173
+
+
+state 143
+
+    (97) procedure_body -> BEGIN . statements END
     (13) statements -> . statement SEMICOLON statements
     (14) statements -> . statement SEMICOLON
     (15) statement -> . writeln
@@ -3342,22 +3353,22 @@ state 142
     (19) statement -> . while_loop
     (20) statement -> . for_loop
     (21) statement -> . readln
-    (116) writeln -> . WRITELN LPAREN writeln_args RPAREN
+    (118) writeln -> . WRITELN LPAREN writeln_args RPAREN
     (22) assignment -> . IDENTIFIER ASSIGNMENT type
     (23) assignment -> . IDENTIFIER ASSIGNMENT expression
     (24) assignment -> . IDENTIFIER ASSIGNMENT length
-    (96) procedure_call -> . IDENTIFIER
-    (97) cond_if -> . IF condition THEN statement
-    (98) cond_if -> . IF condition THEN statement ELSE statement
-    (99) cond_if -> . IF condition THEN if_body
-    (100) cond_if -> . IF condition THEN if_body ELSE if_body
-    (113) while_loop -> . WHILE condition DO statement
-    (114) while_loop -> . WHILE condition DO if_body
-    (109) for_loop -> . FOR assignment to type DO statement
-    (110) for_loop -> . FOR assignment to type DO if_body
-    (111) for_loop -> . FOR assignment downto type DO statement
-    (112) for_loop -> . FOR assignment downto type DO if_body
-    (115) readln -> . READLN LPAREN type RPAREN
+    (98) procedure_call -> . IDENTIFIER
+    (99) cond_if -> . IF condition THEN statement
+    (100) cond_if -> . IF condition THEN statement ELSE statement
+    (101) cond_if -> . IF condition THEN if_body
+    (102) cond_if -> . IF condition THEN if_body ELSE if_body
+    (115) while_loop -> . WHILE condition DO statement
+    (116) while_loop -> . WHILE condition DO if_body
+    (111) for_loop -> . FOR assignment to type DO statement
+    (112) for_loop -> . FOR assignment to type DO if_body
+    (113) for_loop -> . FOR assignment downto type DO statement
+    (114) for_loop -> . FOR assignment downto type DO if_body
+    (117) readln -> . READLN LPAREN type RPAREN
 
     WRITELN         shift and go to state 29
     IDENTIFIER      shift and go to state 30
@@ -3366,7 +3377,7 @@ state 142
     FOR             shift and go to state 33
     READLN          shift and go to state 34
 
-    statements                     shift and go to state 172
+    statements                     shift and go to state 174
     statement                      shift and go to state 21
     writeln                        shift and go to state 22
     assignment                     shift and go to state 23
@@ -3376,37 +3387,37 @@ state 142
     for_loop                       shift and go to state 27
     readln                         shift and go to state 28
 
-state 143
-
-    (88) func_arg -> IDENTIFIER . COLON type_name
-
-    COLON           shift and go to state 173
-
-
 state 144
 
-    (84) func_header -> FUNCTION IDENTIFIER LPAREN func_args . RPAREN COLON type_name
-
-    RPAREN          shift and go to state 174
-
-
-state 145
-
-    (85) func_header -> FUNCTION IDENTIFIER LPAREN RPAREN . COLON type_name
+    (88) func_arg -> IDENTIFIER . COLON type_name
 
     COLON           shift and go to state 175
 
 
+state 145
+
+    (84) func_header -> FUNCTION IDENTIFIER LPAREN func_args . RPAREN COLON type_name
+
+    RPAREN          shift and go to state 176
+
+
 state 146
+
+    (85) func_header -> FUNCTION IDENTIFIER LPAREN RPAREN . COLON type_name
+
+    COLON           shift and go to state 177
+
+
+state 147
 
     (86) func_args -> func_arg . COMMA func_args
     (87) func_args -> func_arg .
 
-    COMMA           shift and go to state 176
+    COMMA           shift and go to state 178
     RPAREN          reduce using rule 87 (func_args -> func_arg .)
 
 
-state 147
+state 148
 
     (7) variable_declaration -> identifier_list COLON type_name SEMICOLON . variable_declaration
     (8) variable_declaration -> identifier_list COLON type_name SEMICOLON .
@@ -3419,9 +3430,9 @@ state 147
     IDENTIFIER      shift and go to state 17
 
     identifier_list                shift and go to state 16
-    variable_declaration           shift and go to state 177
+    variable_declaration           shift and go to state 179
 
-state 148
+state 149
 
     (11) array_type -> ARRAY LBRACKET . type RANGE type RBRACKET OF type_name
     (44) type -> . integer
@@ -3437,86 +3448,7 @@ state 148
     (54) char -> . CHAR
     (55) boolean -> . BOOLEAN
     (56) identifier -> . IDENTIFIER
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
-
-    INTEGER         shift and go to state 59
-    REAL            shift and go to state 60
-    STRING          shift and go to state 61
-    CHAR            shift and go to state 62
-    BOOLEAN         shift and go to state 63
-    IDENTIFIER      shift and go to state 86
-
-    type                           shift and go to state 178
-    integer                        shift and go to state 51
-    real                           shift and go to state 52
-    string                         shift and go to state 53
-    char                           shift and go to state 54
-    boolean                        shift and go to state 55
-    identifier                     shift and go to state 56
-    func_call                      shift and go to state 85
-
-state 149
-
-    (116) writeln -> WRITELN LPAREN writeln_args RPAREN .
-
-    SEMICOLON       reduce using rule 116 (writeln -> WRITELN LPAREN writeln_args RPAREN .)
-    ELSE            reduce using rule 116 (writeln -> WRITELN LPAREN writeln_args RPAREN .)
-
-
-state 150
-
-    (117) writeln_args -> type COMMA . writeln_args
-    (117) writeln_args -> . type COMMA writeln_args
-    (118) writeln_args -> . type
-    (44) type -> . integer
-    (45) type -> . real
-    (46) type -> . string
-    (47) type -> . char
-    (48) type -> . boolean
-    (49) type -> . identifier
-    (50) type -> . func_call
-    (51) integer -> . INTEGER
-    (52) real -> . REAL
-    (53) string -> . STRING
-    (54) char -> . CHAR
-    (55) boolean -> . BOOLEAN
-    (56) identifier -> . IDENTIFIER
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
-
-    INTEGER         shift and go to state 59
-    REAL            shift and go to state 60
-    STRING          shift and go to state 61
-    CHAR            shift and go to state 62
-    BOOLEAN         shift and go to state 63
-    IDENTIFIER      shift and go to state 86
-
-    type                           shift and go to state 84
-    writeln_args                   shift and go to state 179
-    integer                        shift and go to state 51
-    real                           shift and go to state 52
-    string                         shift and go to state 53
-    char                           shift and go to state 54
-    boolean                        shift and go to state 55
-    identifier                     shift and go to state 56
-    func_call                      shift and go to state 85
-
-state 151
-
-    (81) length -> LENGTH LPAREN . type RPAREN
-    (44) type -> . integer
-    (45) type -> . real
-    (46) type -> . string
-    (47) type -> . char
-    (48) type -> . boolean
-    (49) type -> . identifier
-    (50) type -> . func_call
-    (51) integer -> . INTEGER
-    (52) real -> . REAL
-    (53) string -> . STRING
-    (54) char -> . CHAR
-    (55) boolean -> . BOOLEAN
-    (56) identifier -> . IDENTIFIER
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     INTEGER         shift and go to state 59
     REAL            shift and go to state 60
@@ -3534,33 +3466,112 @@ state 151
     identifier                     shift and go to state 56
     func_call                      shift and go to state 85
 
+state 150
+
+    (118) writeln -> WRITELN LPAREN writeln_args RPAREN .
+
+    SEMICOLON       reduce using rule 118 (writeln -> WRITELN LPAREN writeln_args RPAREN .)
+    ELSE            reduce using rule 118 (writeln -> WRITELN LPAREN writeln_args RPAREN .)
+
+
+state 151
+
+    (119) writeln_args -> type COMMA . writeln_args
+    (119) writeln_args -> . type COMMA writeln_args
+    (120) writeln_args -> . type
+    (44) type -> . integer
+    (45) type -> . real
+    (46) type -> . string
+    (47) type -> . char
+    (48) type -> . boolean
+    (49) type -> . identifier
+    (50) type -> . func_call
+    (51) integer -> . INTEGER
+    (52) real -> . REAL
+    (53) string -> . STRING
+    (54) char -> . CHAR
+    (55) boolean -> . BOOLEAN
+    (56) identifier -> . IDENTIFIER
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+
+    INTEGER         shift and go to state 59
+    REAL            shift and go to state 60
+    STRING          shift and go to state 61
+    CHAR            shift and go to state 62
+    BOOLEAN         shift and go to state 63
+    IDENTIFIER      shift and go to state 86
+
+    type                           shift and go to state 84
+    writeln_args                   shift and go to state 181
+    integer                        shift and go to state 51
+    real                           shift and go to state 52
+    string                         shift and go to state 53
+    char                           shift and go to state 54
+    boolean                        shift and go to state 55
+    identifier                     shift and go to state 56
+    func_call                      shift and go to state 85
+
 state 152
 
-    (97) cond_if -> IF condition THEN statement .
-    (98) cond_if -> IF condition THEN statement . ELSE statement
+    (81) length -> LENGTH LPAREN . type RPAREN
+    (44) type -> . integer
+    (45) type -> . real
+    (46) type -> . string
+    (47) type -> . char
+    (48) type -> . boolean
+    (49) type -> . identifier
+    (50) type -> . func_call
+    (51) integer -> . INTEGER
+    (52) real -> . REAL
+    (53) string -> . STRING
+    (54) char -> . CHAR
+    (55) boolean -> . BOOLEAN
+    (56) identifier -> . IDENTIFIER
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-  ! shift/reduce conflict for ELSE resolved as shift
-    SEMICOLON       reduce using rule 97 (cond_if -> IF condition THEN statement .)
-    ELSE            shift and go to state 181
+    INTEGER         shift and go to state 59
+    REAL            shift and go to state 60
+    STRING          shift and go to state 61
+    CHAR            shift and go to state 62
+    BOOLEAN         shift and go to state 63
+    IDENTIFIER      shift and go to state 86
 
-  ! ELSE            [ reduce using rule 97 (cond_if -> IF condition THEN statement .) ]
-
+    type                           shift and go to state 182
+    integer                        shift and go to state 51
+    real                           shift and go to state 52
+    string                         shift and go to state 53
+    char                           shift and go to state 54
+    boolean                        shift and go to state 55
+    identifier                     shift and go to state 56
+    func_call                      shift and go to state 85
 
 state 153
 
-    (99) cond_if -> IF condition THEN if_body .
-    (100) cond_if -> IF condition THEN if_body . ELSE if_body
+    (99) cond_if -> IF condition THEN statement .
+    (100) cond_if -> IF condition THEN statement . ELSE statement
 
   ! shift/reduce conflict for ELSE resolved as shift
-    SEMICOLON       reduce using rule 99 (cond_if -> IF condition THEN if_body .)
-    ELSE            shift and go to state 182
+    SEMICOLON       reduce using rule 99 (cond_if -> IF condition THEN statement .)
+    ELSE            shift and go to state 183
 
-  ! ELSE            [ reduce using rule 99 (cond_if -> IF condition THEN if_body .) ]
+  ! ELSE            [ reduce using rule 99 (cond_if -> IF condition THEN statement .) ]
 
 
 state 154
 
-    (106) if_body -> BEGIN . statements END
+    (101) cond_if -> IF condition THEN if_body .
+    (102) cond_if -> IF condition THEN if_body . ELSE if_body
+
+  ! shift/reduce conflict for ELSE resolved as shift
+    SEMICOLON       reduce using rule 101 (cond_if -> IF condition THEN if_body .)
+    ELSE            shift and go to state 184
+
+  ! ELSE            [ reduce using rule 101 (cond_if -> IF condition THEN if_body .) ]
+
+
+state 155
+
+    (108) if_body -> BEGIN . statements END
     (13) statements -> . statement SEMICOLON statements
     (14) statements -> . statement SEMICOLON
     (15) statement -> . writeln
@@ -3570,22 +3581,22 @@ state 154
     (19) statement -> . while_loop
     (20) statement -> . for_loop
     (21) statement -> . readln
-    (116) writeln -> . WRITELN LPAREN writeln_args RPAREN
+    (118) writeln -> . WRITELN LPAREN writeln_args RPAREN
     (22) assignment -> . IDENTIFIER ASSIGNMENT type
     (23) assignment -> . IDENTIFIER ASSIGNMENT expression
     (24) assignment -> . IDENTIFIER ASSIGNMENT length
-    (96) procedure_call -> . IDENTIFIER
-    (97) cond_if -> . IF condition THEN statement
-    (98) cond_if -> . IF condition THEN statement ELSE statement
-    (99) cond_if -> . IF condition THEN if_body
-    (100) cond_if -> . IF condition THEN if_body ELSE if_body
-    (113) while_loop -> . WHILE condition DO statement
-    (114) while_loop -> . WHILE condition DO if_body
-    (109) for_loop -> . FOR assignment to type DO statement
-    (110) for_loop -> . FOR assignment to type DO if_body
-    (111) for_loop -> . FOR assignment downto type DO statement
-    (112) for_loop -> . FOR assignment downto type DO if_body
-    (115) readln -> . READLN LPAREN type RPAREN
+    (98) procedure_call -> . IDENTIFIER
+    (99) cond_if -> . IF condition THEN statement
+    (100) cond_if -> . IF condition THEN statement ELSE statement
+    (101) cond_if -> . IF condition THEN if_body
+    (102) cond_if -> . IF condition THEN if_body ELSE if_body
+    (115) while_loop -> . WHILE condition DO statement
+    (116) while_loop -> . WHILE condition DO if_body
+    (111) for_loop -> . FOR assignment to type DO statement
+    (112) for_loop -> . FOR assignment to type DO if_body
+    (113) for_loop -> . FOR assignment downto type DO statement
+    (114) for_loop -> . FOR assignment downto type DO if_body
+    (117) readln -> . READLN LPAREN type RPAREN
 
     WRITELN         shift and go to state 29
     IDENTIFIER      shift and go to state 30
@@ -3594,7 +3605,7 @@ state 154
     FOR             shift and go to state 33
     READLN          shift and go to state 34
 
-    statements                     shift and go to state 183
+    statements                     shift and go to state 185
     statement                      shift and go to state 21
     writeln                        shift and go to state 22
     assignment                     shift and go to state 23
@@ -3604,12 +3615,12 @@ state 154
     for_loop                       shift and go to state 27
     readln                         shift and go to state 28
 
-state 155
+state 156
 
-    (101) condition -> expression comparator expression .
+    (103) condition -> expression comparator expression .
     (27) expression -> expression . operation expression
-    (101) condition -> expression . comparator expression
-    (104) condition -> expression . comparator type
+    (103) condition -> expression . comparator expression
+    (106) condition -> expression . comparator type
     (31) operation -> . plus
     (32) operation -> . minus
     (33) operation -> . times
@@ -3658,13 +3669,13 @@ state 155
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for NOT resolved as shift
-    THEN            reduce using rule 101 (condition -> expression comparator expression .)
-    DO              reduce using rule 101 (condition -> expression comparator expression .)
-    SEMICOLON       reduce using rule 101 (condition -> expression comparator expression .)
-    TO              reduce using rule 101 (condition -> expression comparator expression .)
-    DOWNTO          reduce using rule 101 (condition -> expression comparator expression .)
-    ELSE            reduce using rule 101 (condition -> expression comparator expression .)
-    RPAREN          reduce using rule 101 (condition -> expression comparator expression .)
+    THEN            reduce using rule 103 (condition -> expression comparator expression .)
+    DO              reduce using rule 103 (condition -> expression comparator expression .)
+    SEMICOLON       reduce using rule 103 (condition -> expression comparator expression .)
+    TO              reduce using rule 103 (condition -> expression comparator expression .)
+    DOWNTO          reduce using rule 103 (condition -> expression comparator expression .)
+    ELSE            reduce using rule 103 (condition -> expression comparator expression .)
+    RPAREN          reduce using rule 103 (condition -> expression comparator expression .)
     RANGE           shift and go to state 111
     PLUS            shift and go to state 121
     MINUS           shift and go to state 122
@@ -3682,22 +3693,22 @@ state 155
     OR              shift and go to state 119
     NOT             shift and go to state 120
 
-  ! RANGE           [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! EQ              [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! NEQ             [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! LT              [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! GT              [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! LTE             [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! GTE             [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! AND             [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! OR              [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! NOT             [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! PLUS            [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! MINUS           [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! TIMES           [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! DIVISION        [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! DIV             [ reduce using rule 101 (condition -> expression comparator expression .) ]
-  ! MOD             [ reduce using rule 101 (condition -> expression comparator expression .) ]
+  ! RANGE           [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! EQ              [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! NEQ             [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! LT              [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! GT              [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! LTE             [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! GTE             [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! AND             [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! OR              [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! NOT             [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! PLUS            [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! MINUS           [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! TIMES           [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! DIVISION        [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! DIV             [ reduce using rule 103 (condition -> expression comparator expression .) ]
+  ! MOD             [ reduce using rule 103 (condition -> expression comparator expression .) ]
 
     comparator                     shift and go to state 94
     operation                      shift and go to state 95
@@ -3717,13 +3728,13 @@ state 155
     or                             shift and go to state 103
     not                            shift and go to state 104
 
-state 156
+state 157
 
-    (104) condition -> expression comparator type .
+    (106) condition -> expression comparator type .
     (25) expression -> type . operation type
-    (102) condition -> type . comparator expression
-    (103) condition -> type . comparator type
-    (105) condition -> type .
+    (104) condition -> type . comparator expression
+    (105) condition -> type . comparator type
+    (107) condition -> type .
     (31) operation -> . plus
     (32) operation -> . minus
     (33) operation -> . times
@@ -3756,29 +3767,29 @@ state 156
     (79) or -> . OR
     (80) not -> . NOT
 
-  ! reduce/reduce conflict for RANGE resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for PLUS resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for MINUS resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for TIMES resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for DIVISION resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for DIV resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for MOD resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for EQ resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for NEQ resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for LT resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for GT resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for LTE resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for GTE resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for AND resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for OR resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for NOT resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for THEN resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for DO resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for SEMICOLON resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for TO resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for DOWNTO resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for ELSE resolved using rule 104 (condition -> expression comparator type .)
-  ! reduce/reduce conflict for RPAREN resolved using rule 104 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for RANGE resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for PLUS resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for MINUS resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for TIMES resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for DIVISION resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for DIV resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for MOD resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for EQ resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for NEQ resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for LT resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for GT resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for LTE resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for GTE resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for AND resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for OR resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for NOT resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for THEN resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for DO resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for SEMICOLON resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for TO resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for DOWNTO resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for ELSE resolved using rule 106 (condition -> expression comparator type .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 106 (condition -> expression comparator type .)
   ! shift/reduce conflict for RANGE resolved as shift
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
@@ -3795,13 +3806,13 @@ state 156
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for NOT resolved as shift
-    THEN            reduce using rule 104 (condition -> expression comparator type .)
-    DO              reduce using rule 104 (condition -> expression comparator type .)
-    SEMICOLON       reduce using rule 104 (condition -> expression comparator type .)
-    TO              reduce using rule 104 (condition -> expression comparator type .)
-    DOWNTO          reduce using rule 104 (condition -> expression comparator type .)
-    ELSE            reduce using rule 104 (condition -> expression comparator type .)
-    RPAREN          reduce using rule 104 (condition -> expression comparator type .)
+    THEN            reduce using rule 106 (condition -> expression comparator type .)
+    DO              reduce using rule 106 (condition -> expression comparator type .)
+    SEMICOLON       reduce using rule 106 (condition -> expression comparator type .)
+    TO              reduce using rule 106 (condition -> expression comparator type .)
+    DOWNTO          reduce using rule 106 (condition -> expression comparator type .)
+    ELSE            reduce using rule 106 (condition -> expression comparator type .)
+    RPAREN          reduce using rule 106 (condition -> expression comparator type .)
     RANGE           shift and go to state 111
     PLUS            shift and go to state 121
     MINUS           shift and go to state 122
@@ -3819,45 +3830,45 @@ state 156
     OR              shift and go to state 119
     NOT             shift and go to state 120
 
-  ! RANGE           [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! EQ              [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! NEQ             [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! LT              [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! GT              [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! LTE             [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! GTE             [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! AND             [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! OR              [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! NOT             [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! PLUS            [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! MINUS           [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! TIMES           [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! DIVISION        [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! DIV             [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! MOD             [ reduce using rule 104 (condition -> expression comparator type .) ]
-  ! RANGE           [ reduce using rule 105 (condition -> type .) ]
-  ! PLUS            [ reduce using rule 105 (condition -> type .) ]
-  ! MINUS           [ reduce using rule 105 (condition -> type .) ]
-  ! TIMES           [ reduce using rule 105 (condition -> type .) ]
-  ! DIVISION        [ reduce using rule 105 (condition -> type .) ]
-  ! DIV             [ reduce using rule 105 (condition -> type .) ]
-  ! MOD             [ reduce using rule 105 (condition -> type .) ]
-  ! EQ              [ reduce using rule 105 (condition -> type .) ]
-  ! NEQ             [ reduce using rule 105 (condition -> type .) ]
-  ! LT              [ reduce using rule 105 (condition -> type .) ]
-  ! GT              [ reduce using rule 105 (condition -> type .) ]
-  ! LTE             [ reduce using rule 105 (condition -> type .) ]
-  ! GTE             [ reduce using rule 105 (condition -> type .) ]
-  ! AND             [ reduce using rule 105 (condition -> type .) ]
-  ! OR              [ reduce using rule 105 (condition -> type .) ]
-  ! NOT             [ reduce using rule 105 (condition -> type .) ]
-  ! THEN            [ reduce using rule 105 (condition -> type .) ]
-  ! DO              [ reduce using rule 105 (condition -> type .) ]
-  ! SEMICOLON       [ reduce using rule 105 (condition -> type .) ]
-  ! TO              [ reduce using rule 105 (condition -> type .) ]
-  ! DOWNTO          [ reduce using rule 105 (condition -> type .) ]
-  ! ELSE            [ reduce using rule 105 (condition -> type .) ]
-  ! RPAREN          [ reduce using rule 105 (condition -> type .) ]
+  ! RANGE           [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! EQ              [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! NEQ             [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! LT              [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! GT              [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! LTE             [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! GTE             [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! AND             [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! OR              [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! NOT             [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! PLUS            [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! MINUS           [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! TIMES           [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! DIVISION        [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! DIV             [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! MOD             [ reduce using rule 106 (condition -> expression comparator type .) ]
+  ! RANGE           [ reduce using rule 107 (condition -> type .) ]
+  ! PLUS            [ reduce using rule 107 (condition -> type .) ]
+  ! MINUS           [ reduce using rule 107 (condition -> type .) ]
+  ! TIMES           [ reduce using rule 107 (condition -> type .) ]
+  ! DIVISION        [ reduce using rule 107 (condition -> type .) ]
+  ! DIV             [ reduce using rule 107 (condition -> type .) ]
+  ! MOD             [ reduce using rule 107 (condition -> type .) ]
+  ! EQ              [ reduce using rule 107 (condition -> type .) ]
+  ! NEQ             [ reduce using rule 107 (condition -> type .) ]
+  ! LT              [ reduce using rule 107 (condition -> type .) ]
+  ! GT              [ reduce using rule 107 (condition -> type .) ]
+  ! LTE             [ reduce using rule 107 (condition -> type .) ]
+  ! GTE             [ reduce using rule 107 (condition -> type .) ]
+  ! AND             [ reduce using rule 107 (condition -> type .) ]
+  ! OR              [ reduce using rule 107 (condition -> type .) ]
+  ! NOT             [ reduce using rule 107 (condition -> type .) ]
+  ! THEN            [ reduce using rule 107 (condition -> type .) ]
+  ! DO              [ reduce using rule 107 (condition -> type .) ]
+  ! SEMICOLON       [ reduce using rule 107 (condition -> type .) ]
+  ! TO              [ reduce using rule 107 (condition -> type .) ]
+  ! DOWNTO          [ reduce using rule 107 (condition -> type .) ]
+  ! ELSE            [ reduce using rule 107 (condition -> type .) ]
+  ! RPAREN          [ reduce using rule 107 (condition -> type .) ]
 
     comparator                     shift and go to state 127
     operation                      shift and go to state 128
@@ -3877,12 +3888,12 @@ state 156
     or                             shift and go to state 103
     not                            shift and go to state 104
 
-state 157
+state 158
 
     (27) expression -> expression operation expression .
     (27) expression -> expression . operation expression
-    (101) condition -> expression . comparator expression
-    (104) condition -> expression . comparator type
+    (103) condition -> expression . comparator expression
+    (106) condition -> expression . comparator type
     (31) operation -> . plus
     (32) operation -> . minus
     (33) operation -> . times
@@ -3990,13 +4001,13 @@ state 157
     or                             shift and go to state 103
     not                            shift and go to state 104
 
-state 158
+state 159
 
-    (103) condition -> type comparator type .
+    (105) condition -> type comparator type .
     (25) expression -> type . operation type
-    (102) condition -> type . comparator expression
-    (103) condition -> type . comparator type
-    (105) condition -> type .
+    (104) condition -> type . comparator expression
+    (105) condition -> type . comparator type
+    (107) condition -> type .
     (31) operation -> . plus
     (32) operation -> . minus
     (33) operation -> . times
@@ -4029,29 +4040,29 @@ state 158
     (79) or -> . OR
     (80) not -> . NOT
 
-  ! reduce/reduce conflict for RANGE resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for PLUS resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for MINUS resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for TIMES resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for DIVISION resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for DIV resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for MOD resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for EQ resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for NEQ resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for LT resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for GT resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for LTE resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for GTE resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for AND resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for OR resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for NOT resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for THEN resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for DO resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for SEMICOLON resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for TO resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for DOWNTO resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for ELSE resolved using rule 103 (condition -> type comparator type .)
-  ! reduce/reduce conflict for RPAREN resolved using rule 103 (condition -> type comparator type .)
+  ! reduce/reduce conflict for RANGE resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for PLUS resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for MINUS resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for TIMES resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for DIVISION resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for DIV resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for MOD resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for EQ resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for NEQ resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for LT resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for GT resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for LTE resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for GTE resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for AND resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for OR resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for NOT resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for THEN resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for DO resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for SEMICOLON resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for TO resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for DOWNTO resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for ELSE resolved using rule 105 (condition -> type comparator type .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 105 (condition -> type comparator type .)
   ! shift/reduce conflict for RANGE resolved as shift
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
@@ -4068,13 +4079,13 @@ state 158
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for NOT resolved as shift
-    THEN            reduce using rule 103 (condition -> type comparator type .)
-    DO              reduce using rule 103 (condition -> type comparator type .)
-    SEMICOLON       reduce using rule 103 (condition -> type comparator type .)
-    TO              reduce using rule 103 (condition -> type comparator type .)
-    DOWNTO          reduce using rule 103 (condition -> type comparator type .)
-    ELSE            reduce using rule 103 (condition -> type comparator type .)
-    RPAREN          reduce using rule 103 (condition -> type comparator type .)
+    THEN            reduce using rule 105 (condition -> type comparator type .)
+    DO              reduce using rule 105 (condition -> type comparator type .)
+    SEMICOLON       reduce using rule 105 (condition -> type comparator type .)
+    TO              reduce using rule 105 (condition -> type comparator type .)
+    DOWNTO          reduce using rule 105 (condition -> type comparator type .)
+    ELSE            reduce using rule 105 (condition -> type comparator type .)
+    RPAREN          reduce using rule 105 (condition -> type comparator type .)
     RANGE           shift and go to state 111
     PLUS            shift and go to state 121
     MINUS           shift and go to state 122
@@ -4092,45 +4103,45 @@ state 158
     OR              shift and go to state 119
     NOT             shift and go to state 120
 
-  ! RANGE           [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! EQ              [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! NEQ             [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! LT              [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! GT              [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! LTE             [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! GTE             [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! AND             [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! OR              [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! NOT             [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! PLUS            [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! MINUS           [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! TIMES           [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! DIVISION        [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! DIV             [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! MOD             [ reduce using rule 103 (condition -> type comparator type .) ]
-  ! RANGE           [ reduce using rule 105 (condition -> type .) ]
-  ! PLUS            [ reduce using rule 105 (condition -> type .) ]
-  ! MINUS           [ reduce using rule 105 (condition -> type .) ]
-  ! TIMES           [ reduce using rule 105 (condition -> type .) ]
-  ! DIVISION        [ reduce using rule 105 (condition -> type .) ]
-  ! DIV             [ reduce using rule 105 (condition -> type .) ]
-  ! MOD             [ reduce using rule 105 (condition -> type .) ]
-  ! EQ              [ reduce using rule 105 (condition -> type .) ]
-  ! NEQ             [ reduce using rule 105 (condition -> type .) ]
-  ! LT              [ reduce using rule 105 (condition -> type .) ]
-  ! GT              [ reduce using rule 105 (condition -> type .) ]
-  ! LTE             [ reduce using rule 105 (condition -> type .) ]
-  ! GTE             [ reduce using rule 105 (condition -> type .) ]
-  ! AND             [ reduce using rule 105 (condition -> type .) ]
-  ! OR              [ reduce using rule 105 (condition -> type .) ]
-  ! NOT             [ reduce using rule 105 (condition -> type .) ]
-  ! THEN            [ reduce using rule 105 (condition -> type .) ]
-  ! DO              [ reduce using rule 105 (condition -> type .) ]
-  ! SEMICOLON       [ reduce using rule 105 (condition -> type .) ]
-  ! TO              [ reduce using rule 105 (condition -> type .) ]
-  ! DOWNTO          [ reduce using rule 105 (condition -> type .) ]
-  ! ELSE            [ reduce using rule 105 (condition -> type .) ]
-  ! RPAREN          [ reduce using rule 105 (condition -> type .) ]
+  ! RANGE           [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! EQ              [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! NEQ             [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! LT              [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! GT              [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! LTE             [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! GTE             [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! AND             [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! OR              [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! NOT             [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! PLUS            [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! MINUS           [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! TIMES           [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! DIVISION        [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! DIV             [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! MOD             [ reduce using rule 105 (condition -> type comparator type .) ]
+  ! RANGE           [ reduce using rule 107 (condition -> type .) ]
+  ! PLUS            [ reduce using rule 107 (condition -> type .) ]
+  ! MINUS           [ reduce using rule 107 (condition -> type .) ]
+  ! TIMES           [ reduce using rule 107 (condition -> type .) ]
+  ! DIVISION        [ reduce using rule 107 (condition -> type .) ]
+  ! DIV             [ reduce using rule 107 (condition -> type .) ]
+  ! MOD             [ reduce using rule 107 (condition -> type .) ]
+  ! EQ              [ reduce using rule 107 (condition -> type .) ]
+  ! NEQ             [ reduce using rule 107 (condition -> type .) ]
+  ! LT              [ reduce using rule 107 (condition -> type .) ]
+  ! GT              [ reduce using rule 107 (condition -> type .) ]
+  ! LTE             [ reduce using rule 107 (condition -> type .) ]
+  ! GTE             [ reduce using rule 107 (condition -> type .) ]
+  ! AND             [ reduce using rule 107 (condition -> type .) ]
+  ! OR              [ reduce using rule 107 (condition -> type .) ]
+  ! NOT             [ reduce using rule 107 (condition -> type .) ]
+  ! THEN            [ reduce using rule 107 (condition -> type .) ]
+  ! DO              [ reduce using rule 107 (condition -> type .) ]
+  ! SEMICOLON       [ reduce using rule 107 (condition -> type .) ]
+  ! TO              [ reduce using rule 107 (condition -> type .) ]
+  ! DOWNTO          [ reduce using rule 107 (condition -> type .) ]
+  ! ELSE            [ reduce using rule 107 (condition -> type .) ]
+  ! RPAREN          [ reduce using rule 107 (condition -> type .) ]
 
     comparator                     shift and go to state 127
     operation                      shift and go to state 128
@@ -4150,12 +4161,12 @@ state 158
     or                             shift and go to state 103
     not                            shift and go to state 104
 
-state 159
+state 160
 
-    (102) condition -> type comparator expression .
+    (104) condition -> type comparator expression .
     (27) expression -> expression . operation expression
-    (101) condition -> expression . comparator expression
-    (104) condition -> expression . comparator type
+    (103) condition -> expression . comparator expression
+    (106) condition -> expression . comparator type
     (31) operation -> . plus
     (32) operation -> . minus
     (33) operation -> . times
@@ -4204,13 +4215,13 @@ state 159
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for NOT resolved as shift
-    THEN            reduce using rule 102 (condition -> type comparator expression .)
-    DO              reduce using rule 102 (condition -> type comparator expression .)
-    SEMICOLON       reduce using rule 102 (condition -> type comparator expression .)
-    TO              reduce using rule 102 (condition -> type comparator expression .)
-    DOWNTO          reduce using rule 102 (condition -> type comparator expression .)
-    ELSE            reduce using rule 102 (condition -> type comparator expression .)
-    RPAREN          reduce using rule 102 (condition -> type comparator expression .)
+    THEN            reduce using rule 104 (condition -> type comparator expression .)
+    DO              reduce using rule 104 (condition -> type comparator expression .)
+    SEMICOLON       reduce using rule 104 (condition -> type comparator expression .)
+    TO              reduce using rule 104 (condition -> type comparator expression .)
+    DOWNTO          reduce using rule 104 (condition -> type comparator expression .)
+    ELSE            reduce using rule 104 (condition -> type comparator expression .)
+    RPAREN          reduce using rule 104 (condition -> type comparator expression .)
     RANGE           shift and go to state 111
     PLUS            shift and go to state 121
     MINUS           shift and go to state 122
@@ -4228,22 +4239,22 @@ state 159
     OR              shift and go to state 119
     NOT             shift and go to state 120
 
-  ! RANGE           [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! EQ              [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! NEQ             [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! LT              [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! GT              [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! LTE             [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! GTE             [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! AND             [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! OR              [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! NOT             [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! PLUS            [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! MINUS           [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! TIMES           [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! DIVISION        [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! DIV             [ reduce using rule 102 (condition -> type comparator expression .) ]
-  ! MOD             [ reduce using rule 102 (condition -> type comparator expression .) ]
+  ! RANGE           [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! EQ              [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! NEQ             [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! LT              [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! GT              [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! LTE             [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! GTE             [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! AND             [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! OR              [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! NOT             [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! PLUS            [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! MINUS           [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! TIMES           [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! DIVISION        [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! DIV             [ reduce using rule 104 (condition -> type comparator expression .) ]
+  ! MOD             [ reduce using rule 104 (condition -> type comparator expression .) ]
 
     comparator                     shift and go to state 94
     operation                      shift and go to state 95
@@ -4263,7 +4274,7 @@ state 159
     or                             shift and go to state 103
     not                            shift and go to state 104
 
-state 160
+state 161
 
     (25) expression -> type operation type .
 
@@ -4292,7 +4303,7 @@ state 160
     DO              reduce using rule 25 (expression -> type operation type .)
 
 
-state 161
+state 162
 
     (30) expression_paren -> LPAREN expression RPAREN .
 
@@ -4321,94 +4332,116 @@ state 161
     DO              reduce using rule 30 (expression_paren -> LPAREN expression RPAREN .)
 
 
-state 162
-
-    (91) arg_list -> IDENTIFIER . COMMA arg_list
-    (92) arg_list -> IDENTIFIER .
-
-    COMMA           shift and go to state 184
-    RPAREN          reduce using rule 92 (arg_list -> IDENTIFIER .)
-
-
 state 163
 
-    (90) func_call -> IDENTIFIER LPAREN arg_list . RPAREN
+    (93) arg_list -> IDENTIFIER . COMMA arg_list
+    (94) arg_list -> IDENTIFIER .
 
-    RPAREN          shift and go to state 185
+    COMMA           shift and go to state 186
+    RPAREN          reduce using rule 94 (arg_list -> IDENTIFIER .)
 
 
 state 164
 
-    (113) while_loop -> WHILE condition DO statement .
+    (92) func_call -> IDENTIFIER LPAREN arg_list . RPAREN
 
-    SEMICOLON       reduce using rule 113 (while_loop -> WHILE condition DO statement .)
-    ELSE            reduce using rule 113 (while_loop -> WHILE condition DO statement .)
+    RPAREN          shift and go to state 187
 
 
 state 165
 
-    (114) while_loop -> WHILE condition DO if_body .
+    (115) while_loop -> WHILE condition DO statement .
 
-    SEMICOLON       reduce using rule 114 (while_loop -> WHILE condition DO if_body .)
-    ELSE            reduce using rule 114 (while_loop -> WHILE condition DO if_body .)
+    SEMICOLON       reduce using rule 115 (while_loop -> WHILE condition DO statement .)
+    ELSE            reduce using rule 115 (while_loop -> WHILE condition DO statement .)
 
 
 state 166
 
-    (109) for_loop -> FOR assignment to type . DO statement
-    (110) for_loop -> FOR assignment to type . DO if_body
+    (116) while_loop -> WHILE condition DO if_body .
 
-    DO              shift and go to state 186
+    SEMICOLON       reduce using rule 116 (while_loop -> WHILE condition DO if_body .)
+    ELSE            reduce using rule 116 (while_loop -> WHILE condition DO if_body .)
 
 
 state 167
 
-    (111) for_loop -> FOR assignment downto type . DO statement
-    (112) for_loop -> FOR assignment downto type . DO if_body
+    (111) for_loop -> FOR assignment to type . DO statement
+    (112) for_loop -> FOR assignment to type . DO if_body
 
-    DO              shift and go to state 187
+    DO              shift and go to state 188
 
 
 state 168
 
-    (115) readln -> READLN LPAREN type RPAREN .
+    (113) for_loop -> FOR assignment downto type . DO statement
+    (114) for_loop -> FOR assignment downto type . DO if_body
 
-    SEMICOLON       reduce using rule 115 (readln -> READLN LPAREN type RPAREN .)
-    ELSE            reduce using rule 115 (readln -> READLN LPAREN type RPAREN .)
+    DO              shift and go to state 189
 
 
 state 169
 
-    (82) function -> func_header SEMICOLON VAR variable_declaration func_body . SEMICOLON
+    (117) readln -> READLN LPAREN type RPAREN .
 
-    SEMICOLON       shift and go to state 188
+    SEMICOLON       reduce using rule 117 (readln -> READLN LPAREN type RPAREN .)
+    ELSE            reduce using rule 117 (readln -> READLN LPAREN type RPAREN .)
 
 
 state 170
 
-    (89) func_body -> BEGIN statements END .
+    (82) function -> func_header SEMICOLON VAR func_variable_declaration func_body . SEMICOLON
 
-    SEMICOLON       reduce using rule 89 (func_body -> BEGIN statements END .)
+    SEMICOLON       shift and go to state 190
 
 
 state 171
 
-    (94) procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON .
+    (89) func_variable_declaration -> identifier_list COLON . type_name SEMICOLON func_variable_declaration
+    (90) func_variable_declaration -> identifier_list COLON . type_name SEMICOLON
+    (38) type_name -> . NINTEGER
+    (39) type_name -> . NREAL
+    (40) type_name -> . NSTRING
+    (41) type_name -> . NCHAR
+    (42) type_name -> . NBOOLEAN
+    (43) type_name -> . array_type
+    (11) array_type -> . ARRAY LBRACKET type RANGE type RBRACKET OF type_name
 
-    VAR             reduce using rule 94 (procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON .)
-    BEGIN           reduce using rule 94 (procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON .)
-    PROCEDURE       reduce using rule 94 (procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON .)
-    FUNCTION        reduce using rule 94 (procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON .)
+    NINTEGER        shift and go to state 74
+    NREAL           shift and go to state 75
+    NSTRING         shift and go to state 76
+    NCHAR           shift and go to state 77
+    NBOOLEAN        shift and go to state 78
+    ARRAY           shift and go to state 80
 
+    type_name                      shift and go to state 191
+    array_type                     shift and go to state 79
 
 state 172
 
-    (95) procedure_body -> BEGIN statements . END
+    (91) func_body -> BEGIN statements END .
 
-    END             shift and go to state 189
+    SEMICOLON       reduce using rule 91 (func_body -> BEGIN statements END .)
 
 
 state 173
+
+    (96) procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON .
+
+    VAR             reduce using rule 96 (procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON .)
+    BEGIN           reduce using rule 96 (procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON .)
+    PROCEDURE       reduce using rule 96 (procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON .)
+    FUNCTION        reduce using rule 96 (procedure -> PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON .)
+
+
+state 174
+
+    (97) procedure_body -> BEGIN statements . END
+
+    END             shift and go to state 192
+
+
+state 175
 
     (88) func_arg -> IDENTIFIER COLON . type_name
     (38) type_name -> . NINTEGER
@@ -4426,17 +4459,17 @@ state 173
     NBOOLEAN        shift and go to state 78
     ARRAY           shift and go to state 80
 
-    type_name                      shift and go to state 190
+    type_name                      shift and go to state 193
     array_type                     shift and go to state 79
 
-state 174
+state 176
 
     (84) func_header -> FUNCTION IDENTIFIER LPAREN func_args RPAREN . COLON type_name
 
-    COLON           shift and go to state 191
+    COLON           shift and go to state 194
 
 
-state 175
+state 177
 
     (85) func_header -> FUNCTION IDENTIFIER LPAREN RPAREN COLON . type_name
     (38) type_name -> . NINTEGER
@@ -4454,52 +4487,52 @@ state 175
     NBOOLEAN        shift and go to state 78
     ARRAY           shift and go to state 80
 
-    type_name                      shift and go to state 192
+    type_name                      shift and go to state 195
     array_type                     shift and go to state 79
 
-state 176
+state 178
 
     (86) func_args -> func_arg COMMA . func_args
     (86) func_args -> . func_arg COMMA func_args
     (87) func_args -> . func_arg
     (88) func_arg -> . IDENTIFIER COLON type_name
 
-    IDENTIFIER      shift and go to state 143
+    IDENTIFIER      shift and go to state 144
 
-    func_arg                       shift and go to state 146
-    func_args                      shift and go to state 193
+    func_arg                       shift and go to state 147
+    func_args                      shift and go to state 196
 
-state 177
+state 179
 
     (7) variable_declaration -> identifier_list COLON type_name SEMICOLON variable_declaration .
 
     BEGIN           reduce using rule 7 (variable_declaration -> identifier_list COLON type_name SEMICOLON variable_declaration .)
 
 
-state 178
+state 180
 
     (11) array_type -> ARRAY LBRACKET type . RANGE type RBRACKET OF type_name
 
-    RANGE           shift and go to state 194
-
-
-state 179
-
-    (117) writeln_args -> type COMMA writeln_args .
-
-    RPAREN          reduce using rule 117 (writeln_args -> type COMMA writeln_args .)
-
-
-state 180
-
-    (81) length -> LENGTH LPAREN type . RPAREN
-
-    RPAREN          shift and go to state 195
+    RANGE           shift and go to state 197
 
 
 state 181
 
-    (98) cond_if -> IF condition THEN statement ELSE . statement
+    (119) writeln_args -> type COMMA writeln_args .
+
+    RPAREN          reduce using rule 119 (writeln_args -> type COMMA writeln_args .)
+
+
+state 182
+
+    (81) length -> LENGTH LPAREN type . RPAREN
+
+    RPAREN          shift and go to state 198
+
+
+state 183
+
+    (100) cond_if -> IF condition THEN statement ELSE . statement
     (15) statement -> . writeln
     (16) statement -> . assignment
     (17) statement -> . procedure_call
@@ -4507,22 +4540,22 @@ state 181
     (19) statement -> . while_loop
     (20) statement -> . for_loop
     (21) statement -> . readln
-    (116) writeln -> . WRITELN LPAREN writeln_args RPAREN
+    (118) writeln -> . WRITELN LPAREN writeln_args RPAREN
     (22) assignment -> . IDENTIFIER ASSIGNMENT type
     (23) assignment -> . IDENTIFIER ASSIGNMENT expression
     (24) assignment -> . IDENTIFIER ASSIGNMENT length
-    (96) procedure_call -> . IDENTIFIER
-    (97) cond_if -> . IF condition THEN statement
-    (98) cond_if -> . IF condition THEN statement ELSE statement
-    (99) cond_if -> . IF condition THEN if_body
-    (100) cond_if -> . IF condition THEN if_body ELSE if_body
-    (113) while_loop -> . WHILE condition DO statement
-    (114) while_loop -> . WHILE condition DO if_body
-    (109) for_loop -> . FOR assignment to type DO statement
-    (110) for_loop -> . FOR assignment to type DO if_body
-    (111) for_loop -> . FOR assignment downto type DO statement
-    (112) for_loop -> . FOR assignment downto type DO if_body
-    (115) readln -> . READLN LPAREN type RPAREN
+    (98) procedure_call -> . IDENTIFIER
+    (99) cond_if -> . IF condition THEN statement
+    (100) cond_if -> . IF condition THEN statement ELSE statement
+    (101) cond_if -> . IF condition THEN if_body
+    (102) cond_if -> . IF condition THEN if_body ELSE if_body
+    (115) while_loop -> . WHILE condition DO statement
+    (116) while_loop -> . WHILE condition DO if_body
+    (111) for_loop -> . FOR assignment to type DO statement
+    (112) for_loop -> . FOR assignment to type DO if_body
+    (113) for_loop -> . FOR assignment downto type DO statement
+    (114) for_loop -> . FOR assignment downto type DO if_body
+    (117) readln -> . READLN LPAREN type RPAREN
 
     WRITELN         shift and go to state 29
     IDENTIFIER      shift and go to state 30
@@ -4531,7 +4564,7 @@ state 181
     FOR             shift and go to state 33
     READLN          shift and go to state 34
 
-    statement                      shift and go to state 196
+    statement                      shift and go to state 199
     writeln                        shift and go to state 22
     assignment                     shift and go to state 23
     procedure_call                 shift and go to state 24
@@ -4540,116 +4573,69 @@ state 181
     for_loop                       shift and go to state 27
     readln                         shift and go to state 28
 
-state 182
-
-    (100) cond_if -> IF condition THEN if_body ELSE . if_body
-    (106) if_body -> . BEGIN statements END
-
-    BEGIN           shift and go to state 154
-
-    if_body                        shift and go to state 197
-
-state 183
-
-    (106) if_body -> BEGIN statements . END
-
-    END             shift and go to state 198
-
-
 state 184
 
-    (91) arg_list -> IDENTIFIER COMMA . arg_list
-    (91) arg_list -> . IDENTIFIER COMMA arg_list
-    (92) arg_list -> . IDENTIFIER
-    (93) arg_list -> .
+    (102) cond_if -> IF condition THEN if_body ELSE . if_body
+    (108) if_body -> . BEGIN statements END
 
-    IDENTIFIER      shift and go to state 162
-    RPAREN          reduce using rule 93 (arg_list -> .)
+    BEGIN           shift and go to state 155
 
-    arg_list                       shift and go to state 199
+    if_body                        shift and go to state 200
 
 state 185
 
-    (90) func_call -> IDENTIFIER LPAREN arg_list RPAREN .
+    (108) if_body -> BEGIN statements . END
 
-    RANGE           reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    EQ              reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    NEQ             reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    LT              reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    GT              reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    LTE             reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    GTE             reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    AND             reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    OR              reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    NOT             reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    PLUS            reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    MINUS           reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    TIMES           reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    DIVISION        reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    DIV             reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    MOD             reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    THEN            reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    DO              reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    COMMA           reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    RPAREN          reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    SEMICOLON       reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    TO              reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    DOWNTO          reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    ELSE            reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    RBRACKET        reduce using rule 90 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    END             shift and go to state 201
 
 
 state 186
 
-    (109) for_loop -> FOR assignment to type DO . statement
-    (110) for_loop -> FOR assignment to type DO . if_body
-    (15) statement -> . writeln
-    (16) statement -> . assignment
-    (17) statement -> . procedure_call
-    (18) statement -> . cond_if
-    (19) statement -> . while_loop
-    (20) statement -> . for_loop
-    (21) statement -> . readln
-    (106) if_body -> . BEGIN statements END
-    (116) writeln -> . WRITELN LPAREN writeln_args RPAREN
-    (22) assignment -> . IDENTIFIER ASSIGNMENT type
-    (23) assignment -> . IDENTIFIER ASSIGNMENT expression
-    (24) assignment -> . IDENTIFIER ASSIGNMENT length
-    (96) procedure_call -> . IDENTIFIER
-    (97) cond_if -> . IF condition THEN statement
-    (98) cond_if -> . IF condition THEN statement ELSE statement
-    (99) cond_if -> . IF condition THEN if_body
-    (100) cond_if -> . IF condition THEN if_body ELSE if_body
-    (113) while_loop -> . WHILE condition DO statement
-    (114) while_loop -> . WHILE condition DO if_body
-    (109) for_loop -> . FOR assignment to type DO statement
-    (110) for_loop -> . FOR assignment to type DO if_body
-    (111) for_loop -> . FOR assignment downto type DO statement
-    (112) for_loop -> . FOR assignment downto type DO if_body
-    (115) readln -> . READLN LPAREN type RPAREN
+    (93) arg_list -> IDENTIFIER COMMA . arg_list
+    (93) arg_list -> . IDENTIFIER COMMA arg_list
+    (94) arg_list -> . IDENTIFIER
+    (95) arg_list -> .
 
-    BEGIN           shift and go to state 154
-    WRITELN         shift and go to state 29
-    IDENTIFIER      shift and go to state 30
-    IF              shift and go to state 31
-    WHILE           shift and go to state 32
-    FOR             shift and go to state 33
-    READLN          shift and go to state 34
+    IDENTIFIER      shift and go to state 163
+    RPAREN          reduce using rule 95 (arg_list -> .)
 
-    assignment                     shift and go to state 23
-    statement                      shift and go to state 200
-    if_body                        shift and go to state 201
-    writeln                        shift and go to state 22
-    procedure_call                 shift and go to state 24
-    cond_if                        shift and go to state 25
-    while_loop                     shift and go to state 26
-    for_loop                       shift and go to state 27
-    readln                         shift and go to state 28
+    arg_list                       shift and go to state 202
 
 state 187
 
-    (111) for_loop -> FOR assignment downto type DO . statement
-    (112) for_loop -> FOR assignment downto type DO . if_body
+    (92) func_call -> IDENTIFIER LPAREN arg_list RPAREN .
+
+    RANGE           reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    EQ              reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    NEQ             reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    LT              reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    GT              reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    LTE             reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    GTE             reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    AND             reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    OR              reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    NOT             reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    PLUS            reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    MINUS           reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    TIMES           reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    DIVISION        reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    DIV             reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    MOD             reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    THEN            reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    DO              reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    COMMA           reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    RPAREN          reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    SEMICOLON       reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    TO              reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    DOWNTO          reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    ELSE            reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+    RBRACKET        reduce using rule 92 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
+
+
+state 188
+
+    (111) for_loop -> FOR assignment to type DO . statement
+    (112) for_loop -> FOR assignment to type DO . if_body
     (15) statement -> . writeln
     (16) statement -> . assignment
     (17) statement -> . procedure_call
@@ -4657,25 +4643,25 @@ state 187
     (19) statement -> . while_loop
     (20) statement -> . for_loop
     (21) statement -> . readln
-    (106) if_body -> . BEGIN statements END
-    (116) writeln -> . WRITELN LPAREN writeln_args RPAREN
+    (108) if_body -> . BEGIN statements END
+    (118) writeln -> . WRITELN LPAREN writeln_args RPAREN
     (22) assignment -> . IDENTIFIER ASSIGNMENT type
     (23) assignment -> . IDENTIFIER ASSIGNMENT expression
     (24) assignment -> . IDENTIFIER ASSIGNMENT length
-    (96) procedure_call -> . IDENTIFIER
-    (97) cond_if -> . IF condition THEN statement
-    (98) cond_if -> . IF condition THEN statement ELSE statement
-    (99) cond_if -> . IF condition THEN if_body
-    (100) cond_if -> . IF condition THEN if_body ELSE if_body
-    (113) while_loop -> . WHILE condition DO statement
-    (114) while_loop -> . WHILE condition DO if_body
-    (109) for_loop -> . FOR assignment to type DO statement
-    (110) for_loop -> . FOR assignment to type DO if_body
-    (111) for_loop -> . FOR assignment downto type DO statement
-    (112) for_loop -> . FOR assignment downto type DO if_body
-    (115) readln -> . READLN LPAREN type RPAREN
+    (98) procedure_call -> . IDENTIFIER
+    (99) cond_if -> . IF condition THEN statement
+    (100) cond_if -> . IF condition THEN statement ELSE statement
+    (101) cond_if -> . IF condition THEN if_body
+    (102) cond_if -> . IF condition THEN if_body ELSE if_body
+    (115) while_loop -> . WHILE condition DO statement
+    (116) while_loop -> . WHILE condition DO if_body
+    (111) for_loop -> . FOR assignment to type DO statement
+    (112) for_loop -> . FOR assignment to type DO if_body
+    (113) for_loop -> . FOR assignment downto type DO statement
+    (114) for_loop -> . FOR assignment downto type DO if_body
+    (117) readln -> . READLN LPAREN type RPAREN
 
-    BEGIN           shift and go to state 154
+    BEGIN           shift and go to state 155
     WRITELN         shift and go to state 29
     IDENTIFIER      shift and go to state 30
     IF              shift and go to state 31
@@ -4684,8 +4670,8 @@ state 187
     READLN          shift and go to state 34
 
     assignment                     shift and go to state 23
-    statement                      shift and go to state 202
-    if_body                        shift and go to state 203
+    statement                      shift and go to state 203
+    if_body                        shift and go to state 204
     writeln                        shift and go to state 22
     procedure_call                 shift and go to state 24
     cond_if                        shift and go to state 25
@@ -4693,24 +4679,79 @@ state 187
     for_loop                       shift and go to state 27
     readln                         shift and go to state 28
 
-state 188
-
-    (82) function -> func_header SEMICOLON VAR variable_declaration func_body SEMICOLON .
-
-    VAR             reduce using rule 82 (function -> func_header SEMICOLON VAR variable_declaration func_body SEMICOLON .)
-    BEGIN           reduce using rule 82 (function -> func_header SEMICOLON VAR variable_declaration func_body SEMICOLON .)
-    PROCEDURE       reduce using rule 82 (function -> func_header SEMICOLON VAR variable_declaration func_body SEMICOLON .)
-    FUNCTION        reduce using rule 82 (function -> func_header SEMICOLON VAR variable_declaration func_body SEMICOLON .)
-
-
 state 189
 
-    (95) procedure_body -> BEGIN statements END .
+    (113) for_loop -> FOR assignment downto type DO . statement
+    (114) for_loop -> FOR assignment downto type DO . if_body
+    (15) statement -> . writeln
+    (16) statement -> . assignment
+    (17) statement -> . procedure_call
+    (18) statement -> . cond_if
+    (19) statement -> . while_loop
+    (20) statement -> . for_loop
+    (21) statement -> . readln
+    (108) if_body -> . BEGIN statements END
+    (118) writeln -> . WRITELN LPAREN writeln_args RPAREN
+    (22) assignment -> . IDENTIFIER ASSIGNMENT type
+    (23) assignment -> . IDENTIFIER ASSIGNMENT expression
+    (24) assignment -> . IDENTIFIER ASSIGNMENT length
+    (98) procedure_call -> . IDENTIFIER
+    (99) cond_if -> . IF condition THEN statement
+    (100) cond_if -> . IF condition THEN statement ELSE statement
+    (101) cond_if -> . IF condition THEN if_body
+    (102) cond_if -> . IF condition THEN if_body ELSE if_body
+    (115) while_loop -> . WHILE condition DO statement
+    (116) while_loop -> . WHILE condition DO if_body
+    (111) for_loop -> . FOR assignment to type DO statement
+    (112) for_loop -> . FOR assignment to type DO if_body
+    (113) for_loop -> . FOR assignment downto type DO statement
+    (114) for_loop -> . FOR assignment downto type DO if_body
+    (117) readln -> . READLN LPAREN type RPAREN
 
-    SEMICOLON       reduce using rule 95 (procedure_body -> BEGIN statements END .)
+    BEGIN           shift and go to state 155
+    WRITELN         shift and go to state 29
+    IDENTIFIER      shift and go to state 30
+    IF              shift and go to state 31
+    WHILE           shift and go to state 32
+    FOR             shift and go to state 33
+    READLN          shift and go to state 34
 
+    assignment                     shift and go to state 23
+    statement                      shift and go to state 205
+    if_body                        shift and go to state 206
+    writeln                        shift and go to state 22
+    procedure_call                 shift and go to state 24
+    cond_if                        shift and go to state 25
+    while_loop                     shift and go to state 26
+    for_loop                       shift and go to state 27
+    readln                         shift and go to state 28
 
 state 190
+
+    (82) function -> func_header SEMICOLON VAR func_variable_declaration func_body SEMICOLON .
+
+    VAR             reduce using rule 82 (function -> func_header SEMICOLON VAR func_variable_declaration func_body SEMICOLON .)
+    BEGIN           reduce using rule 82 (function -> func_header SEMICOLON VAR func_variable_declaration func_body SEMICOLON .)
+    PROCEDURE       reduce using rule 82 (function -> func_header SEMICOLON VAR func_variable_declaration func_body SEMICOLON .)
+    FUNCTION        reduce using rule 82 (function -> func_header SEMICOLON VAR func_variable_declaration func_body SEMICOLON .)
+
+
+state 191
+
+    (89) func_variable_declaration -> identifier_list COLON type_name . SEMICOLON func_variable_declaration
+    (90) func_variable_declaration -> identifier_list COLON type_name . SEMICOLON
+
+    SEMICOLON       shift and go to state 207
+
+
+state 192
+
+    (97) procedure_body -> BEGIN statements END .
+
+    SEMICOLON       reduce using rule 97 (procedure_body -> BEGIN statements END .)
+
+
+state 193
 
     (88) func_arg -> IDENTIFIER COLON type_name .
 
@@ -4718,172 +4759,9 @@ state 190
     RPAREN          reduce using rule 88 (func_arg -> IDENTIFIER COLON type_name .)
 
 
-state 191
-
-    (84) func_header -> FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON . type_name
-    (38) type_name -> . NINTEGER
-    (39) type_name -> . NREAL
-    (40) type_name -> . NSTRING
-    (41) type_name -> . NCHAR
-    (42) type_name -> . NBOOLEAN
-    (43) type_name -> . array_type
-    (11) array_type -> . ARRAY LBRACKET type RANGE type RBRACKET OF type_name
-
-    NINTEGER        shift and go to state 74
-    NREAL           shift and go to state 75
-    NSTRING         shift and go to state 76
-    NCHAR           shift and go to state 77
-    NBOOLEAN        shift and go to state 78
-    ARRAY           shift and go to state 80
-
-    type_name                      shift and go to state 204
-    array_type                     shift and go to state 79
-
-state 192
-
-    (85) func_header -> FUNCTION IDENTIFIER LPAREN RPAREN COLON type_name .
-
-    SEMICOLON       reduce using rule 85 (func_header -> FUNCTION IDENTIFIER LPAREN RPAREN COLON type_name .)
-
-
-state 193
-
-    (86) func_args -> func_arg COMMA func_args .
-
-    RPAREN          reduce using rule 86 (func_args -> func_arg COMMA func_args .)
-
-
 state 194
 
-    (11) array_type -> ARRAY LBRACKET type RANGE . type RBRACKET OF type_name
-    (44) type -> . integer
-    (45) type -> . real
-    (46) type -> . string
-    (47) type -> . char
-    (48) type -> . boolean
-    (49) type -> . identifier
-    (50) type -> . func_call
-    (51) integer -> . INTEGER
-    (52) real -> . REAL
-    (53) string -> . STRING
-    (54) char -> . CHAR
-    (55) boolean -> . BOOLEAN
-    (56) identifier -> . IDENTIFIER
-    (90) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
-
-    INTEGER         shift and go to state 59
-    REAL            shift and go to state 60
-    STRING          shift and go to state 61
-    CHAR            shift and go to state 62
-    BOOLEAN         shift and go to state 63
-    IDENTIFIER      shift and go to state 86
-
-    type                           shift and go to state 205
-    integer                        shift and go to state 51
-    real                           shift and go to state 52
-    string                         shift and go to state 53
-    char                           shift and go to state 54
-    boolean                        shift and go to state 55
-    identifier                     shift and go to state 56
-    func_call                      shift and go to state 85
-
-state 195
-
-    (81) length -> LENGTH LPAREN type RPAREN .
-
-    SEMICOLON       reduce using rule 81 (length -> LENGTH LPAREN type RPAREN .)
-    TO              reduce using rule 81 (length -> LENGTH LPAREN type RPAREN .)
-    DOWNTO          reduce using rule 81 (length -> LENGTH LPAREN type RPAREN .)
-    ELSE            reduce using rule 81 (length -> LENGTH LPAREN type RPAREN .)
-
-
-state 196
-
-    (98) cond_if -> IF condition THEN statement ELSE statement .
-
-    SEMICOLON       reduce using rule 98 (cond_if -> IF condition THEN statement ELSE statement .)
-    ELSE            reduce using rule 98 (cond_if -> IF condition THEN statement ELSE statement .)
-
-
-state 197
-
-    (100) cond_if -> IF condition THEN if_body ELSE if_body .
-
-    SEMICOLON       reduce using rule 100 (cond_if -> IF condition THEN if_body ELSE if_body .)
-    ELSE            reduce using rule 100 (cond_if -> IF condition THEN if_body ELSE if_body .)
-
-
-state 198
-
-    (106) if_body -> BEGIN statements END .
-
-    ELSE            reduce using rule 106 (if_body -> BEGIN statements END .)
-    SEMICOLON       reduce using rule 106 (if_body -> BEGIN statements END .)
-
-
-state 199
-
-    (91) arg_list -> IDENTIFIER COMMA arg_list .
-
-    RPAREN          reduce using rule 91 (arg_list -> IDENTIFIER COMMA arg_list .)
-
-
-state 200
-
-    (109) for_loop -> FOR assignment to type DO statement .
-
-    SEMICOLON       reduce using rule 109 (for_loop -> FOR assignment to type DO statement .)
-    ELSE            reduce using rule 109 (for_loop -> FOR assignment to type DO statement .)
-
-
-state 201
-
-    (110) for_loop -> FOR assignment to type DO if_body .
-
-    SEMICOLON       reduce using rule 110 (for_loop -> FOR assignment to type DO if_body .)
-    ELSE            reduce using rule 110 (for_loop -> FOR assignment to type DO if_body .)
-
-
-state 202
-
-    (111) for_loop -> FOR assignment downto type DO statement .
-
-    SEMICOLON       reduce using rule 111 (for_loop -> FOR assignment downto type DO statement .)
-    ELSE            reduce using rule 111 (for_loop -> FOR assignment downto type DO statement .)
-
-
-state 203
-
-    (112) for_loop -> FOR assignment downto type DO if_body .
-
-    SEMICOLON       reduce using rule 112 (for_loop -> FOR assignment downto type DO if_body .)
-    ELSE            reduce using rule 112 (for_loop -> FOR assignment downto type DO if_body .)
-
-
-state 204
-
-    (84) func_header -> FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON type_name .
-
-    SEMICOLON       reduce using rule 84 (func_header -> FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON type_name .)
-
-
-state 205
-
-    (11) array_type -> ARRAY LBRACKET type RANGE type . RBRACKET OF type_name
-
-    RBRACKET        shift and go to state 206
-
-
-state 206
-
-    (11) array_type -> ARRAY LBRACKET type RANGE type RBRACKET . OF type_name
-
-    OF              shift and go to state 207
-
-
-state 207
-
-    (11) array_type -> ARRAY LBRACKET type RANGE type RBRACKET OF . type_name
+    (84) func_header -> FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON . type_name
     (38) type_name -> . NINTEGER
     (39) type_name -> . NREAL
     (40) type_name -> . NSTRING
@@ -4902,7 +4780,192 @@ state 207
     type_name                      shift and go to state 208
     array_type                     shift and go to state 79
 
+state 195
+
+    (85) func_header -> FUNCTION IDENTIFIER LPAREN RPAREN COLON type_name .
+
+    SEMICOLON       reduce using rule 85 (func_header -> FUNCTION IDENTIFIER LPAREN RPAREN COLON type_name .)
+
+
+state 196
+
+    (86) func_args -> func_arg COMMA func_args .
+
+    RPAREN          reduce using rule 86 (func_args -> func_arg COMMA func_args .)
+
+
+state 197
+
+    (11) array_type -> ARRAY LBRACKET type RANGE . type RBRACKET OF type_name
+    (44) type -> . integer
+    (45) type -> . real
+    (46) type -> . string
+    (47) type -> . char
+    (48) type -> . boolean
+    (49) type -> . identifier
+    (50) type -> . func_call
+    (51) integer -> . INTEGER
+    (52) real -> . REAL
+    (53) string -> . STRING
+    (54) char -> . CHAR
+    (55) boolean -> . BOOLEAN
+    (56) identifier -> . IDENTIFIER
+    (92) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+
+    INTEGER         shift and go to state 59
+    REAL            shift and go to state 60
+    STRING          shift and go to state 61
+    CHAR            shift and go to state 62
+    BOOLEAN         shift and go to state 63
+    IDENTIFIER      shift and go to state 86
+
+    type                           shift and go to state 209
+    integer                        shift and go to state 51
+    real                           shift and go to state 52
+    string                         shift and go to state 53
+    char                           shift and go to state 54
+    boolean                        shift and go to state 55
+    identifier                     shift and go to state 56
+    func_call                      shift and go to state 85
+
+state 198
+
+    (81) length -> LENGTH LPAREN type RPAREN .
+
+    SEMICOLON       reduce using rule 81 (length -> LENGTH LPAREN type RPAREN .)
+    TO              reduce using rule 81 (length -> LENGTH LPAREN type RPAREN .)
+    DOWNTO          reduce using rule 81 (length -> LENGTH LPAREN type RPAREN .)
+    ELSE            reduce using rule 81 (length -> LENGTH LPAREN type RPAREN .)
+
+
+state 199
+
+    (100) cond_if -> IF condition THEN statement ELSE statement .
+
+    SEMICOLON       reduce using rule 100 (cond_if -> IF condition THEN statement ELSE statement .)
+    ELSE            reduce using rule 100 (cond_if -> IF condition THEN statement ELSE statement .)
+
+
+state 200
+
+    (102) cond_if -> IF condition THEN if_body ELSE if_body .
+
+    SEMICOLON       reduce using rule 102 (cond_if -> IF condition THEN if_body ELSE if_body .)
+    ELSE            reduce using rule 102 (cond_if -> IF condition THEN if_body ELSE if_body .)
+
+
+state 201
+
+    (108) if_body -> BEGIN statements END .
+
+    ELSE            reduce using rule 108 (if_body -> BEGIN statements END .)
+    SEMICOLON       reduce using rule 108 (if_body -> BEGIN statements END .)
+
+
+state 202
+
+    (93) arg_list -> IDENTIFIER COMMA arg_list .
+
+    RPAREN          reduce using rule 93 (arg_list -> IDENTIFIER COMMA arg_list .)
+
+
+state 203
+
+    (111) for_loop -> FOR assignment to type DO statement .
+
+    SEMICOLON       reduce using rule 111 (for_loop -> FOR assignment to type DO statement .)
+    ELSE            reduce using rule 111 (for_loop -> FOR assignment to type DO statement .)
+
+
+state 204
+
+    (112) for_loop -> FOR assignment to type DO if_body .
+
+    SEMICOLON       reduce using rule 112 (for_loop -> FOR assignment to type DO if_body .)
+    ELSE            reduce using rule 112 (for_loop -> FOR assignment to type DO if_body .)
+
+
+state 205
+
+    (113) for_loop -> FOR assignment downto type DO statement .
+
+    SEMICOLON       reduce using rule 113 (for_loop -> FOR assignment downto type DO statement .)
+    ELSE            reduce using rule 113 (for_loop -> FOR assignment downto type DO statement .)
+
+
+state 206
+
+    (114) for_loop -> FOR assignment downto type DO if_body .
+
+    SEMICOLON       reduce using rule 114 (for_loop -> FOR assignment downto type DO if_body .)
+    ELSE            reduce using rule 114 (for_loop -> FOR assignment downto type DO if_body .)
+
+
+state 207
+
+    (89) func_variable_declaration -> identifier_list COLON type_name SEMICOLON . func_variable_declaration
+    (90) func_variable_declaration -> identifier_list COLON type_name SEMICOLON .
+    (89) func_variable_declaration -> . identifier_list COLON type_name SEMICOLON func_variable_declaration
+    (90) func_variable_declaration -> . identifier_list COLON type_name SEMICOLON
+    (9) identifier_list -> . IDENTIFIER COMMA identifier_list
+    (10) identifier_list -> . IDENTIFIER
+
+    BEGIN           reduce using rule 90 (func_variable_declaration -> identifier_list COLON type_name SEMICOLON .)
+    IDENTIFIER      shift and go to state 17
+
+    identifier_list                shift and go to state 139
+    func_variable_declaration      shift and go to state 210
+
 state 208
+
+    (84) func_header -> FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON type_name .
+
+    SEMICOLON       reduce using rule 84 (func_header -> FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON type_name .)
+
+
+state 209
+
+    (11) array_type -> ARRAY LBRACKET type RANGE type . RBRACKET OF type_name
+
+    RBRACKET        shift and go to state 211
+
+
+state 210
+
+    (89) func_variable_declaration -> identifier_list COLON type_name SEMICOLON func_variable_declaration .
+
+    BEGIN           reduce using rule 89 (func_variable_declaration -> identifier_list COLON type_name SEMICOLON func_variable_declaration .)
+
+
+state 211
+
+    (11) array_type -> ARRAY LBRACKET type RANGE type RBRACKET . OF type_name
+
+    OF              shift and go to state 212
+
+
+state 212
+
+    (11) array_type -> ARRAY LBRACKET type RANGE type RBRACKET OF . type_name
+    (38) type_name -> . NINTEGER
+    (39) type_name -> . NREAL
+    (40) type_name -> . NSTRING
+    (41) type_name -> . NCHAR
+    (42) type_name -> . NBOOLEAN
+    (43) type_name -> . array_type
+    (11) array_type -> . ARRAY LBRACKET type RANGE type RBRACKET OF type_name
+
+    NINTEGER        shift and go to state 74
+    NREAL           shift and go to state 75
+    NSTRING         shift and go to state 76
+    NCHAR           shift and go to state 77
+    NBOOLEAN        shift and go to state 78
+    ARRAY           shift and go to state 80
+
+    type_name                      shift and go to state 213
+    array_type                     shift and go to state 79
+
+state 213
 
     (11) array_type -> ARRAY LBRACKET type RANGE type RBRACKET OF type_name .
 
@@ -4961,24 +5024,8 @@ WARNING: shift/reduce conflict for GTE in state 130 resolved as shift
 WARNING: shift/reduce conflict for AND in state 130 resolved as shift
 WARNING: shift/reduce conflict for OR in state 130 resolved as shift
 WARNING: shift/reduce conflict for NOT in state 130 resolved as shift
-WARNING: shift/reduce conflict for ELSE in state 152 resolved as shift
 WARNING: shift/reduce conflict for ELSE in state 153 resolved as shift
-WARNING: shift/reduce conflict for RANGE in state 155 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 155 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 155 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 155 resolved as shift
-WARNING: shift/reduce conflict for DIVISION in state 155 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 155 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 155 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 155 resolved as shift
-WARNING: shift/reduce conflict for NEQ in state 155 resolved as shift
-WARNING: shift/reduce conflict for LT in state 155 resolved as shift
-WARNING: shift/reduce conflict for GT in state 155 resolved as shift
-WARNING: shift/reduce conflict for LTE in state 155 resolved as shift
-WARNING: shift/reduce conflict for GTE in state 155 resolved as shift
-WARNING: shift/reduce conflict for AND in state 155 resolved as shift
-WARNING: shift/reduce conflict for OR in state 155 resolved as shift
-WARNING: shift/reduce conflict for NOT in state 155 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 154 resolved as shift
 WARNING: shift/reduce conflict for RANGE in state 156 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 156 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 156 resolved as shift
@@ -5043,13 +5090,29 @@ WARNING: shift/reduce conflict for GTE in state 159 resolved as shift
 WARNING: shift/reduce conflict for AND in state 159 resolved as shift
 WARNING: shift/reduce conflict for OR in state 159 resolved as shift
 WARNING: shift/reduce conflict for NOT in state 159 resolved as shift
+WARNING: shift/reduce conflict for RANGE in state 160 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 160 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 160 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 160 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 160 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 160 resolved as shift
+WARNING: shift/reduce conflict for MOD in state 160 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 160 resolved as shift
+WARNING: shift/reduce conflict for NEQ in state 160 resolved as shift
+WARNING: shift/reduce conflict for LT in state 160 resolved as shift
+WARNING: shift/reduce conflict for GT in state 160 resolved as shift
+WARNING: shift/reduce conflict for LTE in state 160 resolved as shift
+WARNING: shift/reduce conflict for GTE in state 160 resolved as shift
+WARNING: shift/reduce conflict for AND in state 160 resolved as shift
+WARNING: shift/reduce conflict for OR in state 160 resolved as shift
+WARNING: shift/reduce conflict for NOT in state 160 resolved as shift
 WARNING: reduce/reduce conflict in state 50 resolved using rule (expression -> func_call)
 WARNING: rejected rule (type -> func_call) in state 50
 WARNING: reduce/reduce conflict in state 87 resolved using rule (assignment -> IDENTIFIER ASSIGNMENT type)
 WARNING: rejected rule (condition -> type) in state 87
 WARNING: reduce/reduce conflict in state 90 resolved using rule (expression -> func_call)
 WARNING: rejected rule (type -> func_call) in state 90
-WARNING: reduce/reduce conflict in state 156 resolved using rule (condition -> expression comparator type)
-WARNING: rejected rule (condition -> type) in state 156
-WARNING: reduce/reduce conflict in state 158 resolved using rule (condition -> type comparator type)
-WARNING: rejected rule (condition -> type) in state 158
+WARNING: reduce/reduce conflict in state 157 resolved using rule (condition -> expression comparator type)
+WARNING: rejected rule (condition -> type) in state 157
+WARNING: reduce/reduce conflict in state 159 resolved using rule (condition -> type comparator type)
+WARNING: rejected rule (condition -> type) in state 159
