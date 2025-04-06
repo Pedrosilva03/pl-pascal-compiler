@@ -43,12 +43,18 @@ def p_variable_declaration(p):
     # Exemplo: 'n, i, fat: integer;' será interpretado como [('n', 'NINTEGER'), ('i', 'NINTEGER'), ('fat', 'NINTEGER')]
     # O símbolo '+' é utilizado para concatenar listas.
     global variables
-    for var in p[1]:  # Para cada variável declarada
-        variables[var] = p[3]  # Associa à tabela de símbolos com seu tipo
-    if len(p) == 6:
-        p[0] = [(var, p[3]) for var in p[1]] + p[5]
-    else:
-        p[0] = [(var, p[3]) for var in p[1]]
+    if isinstance(p[3], str):
+        for var in p[1]:  # Para cada variável declarada
+            variables[var] = p[3]  # Associa à tabela de símbolos com seu tipo
+        if len(p) == 6:
+            p[0] = [(var, p[3]) for var in p[1]] + p[5]
+        else:
+            p[0] = [(var, p[3]) for var in p[1]]
+    else: # Caso em que a variável é um array
+        current = 0
+        for _ in p[3][1]:
+            variables[f'{p[1][0]}{current}'] = p[3][0]
+            current += 1
 
 def p_identifier_list(p):
     '''identifier_list : IDENTIFIER COMMA identifier_list
@@ -59,11 +65,20 @@ def p_identifier_list(p):
         p[0] = [p[1]] + p[3]  # Lista de identificadores
     else:
         p[0] = [p[1]]  # Apenas um identificador
+
+# ARRAYS
         
 def p_array_type(p):
     'array_type : ARRAY LBRACKET type RANGE type RBRACKET OF type_name'
     # Representa arrays, incluindo limites inferiores e superiores
-    p[0] = ("array", p[3], p[5], p[8])  # Exemplo: ('array', 1, 5, 'NINTEGER')
+    #p[0] = ("array", p[3], p[5], p[8])  # Exemplo: ('array', 1, 5, 'NINTEGER')
+    start_value = int(p[3][0].split(" ")[1])
+    p[0] = []
+    current = start_value
+    while current <= int(p[5][0].split(" ")[1]):
+        p[0] += [current]
+        current += 1
+    p[0] = (p[8], p[0])
 
 ### BODY ###
     
