@@ -1,7 +1,7 @@
 program Maior3; 
  
 var 
-  num1, num2, num3, maior: Integer; 
+  num1, num2, num3, maior: integer; 
  
 begin 
   WriteLn('Introduza o primeiro número: '); 
@@ -20,5 +20,5 @@ begin
     if num2 > num3 then maior := num2 
     else maior := num3; 
    
-  WriteLn('O maior é: ', maior) 
+  WriteLn('O maior é: ', maior);
 end.
