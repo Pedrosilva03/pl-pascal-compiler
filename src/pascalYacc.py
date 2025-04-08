@@ -51,10 +51,9 @@ def p_variable_declaration(p):
         else:
             p[0] = [(var, p[3]) for var in p[1]]
     else: # Caso em que a variável é um array
-        current = 0
-        for _ in p[3][1]:
+        variables[f'{p[1][0]}'] = p[3][0]
+        for current in p[3][1]:
             variables[f'{p[1][0]}{current}'] = p[3][0]
-            current += 1
 
 def p_identifier_list(p):
     '''identifier_list : IDENTIFIER COMMA identifier_list
@@ -79,6 +78,16 @@ def p_array_type(p):
         p[0] += [current]
         current += 1
     p[0] = (p[8], p[0])
+    print(p[0])
+
+def p_array_access(p):
+    """array_access : IDENTIFIER LBRACKET type RBRACKET"""
+    head_index = list(variables.keys()).index(p[1])
+    index = [f'PUSHG {list(variables.keys()).index(p[3])}']
+
+    p[0] = ['PUSHFP'] + [f'PUSHI {head_index}'] + ['PADD'] + index + ["PADD"]
+    # Coloca no topo da stack o endereço onde está o valor
+    # Acessa a cabeça do array a partir do FP e adiciona o index para obter o endereço da posição pretendida
 
 ### BODY ###
     
@@ -120,7 +129,7 @@ def p_assignment(p):
         variables_assigned[p[1]] = var_type
         index_destiny = list(variables.keys()).index(p[1])
         if isinstance(p[3], list): # Caso em que são valores elementares ou previamente processados e podem ser imediatamente atribuidos
-            p[0] = p[3]
+            p[0] = p[3] + (['LOAD 0'] if p[3][-1] == 'PADD' else []) # Caso em que o valor está num array
         else: # Caso em que é um identifier
             index_source = list(variables.keys()).index(p[3])
             if p[3] not in variables.keys():
@@ -142,7 +151,7 @@ def p_expression(p):
     global variables_assigned, variables
     if len(p) == 4:
         if not isinstance(p[1], str) and not isinstance(p[3], str):
-            p[0] = p[1] + p[3] + p[2]
+            p[0] = p[1] + p[3] + (['LOAD 0'] if p[1][-1] == 'PADD' else []) + p[2]
         else:
             if not isinstance(p[1], list) and p[1] not in variables.keys():
                 raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
@@ -155,12 +164,12 @@ def p_expression(p):
             
             p[0] = []
             if not isinstance(p[1], str):
-                p[0] += p[1]
+                p[0] += p[1] + (['LOAD 0'] if p[1][-1] == 'PADD' else [])
             else:
                 index_source1 = list(variables.keys()).index(p[1])
                 p[0] += [f'PUSHG {index_source1}']
             if not isinstance(p[3], str):
-                p[0] += p[3]
+                p[0] += p[3] + (['LOAD 0'] if p[3][-1] == 'PADD' else [])
             else:
                 index_source2 = list(variables.keys()).index(p[3])
                 p[0] += [f'PUSHG {index_source2}']
@@ -202,7 +211,8 @@ def p_type(p):
             | char
             | boolean
             | identifier
-            | func_call""" 
+            | func_call
+            | array_access""" 
     p[0] = p[1]
 
 # TIPOS ELEMENTARES
@@ -505,17 +515,23 @@ def p_while(p):
 def p_readln(p):
     """readln : READLN LPAREN type RPAREN"""
     global variables
-    var_index = list(variables.keys()).index(p[3])
-    var_type = variables[p[3]]
+    if not isinstance(p[3], list):
+        var_index = list(variables.keys()).index(p[3])
+        var_type = variables[p[3]]
 
-    p[0] = ['READ']
-    if var_type == "integer":
-        p[0] += ["ATOI"]
-    elif var_type == "float":
-        p[0] += ["ATOF"]
-    
-    p[0] += [f'STOREG {var_index}']
+        p[0] = ['READ']
+        if var_type == "integer":
+            p[0] += ["ATOI"]
+        elif var_type == "float":
+            p[0] += ["ATOF"]
+        
+        p[0] += [f'STOREG {var_index}']
 
+        variables_assigned[p[3]] = var_type # O read é o mesmo que um assignment de um valor a uma variavel
+    else: # Caso em que o elemento de destino está num array
+        p[0] = p[3] + ['READ'] + ['ATOI']
+        p[0] += [f'STORE 0']
+        
 # WRITELN
 
 def writeln_for_function(caller):
