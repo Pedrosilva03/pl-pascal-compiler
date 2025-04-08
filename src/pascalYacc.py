@@ -83,7 +83,10 @@ def p_array_type(p):
 def p_array_access(p):
     """array_access : IDENTIFIER LBRACKET type RBRACKET"""
     head_index = list(variables.keys()).index(p[1])
-    index = [f'PUSHG {list(variables.keys()).index(p[3])}']
+    if not isinstance(p[3], list):
+        index = [f'PUSHG {list(variables.keys()).index(p[3])}']
+    else:
+        index = p[3]
 
     p[0] = ['PUSHFP'] + [f'PUSHI {head_index}'] + ['PADD'] + index + ["PADD"]
     # Coloca no topo da stack o endereço onde está o valor
@@ -119,12 +122,12 @@ def p_statement(p):
     p[0] = p[1]
 
 def p_assignment(p):
-    """assignment : IDENTIFIER ASSIGNMENT type
-                  | IDENTIFIER ASSIGNMENT expression
-                  | IDENTIFIER ASSIGNMENT length"""
+    """assignment : type ASSIGNMENT type
+                  | type ASSIGNMENT expression
+                  | type ASSIGNMENT length"""
     global variables_assigned, variables, functions
     # Caso para lidar com tentativas de assignment a variáveis que não fora declaradas
-    if p[1] in variables.keys() or p[1] in functions.keys():
+    if not isinstance(p[1], list) and (p[1] in variables.keys() or p[1] in functions.keys()):
         var_type = variables[p[1]]
         variables_assigned[p[1]] = var_type
         index_destiny = list(variables.keys()).index(p[1])
@@ -139,6 +142,18 @@ def p_assignment(p):
             p[0] = [f'PUSHG {index_source}']
         
         p[0] += [f'STOREG {index_destiny}']
+    elif isinstance(p[1], list): # Caso em que o destino é uma posição de um array
+        if isinstance(p[3], list): # Caso em que são valores elementares ou previamente processados e podem ser imediatamente atribuidos
+            p[0] = p[1] + p[3] + (['LOAD 0'] if p[3][-1] == 'PADD' else []) # Caso em que o valor está num array
+        else: # Caso em que é um identifier
+            index_source = list(variables.keys()).index(p[3])
+            if p[3] not in variables.keys():
+                raise Exception(f"Erro: Variável '{p[3]}' não declarada.")
+            if p[3] not in variables_assigned.keys():
+                print(f"Erro: Variável '{p[3]}' não atribuida.")
+            p[0] = p[1] + [f'PUSHG {index_source}']
+        
+        p[0] += p[0] + [f'STORE 0']
     else:
         raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
 
@@ -565,7 +580,9 @@ def p_writeln_args(p):
     
     # Caso em que é um valor explicito, pode ser imediatamente escrito
     if isinstance(p[1], list):
-        if "PUSHS" in p[1][0]:
+        if "PADD" in p[1]: # Caso em que é um acesso a um array
+            p[0] = p[1] + ['LOAD 0'] + ["WRITEI"]
+        elif "PUSHS" in p[1][0]:
             p[0] = p[1] + ["WRITES"]
         elif "PUSHI" in p[1][0]:
             p[0] = p[1] + ["WRITEI"]
