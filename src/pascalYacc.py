@@ -9,8 +9,13 @@ variables = {}
 variables_assigned = {}
 procedures = {}
 
+# Indices para tracking para identificar os loops e as condições dentro do código máquina
 if_counter  = 0
 loop_counter = 0
+
+# Indices utilizado para auxiliar o parser no parsing dos argumentos passados para as funções
+func_args_tracker = 0
+current_called_func = 0
 
 def p_program(p):
     'program : header block DOT'
@@ -160,6 +165,7 @@ def p_assignment(p):
 def p_expression(p):
     """expression : type operation type
                   | expression_paren
+                  | expression operation type
                   | expression operation expression
                   | func_call
                   | condition"""
@@ -368,18 +374,21 @@ def p_function_header(p):
     p[0] = p[2]
 
 def p_function_args(p):
-    """func_args : func_arg COMMA func_args
-                 | func_arg"""
+    """func_args : func_arglist SEMICOLON func_args
+                 | func_arglist"""
     global variables
-    variables[p[1][0]] = p[1][1]  # Associa à tabela de símbolos com seu tipo
+    for var in p[1]:
+        variables[var[0]] = var[1]
     if len(p) == 4:
         p[0] = [p[1]] + p[3]
     else:
         p[0] = p[1]
     
 def p_func_arg(p):
-    """func_arg : IDENTIFIER COLON type_name"""
-    p[0] = (p[1], p[3])
+    """func_arglist : identifier_list COLON type_name"""
+    p[0] = []
+    for identifier in p[1]:
+        p[0] += [(identifier, p[3])]
 
 def p_func_variable_declaration(p):
     """func_variable_declaration : identifier_list COLON type_name SEMICOLON func_variable_declaration
@@ -395,16 +404,26 @@ def p_func_body(p):
     p[0] = p[2] + ["RETURN"]
 
 def p_func_call(p):
-    """func_call : IDENTIFIER LPAREN arg_list RPAREN"""
+    """func_call : prepare_func_call LPAREN arg_list RPAREN"""
+    global func_args_tracker
     p[0] = p[3] + [f'PUSHA {p[1]}', 'CALL']
+    func_args_tracker = 0 # Dá reset para a próxima chamada
+
+def p_prepare_func_call(p):
+    """prepare_func_call : IDENTIFIER"""
+    global current_called_func
+    current_called_func = p[1]
+    p[0] = p[1]
 
 def p_arg_list(p):
     """arg_list : IDENTIFIER COMMA arg_list
                 | IDENTIFIER
                 | """
-    global functions, variables
+    global functions, variables, func_args_tracker
     index_arg = list(variables.keys()).index(p[1])
-    index_func_arg = list(variables.keys()).index(utils.get_nth_element_dict(functions, 0, 0)[0][0]) # Brute force partindo do princípio que apenas existe uma função definida e essa função só tem um argumento
+    index_func_arg = list(variables.keys()).index(functions[current_called_func][0][0 + func_args_tracker][0])
+
+    func_args_tracker += 1
 
     vm = [f'PUSHG {index_arg}'] + [f'STOREG {index_func_arg}']
     if len(p) == 4:
@@ -525,6 +544,10 @@ def p_while(p):
     p[0] += [f'ENDWHILE{loop_counter}:']
     loop_counter += 1
 
+def p_repeat(p):
+    # TODO: Ciclo repeat until
+    pass
+
 # READLN
 
 def p_readln(p):
@@ -551,9 +574,9 @@ def p_readln(p):
 
 def writeln_for_function(caller):
     writer = []
-    index_arg = list(variables.keys()).index(utils.get_nth_element_dict(functions, 0, 1))
+    index_arg = list(variables.keys()).index(current_called_func)
     push_instruction = caller + [f'PUSHG {index_arg}']
-    var_type = variables[utils.get_nth_element_dict(functions, 0, 1)]
+    var_type = variables[current_called_func]
     if var_type == 'integer':
         writer = push_instruction + ["WRITEI"]
     elif var_type == 'real':

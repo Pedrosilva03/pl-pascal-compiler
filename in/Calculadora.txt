@@ -1,0 +1,34 @@
+program CalculadoraAvancada;
+
+function Max(a, b: integer): integer;
+begin
+  if a > b then
+    Max := a
+  else
+    Max := b;
+end;
+
+function Min(c, d: integer): integer;
+begin
+  if c < d then
+    Min := c
+  else
+    Min := d;
+end;
+
+var
+  x, y: integer;
+
+begin
+  writeln('Introduza dois números:');
+  readln(x);
+  readln(y);
+
+  writeln('O maior é: ', Max(x, y));
+  writeln('O menor é: ', Min(x, y));
+
+  if ((x + y) mod 2) = 0 then
+    writeln('A soma é par')
+  else
+    writeln('A soma é ímpar');
+end.
