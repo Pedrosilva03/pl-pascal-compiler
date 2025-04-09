@@ -123,6 +123,7 @@ def p_statement(p):
                  | cond_if
                  | while_loop
                  | for_loop
+                 | repeat_loop
                  | readln"""
     p[0] = p[1]
 
@@ -545,8 +546,13 @@ def p_while(p):
     loop_counter += 1
 
 def p_repeat(p):
-    # TODO: Ciclo repeat until
-    pass
+    """repeat_loop : REPEAT statements UNTIL condition"""
+    global loop_counter
+    p[0] = [f'REPEAT{loop_counter}:'] + p[2]
+    p[0] += p[4] + ['NOT'] + [f'JZ ENDREPEAT{loop_counter}'] # É um not porque o ciclo apenas corre se a condição não se verificar
+    p[0] += [f'JUMP REPEAT{loop_counter}']
+    p[0] += [f'ENDREPEAT{loop_counter}:']
+    loop_counter += 1
 
 # READLN
 
