@@ -9,7 +9,6 @@ var
   valores: array[1..5] of integer;
   i, min, max, soma: integer;
   media: real;
-  comp1: integer;
 begin
   writeln('Introduza 5 números:');
   
@@ -22,10 +21,9 @@ begin
 
   for i := 1 to 5 do
   begin
-    comp1 := valores[i];
-    if comp1 < min then
+    if valores[i] < min then
       min := valores[i];
-    if comp1 > max then
+    if valores[i] > max then
       max := valores[i];
     soma := soma + valores[i];
   end;

@@ -39,3 +39,6 @@ def get_index_from_storeg(instructions):
             splitted_inst = instruction.split(" ")
             index = splitted_inst[1]
     return index
+
+def add_array_load(instrutions):
+    return (['LOAD 0'] if instrutions[-1] == 'PADD' else [])
