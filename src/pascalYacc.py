@@ -84,17 +84,25 @@ def p_array_type(p):
         current += 1
     p[0] = (p[8], p[0])
 
-def p_array_access(p):
+def p_array_access(p): # Trata também de acessos a carateres em strings
     """array_access : IDENTIFIER LBRACKET type RBRACKET"""
     head_index = list(variables.keys()).index(p[1])
-    if not isinstance(p[3], list):
-        index = [f'PUSHG {list(variables.keys()).index(p[3])}']
+    if variables[p[1]] == "string": # Caso em que o elemento é uma string
+        p[0] = [f'PUSHG {list(variables.keys()).index(p[1])}']
+        if not isinstance(p[3], list):
+            p[0] += [f'PUSHG {list(variables.keys()).index(p[3])}']
+        else:
+            p[0] += p[3]
+        p[0] += [f'PUSHI 1', 'SUB'] + ['CHARAT'] # Tem de ser assim porque a stack começa a contar do zero mas o pascal conta a partir de 1
     else:
-        index = p[3]
+        if not isinstance(p[3], list):
+            index = [f'PUSHG {list(variables.keys()).index(p[3])}']
+        else:
+            index = p[3]
 
-    p[0] = ['PUSHFP'] + [f'PUSHI {head_index}'] + ['PADD'] + index + ["PADD"]
-    # Coloca no topo da stack o endereço onde está o valor
-    # Acessa a cabeça do array a partir do FP e adiciona o index para obter o endereço da posição pretendida
+        p[0] = ['PUSHFP'] + [f'PUSHI {head_index}'] + ['PADD'] + index + ["PADD"]
+        # Coloca no topo da stack o endereço onde está o valor
+        # Acessa a cabeça do array a partir do FP e adiciona o index para obter o endereço da posição pretendida
 
 ### BODY ###
     
@@ -505,7 +513,8 @@ def p_condition(p):
         p[0] = [f'PUSHG {list(variables.keys()).index(p[1])}']
     else:
         if isinstance(p[1], list) and isinstance(p[3], list):
-            p[0] = p[1] + utils.add_array_load(p[1]) + p[3] + utils.add_array_load(p[3]) + p[2]
+            # Já abrange casos em que carateres são utilizados para comparar
+            p[0] = p[1] + utils.add_array_load(p[1]) + utils.add_ascii_conversion(p[1]) + p[3] + utils.add_array_load(p[3]) + utils.add_ascii_conversion(p[1]) + p[2]
         else: # Casos em que um dos fatores da comparacao e uma variavel
             p[0] = []
             if not isinstance(p[1], str):

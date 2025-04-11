@@ -41,3 +41,6 @@ def get_index_from_storeg(instructions):
 
 def add_array_load(instrutions):
     return (['LOAD 0'] if instrutions[-1] == 'PADD' else [])
+
+def add_ascii_conversion(instructions):
+    return (['CHRCODE'] if instructions[-1] == 'CHARAT' else [])
