@@ -12,8 +12,7 @@ def print_funcs(functions):
 def print_procedures(procedures):
     procedures_code = ""
     for procedure in procedures.items():
-        procedures_vm_array = procedure[1]
-        print(procedure)
+        procedures_vm_array = procedure[1][1]
         procedures_code += "\n" + "\n".join(procedures_vm_array) + "\n" + "\n"
     return procedures_code
 

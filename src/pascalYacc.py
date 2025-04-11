@@ -343,6 +343,51 @@ def p_or(p):
 def p_not(p):
     """not : NOT"""
     p[0] = ['NOT']
+
+# PROCEDURES
+
+def p_procedure(p):
+    """procedure : PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON
+                 | PROCEDURE IDENTIFIER LPAREN func_args RPAREN SEMICOLON procedure_body SEMICOLON"""
+    if len(p) == 6:
+        p[0] = [f'{p[2]}:'] + p[4]
+        procedures[p[2]] = ([], p[0])
+    else:
+        p[0] = [f'{p[2]}:'] + p[7]
+        procedures[p[2]] = (p[4], p[0])
+
+def p_procedure_body(p):
+    """procedure_body : BEGIN statements END"""
+    p[0] = p[2] + ["RETURN"]
+
+def p_procedure_call(p):
+    """procedure_call : prepare_func_call
+                      | prepare_func_call LPAREN procedure_arg_list RPAREN"""
+    global func_args_tracker
+    if len(p) == 2:
+        if len(procedures[p[1]][0]) > 0:
+            raise Exception(f'O procedimento {p[1]} contém argumentos: {procedures[p[1]][0]}')
+        p[0] = [f'PUSHA {p[1]}'] + [f'CALL']
+    else:
+        if len(procedures[p[1]][0]) == 0:
+            raise Exception(f'Argumentos inválidos para o procedimento {p[1]}')
+        p[0] = p[3] + [f'PUSHA {p[1]}'] + [f'CALL']
+    func_args_tracker = 0
+
+def p_procedure_arg_list(p):
+    """procedure_arg_list : IDENTIFIER COMMA procedure_arg_list
+                          | IDENTIFIER"""
+    global procedures, variables, func_args_tracker
+    index_arg = list(variables.keys()).index(p[1])
+    index_func_arg = list(variables.keys()).index(procedures[current_called_func][0][0 + func_args_tracker][0])
+
+    func_args_tracker += 1
+
+    vm = [f'PUSHG {index_arg}'] + [f'STOREG {index_func_arg}']
+    if len(p) == 4:
+        p[0] = vm + p[3]
+    elif len(p) == 2:
+        p[0] = vm
     
 # FUNCOES
 
@@ -430,21 +475,6 @@ def p_arg_list(p):
         p[0] = vm + p[3]
     elif len(p) == 2:
         p[0] = vm
-
-# PROCEDURES
-
-def p_procedure(p):
-    """procedure : PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON"""
-    p[0] = [f'{p[2]}:'] + p[4]
-    procedures[p[2]] = p[0]
-
-def p_procedure_body(p):
-    """procedure_body : BEGIN statements END"""
-    p[0] = p[2] + ["RETURN"]
-
-def p_procedure_call(p):
-    """procedure_call : IDENTIFIER"""
-    p[0] = [f'PUSHA {p[1]}'] + [f'CALL']
 
 # CONDITIONS
 
@@ -658,8 +688,9 @@ def parse_input(input_string):
     vm_code += utils.print_funcs(functions)
     vm_code += utils.print_procedures(procedures)
 
-    print(variables)
-    print(variables_assigned)
-    print(functions)
+    print(f'VARS: {variables}')
+    print(f'VARS_ASSIGNED: {variables_assigned}')
+    print(f'FUNCS: {functions}')
+    print(f'PROCEDURES: {procedures}')
 
     return vm_code
