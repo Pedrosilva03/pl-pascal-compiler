@@ -384,14 +384,21 @@ def p_procedure_call(p):
 
 def p_procedure_arg_list(p):
     """procedure_arg_list : IDENTIFIER COMMA procedure_arg_list
-                          | IDENTIFIER"""
+                          | IDENTIFIER
+                          | type COMMA procedure_arg_list
+                          | type"""
     global procedures, variables, func_args_tracker
-    index_arg = list(variables.keys()).index(p[1])
+    if not isinstance(p[1], list):
+        index_arg = list(variables.keys()).index(p[1])
+
+        vm = [f'PUSHG {index_arg}']
+    else:
+        vm = p[1]
     index_func_arg = list(variables.keys()).index(procedures[current_called_func][0][0 + func_args_tracker][0])
 
     func_args_tracker += 1
 
-    vm = [f'PUSHG {index_arg}'] + [f'STOREG {index_func_arg}']
+    vm += [f'STOREG {index_func_arg}']
     if len(p) == 4:
         p[0] = vm + p[3]
     elif len(p) == 2:
@@ -471,14 +478,21 @@ def p_prepare_func_call(p):
 def p_arg_list(p):
     """arg_list : IDENTIFIER COMMA arg_list
                 | IDENTIFIER
+                | type COMMA arg_list
+                | type
                 | """
     global functions, variables, func_args_tracker
-    index_arg = list(variables.keys()).index(p[1])
+    if not isinstance(p[1], list):
+        index_arg = list(variables.keys()).index(p[1])
+
+        vm = [f'PUSHG {index_arg}']
+    else:
+        vm = p[1]
     index_func_arg = list(variables.keys()).index(functions[current_called_func][0][0 + func_args_tracker][0])
 
     func_args_tracker += 1
 
-    vm = [f'PUSHG {index_arg}'] + [f'STOREG {index_func_arg}']
+    vm += [f'STOREG {index_func_arg}']
     if len(p) == 4:
         p[0] = vm + p[3]
     elif len(p) == 2:
@@ -489,8 +503,10 @@ def p_arg_list(p):
 def p_if(p):
     """cond_if : IF condition THEN statement
                | IF condition THEN statement ELSE statement
+               | IF condition THEN statement ELSE if_body
                | IF condition THEN if_body
-               | IF condition THEN if_body ELSE if_body"""
+               | IF condition THEN if_body ELSE if_body
+               | IF condition THEN if_body ELSE statement"""
     global if_counter
     else_label = f'ELSE{if_counter}'
     p[0] = [f'IF{if_counter}:'] + p[2] + [f'JZ {else_label}'] + p[4] + [f'JUMP ENDIF{if_counter}']
@@ -498,8 +514,6 @@ def p_if(p):
     if len(p) == 7:
         p[0] += p[6]
     p[0] += [f'ENDIF{if_counter}:']
-
-    # TODO: Generalizar para vários tipos de if bodys
 
     if_counter += 1
     
