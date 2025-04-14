@@ -356,13 +356,30 @@ def p_not(p):
 
 def p_procedure(p):
     """procedure : PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON
-                 | PROCEDURE IDENTIFIER LPAREN func_args RPAREN SEMICOLON procedure_body SEMICOLON"""
+                 | PROCEDURE IDENTIFIER LPAREN func_args RPAREN SEMICOLON procedure_body SEMICOLON
+                 | PROCEDURE IDENTIFIER SEMICOLON VAR func_variable_declaration procedure_body SEMICOLON
+                 | PROCEDURE IDENTIFIER LPAREN func_args RPAREN SEMICOLON VAR func_variable_declaration procedure_body SEMICOLON"""
     if len(p) == 6:
         p[0] = [f'{p[2]}:'] + p[4]
         procedures[p[2]] = ([], p[0])
-    else:
+    elif len(p) == 9:
         p[0] = [f'{p[2]}:'] + p[7]
         procedures[p[2]] = (p[4], p[0])
+    elif len(p) == 8:
+        p[0] = [f'{p[2]}:'] + p[6]
+        procedures[p[2]] = ([], p[0])
+    else:
+        p[0] = [f'{p[2]}:'] + p[9]
+        procedures[p[2]] = (p[4], p[0])
+
+def p_procedure_variable_declaration(p):
+    """procedure_variable_declaration : identifier_list COLON type_name SEMICOLON procedure_variable_declaration
+                                      | identifier_list COLON type_name SEMICOLON"""
+    p[0] = [(var, p[3]) for var in p[1]]
+    for var in p[0]:
+        variables[var[0]] = var[1]
+    if len(p) == 6:
+        p[0] += p[5]
 
 def p_procedure_body(p):
     """procedure_body : BEGIN statements END"""
@@ -522,9 +539,13 @@ def p_condition(p):
                  | type comparator expression
                  | type comparator type
                  | expression comparator type
+                 | func_call
                  | type"""
     if len(p) == 2: # Caso em que um boolean é usado para a condição
-        p[0] = [f'PUSHG {list(variables.keys()).index(p[1])}']
+        if isinstance(p[1], list):
+            p[0] = p[1] + [f'PUSHG {list(variables.keys()).index(current_called_func)}']
+        else:
+            p[0] = [f'PUSHG {list(variables.keys()).index(p[1])}']
     else:
         if isinstance(p[1], list) and isinstance(p[3], list):
             # Já abrange casos em que carateres são utilizados para comparar
