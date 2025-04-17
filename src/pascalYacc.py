@@ -137,7 +137,8 @@ def p_statement(p):
 def p_assignment(p):
     """assignment : type ASSIGNMENT type
                   | type ASSIGNMENT expression
-                  | type ASSIGNMENT length"""
+                  | type ASSIGNMENT length
+                  | type ASSIGNMENT negation"""
     global variables_assigned, variables, functions
     # Caso para lidar com tentativas de assignment a variáveis que não fora declaradas
     if not isinstance(p[1], list) and (p[1] in variables.keys() or p[1] in functions.keys()):
@@ -352,6 +353,11 @@ def p_not(p):
     """not : NOT"""
     p[0] = ['NOT']
 
+def p_negation(p):
+    """negation : not boolean
+                | not func_call"""
+    p[0] = p[2] + ([f'PUSHG {list(variables.keys()).index(current_called_func)}'] if len(p[2]) > 1 else []) + p[1]
+
 # PROCEDURES
 
 def p_procedure(p):
@@ -540,7 +546,8 @@ def p_condition(p):
                  | type comparator type
                  | expression comparator type
                  | func_call
-                 | type"""
+                 | boolean
+                 | identifier"""
     if len(p) == 2: # Caso em que um boolean é usado para a condição
         if isinstance(p[1], list):
             p[0] = p[1] + [f'PUSHG {list(variables.keys()).index(current_called_func)}']
@@ -653,7 +660,7 @@ def p_readln(p):
 
 def writeln_for_function(caller):
     writer = []
-    index_arg = list(variables.keys()).index(current_called_func)
+    index_arg = list(variables.keys()).index(utils.get_name_from_pusha(caller)) # Usa brute force devido ao overlapping de várias funções no parsing
     push_instruction = caller + [f'PUSHG {index_arg}']
     var_type = variables[current_called_func]
     if var_type == 'integer':
