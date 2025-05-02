@@ -361,22 +361,31 @@ def p_negation(p):
 # PROCEDURES
 
 def p_procedure(p):
-    """procedure : PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON
-                 | PROCEDURE IDENTIFIER LPAREN func_args RPAREN SEMICOLON procedure_body SEMICOLON
-                 | PROCEDURE IDENTIFIER SEMICOLON VAR func_variable_declaration procedure_body SEMICOLON
-                 | PROCEDURE IDENTIFIER LPAREN func_args RPAREN SEMICOLON VAR func_variable_declaration procedure_body SEMICOLON"""
-    if len(p) == 6:
-        p[0] = [f'{p[2]}:'] + p[4]
-        procedures[p[2]] = ([], p[0])
-    elif len(p) == 9:
-        p[0] = [f'{p[2]}:'] + p[7]
-        procedures[p[2]] = (p[4], p[0])
-    elif len(p) == 8:
-        p[0] = [f'{p[2]}:'] + p[6]
-        procedures[p[2]] = ([], p[0])
-    else:
-        p[0] = [f'{p[2]}:'] + p[9]
-        procedures[p[2]] = (p[4], p[0])
+    """procedure : procedure_no_args_no_vars
+                 | procedure_args_no_vars
+                 | procedure_no_args_vars
+                 | procedure_args_vars"""
+    p[0] = p[1]
+
+def p_procedure_no_args_no_vars(p):
+    """procedure_no_args_no_vars : PROCEDURE IDENTIFIER SEMICOLON procedure_body SEMICOLON"""
+    p[0] = [f'{p[2]}:'] + p[4]
+    procedures[p[2]] = ([], p[0])
+
+def p_procedure_args_no_vars(p):
+    """procedure_args_no_vars : PROCEDURE IDENTIFIER LPAREN func_args RPAREN SEMICOLON procedure_body SEMICOLON"""
+    p[0] = [f'{p[2]}:'] + p[7]
+    procedures[p[2]] = (p[4], p[0])
+
+def p_procedure_no_args_vars(p):
+    """procedure_no_args_vars : PROCEDURE IDENTIFIER SEMICOLON VAR func_variable_declaration procedure_body SEMICOLON"""
+    p[0] = [f'{p[2]}:'] + p[6]
+    procedures[p[2]] = ([], p[0])
+
+def p_procedure_args_vars(p):
+    """procedure_args_vars : PROCEDURE IDENTIFIER LPAREN func_args RPAREN SEMICOLON VAR func_variable_declaration procedure_body SEMICOLON"""
+    p[0] = [f'{p[2]}:'] + p[9]
+    procedures[p[2]] = (p[4], p[0])
 
 def p_procedure_variable_declaration(p):
     """procedure_variable_declaration : identifier_list COLON type_name SEMICOLON procedure_variable_declaration
@@ -427,7 +436,7 @@ def p_procedure_arg_list(p):
     elif len(p) == 2:
         p[0] = vm
     
-# FUNCOES
+# FUNCOES NATIVAS
 
 def p_length(p):
     """length : LENGTH LPAREN type RPAREN"""
@@ -437,16 +446,24 @@ def p_length(p):
     str_index = list(variables.keys()).index(p[3])
     p[0] = [f'PUSHG {str_index}'] + ["STRLEN"]
 
+# FUNCOES
+
 def p_function(p):
-    """function : func_header SEMICOLON VAR func_variable_declaration func_body SEMICOLON
-                | func_header SEMICOLON func_body SEMICOLON"""
-    global vm_code, functions
-    if len(p) == 5:
-        p[0] = [f'{p[1]}:'] + p[3]
-        functions[p[1]] = (functions[p[1]][0], p[0])
-    else: # Caso em que a função tem variáveis
-        p[0] = [f'{p[1]}:'] + p[5]
-        functions[p[1]] = (functions[p[1]][0], p[0])
+    """function : function_with_vars
+                | function_with_no_vars"""
+    p[0] = p[1]
+
+def p_function_with_vars(p):
+    """function_with_vars : func_header SEMICOLON VAR func_variable_declaration func_body SEMICOLON"""
+    global functions
+    p[0] = [f'{p[1]}:'] + p[5]
+    functions[p[1]] = (functions[p[1]][0], p[0])
+
+def p_function_with_no_vars(p):
+    """function_with_no_vars : func_header SEMICOLON func_body SEMICOLON"""
+    global functions
+    p[0] = [f'{p[1]}:'] + p[3]
+    functions[p[1]] = (functions[p[1]][0], p[0])
 
 def p_function_header(p):
     """func_header : FUNCTION IDENTIFIER LPAREN func_args RPAREN COLON type_name
