@@ -573,7 +573,7 @@ def p_condition(p):
     else:
         if isinstance(p[1], list) and isinstance(p[3], list):
             # Já abrange casos em que carateres são utilizados para comparar
-            p[0] = p[1] + utils.add_array_load(p[1]) + utils.add_ascii_conversion(p[1]) + p[3] + utils.add_array_load(p[3]) + utils.add_ascii_conversion(p[1]) + p[2]
+            p[0] = p[1] + utils.add_array_load(p[1]) + utils.add_ascii_conversion(p[1]) + p[3] + utils.add_array_load(p[3]) + utils.add_ascii_conversion(p[3]) + p[2]
         else: # Casos em que um dos fatores da comparacao e uma variavel
             p[0] = []
             if not isinstance(p[1], str):
