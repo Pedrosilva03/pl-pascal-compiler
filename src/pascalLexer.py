@@ -49,7 +49,7 @@ t_RBRACKET = r"\]"
 
 def t_PROGRAM(t): r"[Pp][Rr][Oo][Gg][Rr][Aa][Mm]"; return t
 
-def t_VAR(t): r"[Vv][Aa][Rr]"; return t
+def t_VAR(t): r"var"; return t
 
 def t_BEGIN(t): r"[Bb][Ee][Gg][Ii][Nn]"; return t
 

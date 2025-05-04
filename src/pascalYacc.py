@@ -101,6 +101,7 @@ def p_array_access(p): # Trata também de acessos a carateres em strings
             index = p[3]
 
         p[0] = ['PUSHFP'] + [f'PUSHI {head_index}'] + ['PADD'] + index + ["PADD"]
+        p[0] += utils.add_array_load(p[0])
         # Coloca no topo da stack o endereço onde está o valor
         # Acessa a cabeça do array a partir do FP e adiciona o index para obter o endereço da posição pretendida
 
@@ -146,25 +147,17 @@ def p_assignment(p):
         variables_assigned[p[1]] = var_type
         index_destiny = list(variables.keys()).index(p[1])
         if isinstance(p[3], list): # Caso em que são valores elementares ou previamente processados e podem ser imediatamente atribuidos
-            p[0] = p[3] + utils.add_array_load(p[3]) # Caso em que o valor está num array
+            p[0] = p[3]
         else: # Caso em que é um identifier
             index_source = list(variables.keys()).index(p[3])
-            if p[3] not in variables.keys():
-                raise Exception(f"Erro: Variável '{p[3]}' não declarada.")
-            if p[3] not in variables_assigned.keys():
-                print(f"Erro: Variável '{p[3]}' não atribuida.")
             p[0] = [f'PUSHG {index_source}']
         
         p[0] += [f'STOREG {index_destiny}']
     elif isinstance(p[1], list): # Caso em que o destino é uma posição de um array
         if isinstance(p[3], list): # Caso em que são valores elementares ou previamente processados e podem ser imediatamente atribuidos
-            p[0] = p[1] + p[3] + utils.add_array_load(p[3]) # Caso em que o valor está num array
+            p[0] = p[1] + p[3]
         else: # Caso em que é um identifier
             index_source = list(variables.keys()).index(p[3])
-            if p[3] not in variables.keys():
-                raise Exception(f"Erro: Variável '{p[3]}' não declarada.")
-            if p[3] not in variables_assigned.keys():
-                print(f"Erro: Variável '{p[3]}' não atribuida.")
             p[0] = p[1] + [f'PUSHG {index_source}']
         
         p[0] += p[0] + [f'STORE 0']
@@ -181,35 +174,35 @@ def p_expression(p):
     global variables_assigned, variables
     if len(p) == 4:
         if not isinstance(p[1], str) and not isinstance(p[3], str):
-            p[0] = p[1] + utils.add_array_load(p[1]) + p[3] + utils.add_array_load(p[3]) + p[2]
+            p[0] = p[1] + p[3] + p[2]
         else:
-            if not isinstance(p[1], list) and p[1] not in variables.keys():
-                raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
-            if not isinstance(p[1], list) and p[1] not in variables_assigned.keys():
-                print(f"Warning: Variável '{p[1]}' não atribuida.")
-            if not isinstance(p[3], list) and p[3] not in variables.keys():
-                raise Exception(f"Erro: Variável '{p[3]}' não declarada.")
-            if not isinstance(p[3], list) and p[3] not in variables_assigned.keys():
-                print(f"Warning: Variável '{p[3]}' não atribuida.")
-            
             p[0] = []
             if not isinstance(p[1], str):
-                p[0] += p[1] + utils.add_array_load(p[1])
+                p[0] += p[1]
             else:
                 index_source1 = list(variables.keys()).index(p[1])
                 p[0] += [f'PUSHG {index_source1}']
             if not isinstance(p[3], str):
-                p[0] += p[3] + utils.add_array_load(p[3])
+                p[0] += p[3]
             else:
                 index_source2 = list(variables.keys()).index(p[3])
                 p[0] += [f'PUSHG {index_source2}']
             p[0] += p[2]
     else:
-        if "CALL" in p[1]: # Caso em que é uma function call visto que tem o mesmo numero de tokens que a expressao entre parentises
-            func_index = utils.get_name_from_pusha(p[1])
-            p[0] = p[1] + [f'PUSHG {list(variables.keys()).index(func_index)}']
-        else:
-            p[0] = p[1]
+        p[0] = p[1]
+
+# EXPRESSÕES
+
+def expression(p):
+    """expression : term
+                  | condition
+                  | expression operationAdd term"""
+    p[0] = p[1] + (p[3] + p[2] if len(p) == 4 else [])
+
+def termo(p):
+    """term : type 
+            | term operationMul type"""
+    p[0] = p[1] + (p[3] + p[2] if len(p) == 4 else [])
 
 def p_expression_paren(p):
     """expression_paren : LPAREN expression RPAREN"""
@@ -507,6 +500,7 @@ def p_func_call(p):
     """func_call : prepare_func_call LPAREN arg_list RPAREN"""
     global func_args_tracker
     p[0] = p[3] + [f'PUSHA {p[1]}', 'CALL']
+    p[0] += [f'PUSHG {list(variables.keys()).index(current_called_func)}']
     func_args_tracker = 0 # Dá reset para a próxima chamada
 
 def p_prepare_func_call(p):
@@ -573,16 +567,16 @@ def p_condition(p):
     else:
         if isinstance(p[1], list) and isinstance(p[3], list):
             # Já abrange casos em que carateres são utilizados para comparar
-            p[0] = p[1] + utils.add_array_load(p[1]) + utils.add_ascii_conversion(p[1]) + p[3] + utils.add_array_load(p[3]) + utils.add_ascii_conversion(p[3]) + p[2]
+            p[0] = p[1] + utils.add_ascii_conversion(p[1]) + p[3] + utils.add_ascii_conversion(p[3]) + p[2]
         else: # Casos em que um dos fatores da comparacao e uma variavel
             p[0] = []
             if not isinstance(p[1], str):
-                p[0] += p[1] + utils.add_array_load(p[1])
+                p[0] += p[1]
             else:
                 index_source1 = list(variables.keys()).index(p[1])
                 p[0] += [f'PUSHG {index_source1}']
             if not isinstance(p[3], str):
-                p[0] += p[3] + utils.add_array_load(p[3])
+                p[0] += p[3]
             else:
                 index_source2 = list(variables.keys()).index(p[3])
                 p[0] += [f'PUSHG {index_source2}']
@@ -670,26 +664,24 @@ def p_readln(p):
 
         variables_assigned[p[3]] = var_type # O read é o mesmo que um assignment de um valor a uma variavel
     else: # Caso em que o elemento de destino está num array
-        p[0] = p[3] + ['READ'] + ['ATOI']
+        p[0] = p[3][:-1] + ['READ'] + ['ATOI'] # O -1 remove a instrução LOAD
         p[0] += [f'STORE 0']
         
 # WRITELN
 
 def writeln_for_function(caller):
     writer = []
-    index_arg = list(variables.keys()).index(utils.get_name_from_pusha(caller)) # Usa brute force devido ao overlapping de várias funções no parsing
-    push_instruction = caller + [f'PUSHG {index_arg}']
     var_type = variables[current_called_func]
     if var_type == 'integer':
-        writer = push_instruction + ["WRITEI"]
+        writer = caller + ["WRITEI"]
     elif var_type == 'real':
-        writer = push_instruction + ["WRITEF"]
+        writer = caller + ["WRITEF"]
     elif var_type == 'string':
-        writer = push_instruction + ["WRITES"]
+        writer = caller + ["WRITES"]
     elif var_type == 'char':
-        writer = push_instruction + ["WRITECHR"]
+        writer = caller + ["WRITECHR"]
     elif var_type == 'boolean':
-        writer = push_instruction + ["WRITES"]
+        writer = caller + ["WRITES"]
     else:
         raise Exception(f"Erro: Tipo inválido.")
     
@@ -707,7 +699,7 @@ def p_writeln_args(p):
     # Caso em que é um valor explicito, pode ser imediatamente escrito
     if isinstance(p[1], list):
         if "PADD" in p[1]: # Caso em que é um acesso a um array
-            p[0] = p[1] + ['LOAD 0'] + ["WRITEI"]
+            p[0] = p[1] + ["WRITEI"]
         elif "PUSHS" in p[1][0]:
             p[0] = p[1] + ["WRITES"]
         elif "PUSHI" in p[1][0]:

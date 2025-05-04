@@ -65,6 +65,8 @@ Os assignments suportam, atribuição de valores literais, outras variáveis, va
 
 Regra geral as atribuições são feitas fazendo um PUSHG do valor source e um STOREG para o destino.
 
+## Expressões
+
 ## Read and write
 
 ### Read
