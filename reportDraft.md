@@ -67,23 +67,75 @@ Regra geral as atribuições são feitas fazendo um PUSHG do valor source e um S
 
 ## Expressões
 
+As expressões são uma das bases deste projeto. 
+
 ## Read and write
 
 ### Read
 
-O read tem dois casos, um geral e um para arrays. 
+O read tem dois casos, um geral e um para arrays. Devido a alguns detalhes nas instruções, foi necessário diferenciar os dois casos.
+
+Dependendo da variável destino, é feita a conversão de string para inteiro ou para float. Após isso é feito um store na variável destino.
+
+Para o caso dos arrays, o local de destino já está especificado nas instruções de acesso ao array, pelo que basta fazer STORE 0.
 
 ### Write
+
+O write consegue lidar com diversos tipos de argumentos:
+
+- Argumentos literais
+- Variáveis
+- Expressões
+- Chamadas de funções
 
 ## Condições
 
 ## Loops
 
+Os loops seguem a mesma lógica: Verificação de uma condição e o respetivo jump de saída no caso em que a condição não é mais respeitada.
+
+Cada loop tem um identificador que é universal e que é incrementado a cada loop criado, garantindo assim que cada loop é único.
+
+Cada loop tem alguns detalhes que os diferenciam
+
 ### For loop
+
+O ciclo for verifica a condição e faz um cálculo (normalmente uma variável de controlo)
+
+A estrutura é a seguinte:
+
+- Inicializa a variável de controlo: statement
+- Label: FOR(ID)
+- Condição: Se a condição for falsa, ativa a instrução JZ que leva ao fim do ciclo.
+- - As palavras TO e DOWNTO indicam se a condição deve verificar se a variável de controlo é menor ou maior que o objetivo.
+- Corpo do ciclo: Statements
+- Incremento da variável de controlo: Soma ou subtrai, dependendo do tipo de ciclo, e atualiza a variável de controlo
+- Salto para nova iteração: JUMP
+- Label de fim de ciclo: ENDFOR
 
 ### While loop
 
+O ciclo while verifica a condição mas, ao contrário do ciclo for, não efetua nenhum cálculo.
+
+A estrutura é a seguinte:
+
+- Label: WHILE(ID)
+- Condição: Se a condição for falsa, ativa a instrução JZ que leva ao fim do ciclo.
+- Corpo do ciclo: Statements
+- Salto para nova iteração: JUMP
+- Label de fim de ciclo: ENDWHILE
+
 ### Repeat until loop
+
+O ciclo repeat until é a mesma coisa que o ciclo while mas o corpo vem antes da condição. Isso significa que o ciclo vai sempre correr pelo menos uma vez.
+
+A estrutura é a seguinte:
+
+- Label: REPEAT(ID)
+- Corpo do ciclo: Statements
+- Condição: A condição é seguida de um NOT visto que o ciclo só corre se a condição for falsa.
+- Salto para nova iteração: JUMP
+- Label de fim de ciclo: ENDREPEAT
 
 ## Funções e Procedures
 
