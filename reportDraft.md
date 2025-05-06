@@ -67,7 +67,37 @@ Regra geral as atribuições são feitas fazendo um PUSHG do valor source e um S
 
 ## Expressões
 
-As expressões são uma das bases deste projeto. 
+As expressões são uma das bases deste projeto. Seguimos um formato de hierarquia, respeitando assim as prioridades das operações.
+
+Regra geral, dados dois valores e uma operação, o código máquina gerado será sempre (primeiro valor) (segundo valor) (operação).
+
+### Expressões booleanas
+
+A última prioridade são as expressões booleanas. Colocar operadores lógicos em último nas prioridades permite criar expressões muito complexas que podem servir de base para condições.
+
+Exemplo: (a + b) * c + d = a - 5 * 4
+
+Ao colocar as expressões booleanas em último, é possível comparar expressões complexas, calculando primeiro os valores de cada lado.
+
+#### Operadores lógicos
+
+O nosso compilador suporta os vários operadores lógicos nativos do pascal, gerando o respetivo código máquina para cada um.
+
+### Expressões soma e subtração
+
+Acima das expressões booleanas aparecem as somas e subtrações. Estão abaixo na gramática, pelo que tem maior prioridade.
+
+Exemplo: a + b = 0
+
+Neste caso será feita a soma primeiro, e depois é que o resultado será comparado.
+
+### Expressões multiplicação e divisão
+
+No topo das prioridades aparecem as multiplicações e divisões. São o nível mais baixo de operações na gramática, pelo que são as primeiras a ser calculadas.
+
+Exemplo: a + b * c
+
+Neste caso, b * c será calculado primeiro e depois o resultado será somado. Esta operação é o equivalente a fazer a + (b * c).
 
 ## Read and write
 
@@ -88,7 +118,24 @@ O write consegue lidar com diversos tipos de argumentos:
 - Expressões
 - Chamadas de funções
 
+É feita uma análise do tipo de dados que vão ser escritos de modo a determinar o tipo de write, visto que o código máquina diferencia a instrução dependendo do tipo de dados.
+
+Para as funções, é analisado o tipo de return da função, para que se possa aplicar o tipo de WRITE correto.
+
 ## Condições
+
+As condições suportam os vários casos de blocos de condiç~so do pascal. Dependendo se cada bloco tem uma ou mais linhas, é necessário adicionar BEGIN e END no inicio e no fim. Para além disso, as condições podem ou não ser acompanhadas de ELSE ou não. No caso do else, o programa também suporta blocos BEGIN..END ou apenas uma instrução.
+
+Cada bloco de condição tem um identificador universal que é incrementado sempre que o compilador deteta um IF statement. Assim garante se que cada IF é único e que não há mistura de labels no código VM gerado.
+
+A estrutura é relativamente parecida com os loops (analisada em detalhe mais tarde):
+
+- Label: IF(ID)
+- Condição: A condição vai sempre ter valor 0 ou 1, que será interpretado pela instrução JZ
+- Corpo: Instruções que correm caso a condição seja verdade. No final encontra-se um salto para fora do IF, visto que o ELSE não corre se a condição for verdadeira
+- Label: ELSE(ID): O identificador do ELSE é o mesmo do seu respetivo IF
+- Corpo do ELSE: Instruções que correm caso a condição seja falsa.´
+- Label de fim da condição: ENDIF(ID)
 
 ## Loops
 
@@ -96,7 +143,7 @@ Os loops seguem a mesma lógica: Verificação de uma condição e o respetivo j
 
 Cada loop tem um identificador que é universal e que é incrementado a cada loop criado, garantindo assim que cada loop é único.
 
-Cada loop tem alguns detalhes que os diferenciam
+Cada loop tem alguns detalhes que os diferenciam mas a estrutura é parecida entre eles e parecida com as condições.
 
 ### For loop
 
@@ -143,4 +190,28 @@ O código VM das funções e procedures é gerado e guardado temporariamente. De
 
 Utilizamos um dicionário para guardar estas informações. Cada posição do dicionário guarda os argumentos que uma função recebe e o código VM. Ao ser chamada, é feita uma atribuição dos valores passados como argumento às variáveis da função.
 
-## Acesso a arrays
+## Arrays
+
+O acesso a arrays é feito de forma parecida com o acesso a variáveis, sendo dividido em dois casos: 
+
+### Acesso a arrays
+
+O acesso a arrays é feito obtendo o índice da cabeça do array e somando o índice pretendido.
+
+Exemplo: arr[4]
+
+Como não existe uma instrução VM que permita, dados dois valores "a" e "b", colocar "b" no endereço "a" da stack, tivemos que criar um atalho.
+
+Primeiramente faz-se um PUSHFP. Este push serve para colocar um endereço no topo da stack de modo a fazer operações diretamente sobre endereços. Visto que a VM é limitada e não dá para dar PUSH a endereços específicos, esta foi a melhor forma.
+
+Neste caso, se o array estiver na posição 3 da stack, faz-se um PUSHI do índice onde está a cabeça, seguido de um PADD para somar endereços. Depois é colocado o valor do índice pretendido, voltando a fazer um PADD. O resultado final será o endereço da stack onde o elemento do array que se quer aceder se encontra.
+
+### Acesso a strings
+
+O acesso a strings é feito dando PUSH da string pretendida e do endereço pedido. Depois faz se um CHARAT. Esta instrução coloca na stack o código ASCII do carater na posição pretendida.
+
+Exemplo: str[i]
+
+- É feito um PUSHS str e PUSHG (indice de i). 
+- É subtraída uma unidade do índice visto que a stack conta a partir de zero mas o pascal conta a partir de 1 (str[3] em pascal == str[2] na VM)
+- Depois é feito um CHARAT.
