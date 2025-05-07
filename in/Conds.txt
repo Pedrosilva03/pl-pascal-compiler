@@ -1,0 +1,17 @@
+program Conds;
+function Conta(e, f: integer): integer;
+begin
+  Soma := e - f;
+end;
+var
+  a, b, c, d: integer;
+begin
+  a := 2;
+  b := 3;
+  c := 11;
+  d := 6;
+  if a + b = Conta(c, d) then
+    writeln('Verdade')
+  else
+    writeln('Falso');
+end.

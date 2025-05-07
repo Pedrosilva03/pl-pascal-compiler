@@ -6,7 +6,6 @@ import utils
 vm_code = ""
 functions = {}
 variables = {}
-variables_assigned = {}
 procedures = {}
 
 # Indices para tracking para identificar os loops e as condições dentro do código máquina
@@ -85,7 +84,7 @@ def p_array_type(p):
     p[0] = (p[8], p[0])
 
 def p_array_access(p): # Trata também de acessos a carateres em strings
-    """array_access : IDENTIFIER LBRACKET type RBRACKET"""
+    """array_access : IDENTIFIER LBRACKET expressionGeneric RBRACKET"""
     head_index = list(variables.keys()).index(p[1])
     if variables[p[1]] == "string": # Caso em que o elemento é uma string
         p[0] = [f'PUSHG {list(variables.keys()).index(p[1])}']
@@ -136,15 +135,12 @@ def p_statement(p):
     p[0] = p[1]
 
 def p_assignment(p):
-    """assignment : type ASSIGNMENT type
-                  | type ASSIGNMENT expression
+    """assignment : type ASSIGNMENT expressionGeneric
                   | type ASSIGNMENT length
                   | type ASSIGNMENT negation"""
-    global variables_assigned, variables, functions
+    global variables, functions
     # Caso para lidar com tentativas de assignment a variáveis que não fora declaradas
     if not isinstance(p[1], list) and (p[1] in variables.keys() or p[1] in functions.keys()):
-        var_type = variables[p[1]]
-        variables_assigned[p[1]] = var_type
         index_destiny = list(variables.keys()).index(p[1])
         if isinstance(p[3], list): # Caso em que são valores elementares ou previamente processados e podem ser imediatamente atribuidos
             p[0] = p[3]
@@ -164,58 +160,53 @@ def p_assignment(p):
     else:
         raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
 
-def p_expression(p):
-    """expression : type operation type
-                  | expression_paren
-                  | expression operation type
-                  | expression operation expression
-                  | func_call
-                  | condition"""
-    global variables_assigned, variables
-    if len(p) == 4:
-        if not isinstance(p[1], str) and not isinstance(p[3], str):
-            p[0] = p[1] + p[3] + p[2]
-        else:
-            p[0] = []
-            if not isinstance(p[1], str):
-                p[0] += p[1]
-            else:
-                index_source1 = list(variables.keys()).index(p[1])
-                p[0] += [f'PUSHG {index_source1}']
-            if not isinstance(p[3], str):
-                p[0] += p[3]
-            else:
-                index_source2 = list(variables.keys()).index(p[3])
-                p[0] += [f'PUSHG {index_source2}']
-            p[0] += p[2]
-    else:
-        p[0] = p[1]
-
 # EXPRESSÕES
 
-def expression(p):
+def p_expressionGeneric(p):
+    """expressionGeneric : expression
+                         | expressionGeneric comparator expression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        if isinstance(p[1], list) and isinstance(p[3], list):
+            # Já abrange casos em que carateres são utilizados para comparar
+            p[0] = p[1] + utils.add_ascii_conversion(p[1]) + p[3] + utils.add_ascii_conversion(p[3]) + p[2]
+        else:
+            p[0] = p[1] + p[3] + p[2]
+
+def p_expression(p):
     """expression : term
-                  | condition
                   | expression operationAdd term"""
     p[0] = p[1] + (p[3] + p[2] if len(p) == 4 else [])
 
-def termo(p):
-    """term : type 
-            | term operationMul type"""
+def p_termo(p):
+    """term : fator 
+            | term operationMul fator"""
     p[0] = p[1] + (p[3] + p[2] if len(p) == 4 else [])
 
+def p_fator(p):
+    """fator : type"""
+    if not isinstance(p[1], str):
+        p[0] = p[1]
+    else:
+        index_source1 = list(variables.keys()).index(p[1])
+        p[0] = [f'PUSHG {index_source1}']
+
 def p_expression_paren(p):
-    """expression_paren : LPAREN expression RPAREN"""
+    """expression_paren : LPAREN expressionGeneric RPAREN"""
     p[0] = p[2]
 
-def p_operation(p):
-    """operation : plus
-                 | minus
-                 | times
-                 | division
-                 | div
-                 | mod
-                 | RANGE"""
+def p_operationAdd(p):
+    """operationAdd : plus
+                    | minus
+                    | div
+                    | mod
+                    | RANGE"""
+    p[0] = p[1]
+
+def p_operationMul(p):
+    """operationMul : times
+                    | division"""
     p[0] = p[1]
 
 def p_type_name(p):
@@ -235,7 +226,8 @@ def p_type(p):
             | boolean
             | identifier
             | func_call
-            | array_access""" 
+            | array_access
+            | expression_paren""" 
     p[0] = p[1]
 
 # TIPOS ELEMENTARES
@@ -408,10 +400,8 @@ def p_procedure_call(p):
     func_args_tracker = 0
 
 def p_procedure_arg_list(p):
-    """procedure_arg_list : IDENTIFIER COMMA procedure_arg_list
-                          | IDENTIFIER
-                          | type COMMA procedure_arg_list
-                          | type"""
+    """procedure_arg_list : expressionGeneric COMMA procedure_arg_list
+                          | expressionGeneric"""
     global procedures, variables, func_args_tracker
     if not isinstance(p[1], list):
         index_arg = list(variables.keys()).index(p[1])
@@ -482,6 +472,7 @@ def p_func_arg(p):
     p[0] = []
     for identifier in p[1]:
         p[0] += [(identifier, p[3])]
+    p[0] = list(reversed(p[0]))
 
 def p_func_variable_declaration(p):
     """func_variable_declaration : identifier_list COLON type_name SEMICOLON func_variable_declaration
@@ -510,10 +501,8 @@ def p_prepare_func_call(p):
     p[0] = p[1]
 
 def p_arg_list(p):
-    """arg_list : IDENTIFIER COMMA arg_list
-                | IDENTIFIER
-                | type COMMA arg_list
-                | type
+    """arg_list : expressionGeneric COMMA arg_list
+                | expressionGeneric
                 | """
     global functions, variables, func_args_tracker
     if not isinstance(p[1], list):
@@ -552,35 +541,8 @@ def p_if(p):
     if_counter += 1
     
 def p_condition(p):
-    """condition : expression comparator expression
-                 | type comparator expression
-                 | type comparator type
-                 | expression comparator type
-                 | func_call
-                 | boolean
-                 | identifier"""
-    if len(p) == 2: # Caso em que um boolean é usado para a condição
-        if isinstance(p[1], list):
-            p[0] = p[1] + [f'PUSHG {list(variables.keys()).index(current_called_func)}']
-        else:
-            p[0] = [f'PUSHG {list(variables.keys()).index(p[1])}']
-    else:
-        if isinstance(p[1], list) and isinstance(p[3], list):
-            # Já abrange casos em que carateres são utilizados para comparar
-            p[0] = p[1] + utils.add_ascii_conversion(p[1]) + p[3] + utils.add_ascii_conversion(p[3]) + p[2]
-        else: # Casos em que um dos fatores da comparacao e uma variavel
-            p[0] = []
-            if not isinstance(p[1], str):
-                p[0] += p[1]
-            else:
-                index_source1 = list(variables.keys()).index(p[1])
-                p[0] += [f'PUSHG {index_source1}']
-            if not isinstance(p[3], str):
-                p[0] += p[3]
-            else:
-                index_source2 = list(variables.keys()).index(p[3])
-                p[0] += [f'PUSHG {index_source2}']
-            p[0] += p[2]
+    """condition : expressionGeneric"""
+    p[0] = p[1]
     
 def p_if_body(p):
     """if_body : BEGIN statements END"""
@@ -661,8 +623,6 @@ def p_readln(p):
             p[0] += ["ATOF"]
         
         p[0] += [f'STOREG {var_index}']
-
-        variables_assigned[p[3]] = var_type # O read é o mesmo que um assignment de um valor a uma variavel
     else: # Caso em que o elemento de destino está num array
         p[0] = p[3][:-1] + ['READ'] + ['ATOI'] # O -1 remove a instrução LOAD
         p[0] += [f'STORE 0']
@@ -700,14 +660,16 @@ def p_writeln_args(p):
     if isinstance(p[1], list):
         if "PADD" in p[1]: # Caso em que é um acesso a um array
             p[0] = p[1] + ["WRITEI"]
-        elif "PUSHS" in p[1][0]:
+        elif "PUSHS" in p[1][0]: # Caso em que é um acesso a uma string
             p[0] = p[1] + ["WRITES"]
-        elif "PUSHI" in p[1][0]:
+        elif "PUSHI" in p[1][0]: # Caso em que é um acesso a um inteiro
             p[0] = p[1] + ["WRITEI"]
-        elif "PUSHF" in p[1][0]:
+        elif "PUSHF" in p[1][0]: # Caso em que é um acesso a um float
             p[0] = p[1] + ["WRITEF"]
-        else: # Caso em que é uma função, vai dar write à variável onde o return foi colocado
+        elif "CALL" in p[1]: # Caso em que é uma função, vai dar write à variável onde o return foi colocado
             p[0] = writeln_for_function(p[1])
+        elif "CHARAT" in p[1]: # Caso em que é um acesso a um carater numa string
+            p[0] = p[1] + ["WRITEI"]
     # Caso em que é um identifier
     elif p[1] not in variables: # Pode ser um array ou função para o futuro. Para já apenas casos em que variáveis não declaradas são chamadas
         raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
@@ -749,7 +711,6 @@ def parse_input(input_string):
     vm_code += utils.print_procedures(procedures)
 
     print(f'VARS: {variables}')
-    print(f'VARS_ASSIGNED: {variables_assigned}')
     print(f'FUNCS: {functions}')
     print(f'PROCEDURES: {procedures}')
 
