@@ -23,7 +23,7 @@ def main(args):
         return
 
     # Write the generated code to the output file
-    output_file = f'../out/{inputFile.split("/")[-1]}'
+    output_file = f'out/{inputFile.split("/")[-1]}'
     with open(output_file, 'w') as file:
         file.write(vm_code)
 

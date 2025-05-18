@@ -1,7 +1,7 @@
 program Conds;
 function Conta(e, f: integer): integer;
 begin
-  Soma := e - f;
+  Conta := e - f;
 end;
 var
   a, b, c, d: integer;
