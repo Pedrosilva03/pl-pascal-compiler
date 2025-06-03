@@ -147,8 +147,8 @@ Rule 137   while_loop -> WHILE condition DO if_body
 Rule 138   repeat_loop -> REPEAT statements UNTIL condition
 Rule 139   readln -> READLN LPAREN type RPAREN
 Rule 140   writeln -> WRITELN LPAREN writeln_args RPAREN
-Rule 141   writeln_args -> type COMMA writeln_args
-Rule 142   writeln_args -> type
+Rule 141   writeln_args -> expressionGeneric COMMA writeln_args
+Rule 142   writeln_args -> expressionGeneric
 
 Terminals, with rules where they appear
 
@@ -231,7 +231,7 @@ division             : 41
 downto               : 134 135
 eq                   : 69
 expression           : 27 28 30
-expressionGeneric    : 12 24 28 34 102 103 119 120 128
+expressionGeneric    : 12 24 28 34 102 103 119 120 128 141 142
 expression_paren     : 56
 fator                : 31 32
 for_loop             : 21
@@ -283,7 +283,7 @@ string               : 50
 term                 : 29 30 32
 times                : 40
 to                   : 132 133
-type                 : 11 11 24 25 26 33 104 132 133 134 135 139 141 142
+type                 : 11 11 24 25 26 33 104 132 133 134 135 139
 type_name            : 7 8 11 97 98 109 110 113 114 115
 variable_declaration : 3 7
 while_loop           : 20
@@ -1758,8 +1758,15 @@ state 68
 state 69
 
     (140) writeln -> WRITELN LPAREN . writeln_args RPAREN
-    (141) writeln_args -> . type COMMA writeln_args
-    (142) writeln_args -> . type
+    (141) writeln_args -> . expressionGeneric COMMA writeln_args
+    (142) writeln_args -> . expressionGeneric
+    (27) expressionGeneric -> . expression
+    (28) expressionGeneric -> . expressionGeneric comparator expression
+    (29) expression -> . term
+    (30) expression -> . expression operationAdd term
+    (31) term -> . fator
+    (32) term -> . term operationMul fator
+    (33) fator -> . type
     (48) type -> . integer
     (49) type -> . real
     (50) type -> . string
@@ -1789,7 +1796,11 @@ state 69
     LPAREN          shift and go to state 37
 
     writeln_args                   shift and go to state 102
-    type                           shift and go to state 103
+    expressionGeneric              shift and go to state 103
+    expression                     shift and go to state 71
+    term                           shift and go to state 72
+    fator                          shift and go to state 73
+    type                           shift and go to state 74
     integer                        shift and go to state 45
     real                           shift and go to state 46
     string                         shift and go to state 47
@@ -1872,11 +1883,11 @@ state 71
     NOT             reduce using rule 27 (expressionGeneric -> expression .)
     THEN            reduce using rule 27 (expressionGeneric -> expression .)
     DO              reduce using rule 27 (expressionGeneric -> expression .)
+    COMMA           reduce using rule 27 (expressionGeneric -> expression .)
     SEMICOLON       reduce using rule 27 (expressionGeneric -> expression .)
     TO              reduce using rule 27 (expressionGeneric -> expression .)
     DOWNTO          reduce using rule 27 (expressionGeneric -> expression .)
     ELSE            reduce using rule 27 (expressionGeneric -> expression .)
-    COMMA           reduce using rule 27 (expressionGeneric -> expression .)
     RBRACKET        reduce using rule 27 (expressionGeneric -> expression .)
     RANGE           shift and go to state 129
     PLUS            shift and go to state 130
@@ -1916,11 +1927,11 @@ state 72
     NOT             reduce using rule 29 (expression -> term .)
     THEN            reduce using rule 29 (expression -> term .)
     DO              reduce using rule 29 (expression -> term .)
+    COMMA           reduce using rule 29 (expression -> term .)
     SEMICOLON       reduce using rule 29 (expression -> term .)
     TO              reduce using rule 29 (expression -> term .)
     DOWNTO          reduce using rule 29 (expression -> term .)
     ELSE            reduce using rule 29 (expression -> term .)
-    COMMA           reduce using rule 29 (expression -> term .)
     RBRACKET        reduce using rule 29 (expression -> term .)
     TIMES           shift and go to state 137
     DIVISION        shift and go to state 138
@@ -1952,11 +1963,11 @@ state 73
     NOT             reduce using rule 31 (term -> fator .)
     THEN            reduce using rule 31 (term -> fator .)
     DO              reduce using rule 31 (term -> fator .)
+    COMMA           reduce using rule 31 (term -> fator .)
     SEMICOLON       reduce using rule 31 (term -> fator .)
     TO              reduce using rule 31 (term -> fator .)
     DOWNTO          reduce using rule 31 (term -> fator .)
     ELSE            reduce using rule 31 (term -> fator .)
-    COMMA           reduce using rule 31 (term -> fator .)
     RBRACKET        reduce using rule 31 (term -> fator .)
 
 
@@ -1983,11 +1994,11 @@ state 74
     NOT             reduce using rule 33 (fator -> type .)
     THEN            reduce using rule 33 (fator -> type .)
     DO              reduce using rule 33 (fator -> type .)
+    COMMA           reduce using rule 33 (fator -> type .)
     SEMICOLON       reduce using rule 33 (fator -> type .)
     TO              reduce using rule 33 (fator -> type .)
     DOWNTO          reduce using rule 33 (fator -> type .)
     ELSE            reduce using rule 33 (fator -> type .)
-    COMMA           reduce using rule 33 (fator -> type .)
     RBRACKET        reduce using rule 33 (fator -> type .)
 
 
@@ -2589,12 +2600,50 @@ state 102
 
 state 103
 
-    (141) writeln_args -> type . COMMA writeln_args
-    (142) writeln_args -> type .
+    (141) writeln_args -> expressionGeneric . COMMA writeln_args
+    (142) writeln_args -> expressionGeneric .
+    (28) expressionGeneric -> expressionGeneric . comparator expression
+    (69) comparator -> . eq
+    (70) comparator -> . neq
+    (71) comparator -> . lt
+    (72) comparator -> . gt
+    (73) comparator -> . lte
+    (74) comparator -> . gte
+    (75) comparator -> . and
+    (76) comparator -> . or
+    (77) comparator -> . not
+    (78) eq -> . EQ
+    (79) neq -> . NEQ
+    (80) lt -> . LT
+    (81) gt -> . GT
+    (82) lte -> . LTE
+    (83) gte -> . GTE
+    (84) and -> . AND
+    (85) or -> . OR
+    (86) not -> . NOT
 
     COMMA           shift and go to state 172
-    RPAREN          reduce using rule 142 (writeln_args -> type .)
+    RPAREN          reduce using rule 142 (writeln_args -> expressionGeneric .)
+    EQ              shift and go to state 115
+    NEQ             shift and go to state 116
+    LT              shift and go to state 117
+    GT              shift and go to state 118
+    LTE             shift and go to state 119
+    GTE             shift and go to state 120
+    AND             shift and go to state 121
+    OR              shift and go to state 122
+    NOT             shift and go to state 123
 
+    comparator                     shift and go to state 105
+    eq                             shift and go to state 106
+    neq                            shift and go to state 107
+    lt                             shift and go to state 108
+    gt                             shift and go to state 109
+    lte                            shift and go to state 110
+    gte                            shift and go to state 111
+    and                            shift and go to state 112
+    or                             shift and go to state 113
+    not                            shift and go to state 114
 
 state 104
 
@@ -4045,9 +4094,16 @@ state 171
 
 state 172
 
-    (141) writeln_args -> type COMMA . writeln_args
-    (141) writeln_args -> . type COMMA writeln_args
-    (142) writeln_args -> . type
+    (141) writeln_args -> expressionGeneric COMMA . writeln_args
+    (141) writeln_args -> . expressionGeneric COMMA writeln_args
+    (142) writeln_args -> . expressionGeneric
+    (27) expressionGeneric -> . expression
+    (28) expressionGeneric -> . expressionGeneric comparator expression
+    (29) expression -> . term
+    (30) expression -> . expression operationAdd term
+    (31) term -> . fator
+    (32) term -> . term operationMul fator
+    (33) fator -> . type
     (48) type -> . integer
     (49) type -> . real
     (50) type -> . string
@@ -4076,8 +4132,12 @@ state 172
     IDENTIFIER      shift and go to state 75
     LPAREN          shift and go to state 37
 
-    type                           shift and go to state 103
+    expressionGeneric              shift and go to state 103
     writeln_args                   shift and go to state 207
+    expression                     shift and go to state 71
+    term                           shift and go to state 72
+    fator                          shift and go to state 73
+    type                           shift and go to state 74
     integer                        shift and go to state 45
     real                           shift and go to state 46
     string                         shift and go to state 47
@@ -4115,11 +4175,11 @@ state 173
     NOT             reduce using rule 28 (expressionGeneric -> expressionGeneric comparator expression .)
     THEN            reduce using rule 28 (expressionGeneric -> expressionGeneric comparator expression .)
     DO              reduce using rule 28 (expressionGeneric -> expressionGeneric comparator expression .)
+    COMMA           reduce using rule 28 (expressionGeneric -> expressionGeneric comparator expression .)
     SEMICOLON       reduce using rule 28 (expressionGeneric -> expressionGeneric comparator expression .)
     TO              reduce using rule 28 (expressionGeneric -> expressionGeneric comparator expression .)
     DOWNTO          reduce using rule 28 (expressionGeneric -> expressionGeneric comparator expression .)
     ELSE            reduce using rule 28 (expressionGeneric -> expressionGeneric comparator expression .)
-    COMMA           reduce using rule 28 (expressionGeneric -> expressionGeneric comparator expression .)
     RBRACKET        reduce using rule 28 (expressionGeneric -> expressionGeneric comparator expression .)
     RANGE           shift and go to state 129
     PLUS            shift and go to state 130
@@ -4159,11 +4219,11 @@ state 174
     NOT             reduce using rule 30 (expression -> expression operationAdd term .)
     THEN            reduce using rule 30 (expression -> expression operationAdd term .)
     DO              reduce using rule 30 (expression -> expression operationAdd term .)
+    COMMA           reduce using rule 30 (expression -> expression operationAdd term .)
     SEMICOLON       reduce using rule 30 (expression -> expression operationAdd term .)
     TO              reduce using rule 30 (expression -> expression operationAdd term .)
     DOWNTO          reduce using rule 30 (expression -> expression operationAdd term .)
     ELSE            reduce using rule 30 (expression -> expression operationAdd term .)
-    COMMA           reduce using rule 30 (expression -> expression operationAdd term .)
     RBRACKET        reduce using rule 30 (expression -> expression operationAdd term .)
     TIMES           shift and go to state 137
     DIVISION        shift and go to state 138
@@ -4195,11 +4255,11 @@ state 175
     NOT             reduce using rule 32 (term -> term operationMul fator .)
     THEN            reduce using rule 32 (term -> term operationMul fator .)
     DO              reduce using rule 32 (term -> term operationMul fator .)
+    COMMA           reduce using rule 32 (term -> term operationMul fator .)
     SEMICOLON       reduce using rule 32 (term -> term operationMul fator .)
     TO              reduce using rule 32 (term -> term operationMul fator .)
     DOWNTO          reduce using rule 32 (term -> term operationMul fator .)
     ELSE            reduce using rule 32 (term -> term operationMul fator .)
-    COMMA           reduce using rule 32 (term -> term operationMul fator .)
     RBRACKET        reduce using rule 32 (term -> term operationMul fator .)
 
 
@@ -4768,9 +4828,9 @@ state 206
 
 state 207
 
-    (141) writeln_args -> type COMMA writeln_args .
+    (141) writeln_args -> expressionGeneric COMMA writeln_args .
 
-    RPAREN          reduce using rule 141 (writeln_args -> type COMMA writeln_args .)
+    RPAREN          reduce using rule 141 (writeln_args -> expressionGeneric COMMA writeln_args .)
 
 
 state 208

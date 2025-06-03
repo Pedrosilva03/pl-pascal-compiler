@@ -67,9 +67,9 @@ def t_WHILE(t): r"[Ww][Hh][Ii][Ll][Ee]"; return t
 
 def t_REPEAT(t): r"[Rr][Ee][Pp][Ee][Aa][Tt]"; return t
 
-def t_DOWNTO(t): r"[Dd][Oo][Ww][Nn][Tt][Oo]"; return t
+def t_DOWNTO(t): r"downto"; return t
 
-def t_DO(t): r"[Dd][Oo]"; return t
+def t_DO(t): r"do"; return t
 
 def t_TO(t): r"[Tt][Oo]"; return t
 

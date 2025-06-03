@@ -189,6 +189,8 @@ def p_fator(p):
     if not isinstance(p[1], str):
         p[0] = p[1]
     else:
+        if p[1] not in variables.keys():
+            raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
         index_source1 = list(variables.keys()).index(p[1])
         p[0] = [f'PUSHG {index_source1}']
 
@@ -629,6 +631,21 @@ def p_readln(p):
         
 # WRITELN
 
+def writeln_for_variable(caller):
+    var_type = variables[list(variables.keys())[utils.get_index_from_pushg(caller)]]
+    if var_type == 'integer':
+        return ["WRITEI"]
+    elif var_type == 'real':
+        return ["WRITEF"]
+    elif var_type == 'string':
+        return ["WRITES"]
+    elif var_type == 'char':
+        return ["WRITECHR"]
+    elif var_type == 'boolean':
+        return ["WRITEI"]
+    else:
+        raise Exception(f"Erro: Tipo inválido.")
+
 def writeln_for_function(caller):
     writer = []
     var_type = variables[current_called_func]
@@ -641,7 +658,7 @@ def writeln_for_function(caller):
     elif var_type == 'char':
         writer = caller + ["WRITECHR"]
     elif var_type == 'boolean':
-        writer = caller + ["WRITES"]
+        writer = caller + ["WRITEI"]
     else:
         raise Exception(f"Erro: Tipo inválido.")
     
@@ -651,46 +668,29 @@ def p_writeln(p):
     """writeln : WRITELN LPAREN writeln_args RPAREN"""        
     p[0] = p[3] + ["WRITELN"] 
     
+
 def p_writeln_args(p):
-    """writeln_args : type COMMA writeln_args 
-                    | type"""
+    """writeln_args : expressionGeneric COMMA writeln_args 
+                    | expressionGeneric"""
     global variables
-    
-    # Caso em que é um valor explicito, pode ser imediatamente escrito
-    if isinstance(p[1], list):
-        if "PADD" in p[1]: # Caso em que é um acesso a um array
-            p[0] = p[1] + ["WRITEI"]
-        elif "PUSHS" in p[1][0]: # Caso em que é um acesso a uma string
-            p[0] = p[1] + ["WRITES"]
-        elif "PUSHI" in p[1][0]: # Caso em que é um acesso a um inteiro
-            p[0] = p[1] + ["WRITEI"]
-        elif "PUSHF" in p[1][0]: # Caso em que é um acesso a um float
-            p[0] = p[1] + ["WRITEF"]
-        elif "CALL" in p[1]: # Caso em que é uma função, vai dar write à variável onde o return foi colocado
-            p[0] = writeln_for_function(p[1])
-        elif "CHARAT" in p[1]: # Caso em que é um acesso a um carater numa string
-            p[0] = p[1] + ["WRITEI"]
-    # Caso em que é um identifier
-    elif p[1] not in variables: # Pode ser um array ou função para o futuro. Para já apenas casos em que variáveis não declaradas são chamadas
-        raise Exception(f"Erro: Variável '{p[1]}' não declarada.")
-    else:
-        var_type = variables[p[1]]
-        index = list(variables.keys()).index(p[1])
-        
-        push_instruction = [f'PUSHG {index}']
-        if var_type == 'integer':
-            p[0] = push_instruction + ["WRITEI"]
-        elif var_type == 'real':
-            p[0] = push_instruction + ["WRITEF"]
-        elif var_type == 'string':
-            p[0] = push_instruction + ["WRITES"]
-        elif var_type == 'char':
-            p[0] = push_instruction + ["WRITECHR"]
-        elif var_type == 'boolean':
-            p[0] = push_instruction + ["WRITES"]
-        else:
-            raise Exception(f"Erro: Tipo inválido para a variável '{p[1]}'.")
-    
+
+    if "PADD" in p[1]: # Caso em que é um acesso a um array
+        p[0] = p[1] + ["WRITEI"]
+    elif "PUSHS" in p[1][-1]: # Caso em que é um acesso a uma string
+        p[0] = p[1] + ["WRITES"]
+    elif "PUSHI" in p[1][-1]: # Caso em que é um acesso a um inteiro
+        p[0] = p[1] + ["WRITEI"]
+    elif "PUSHF" in p[1][-1]: # Caso em que é um acesso a um float
+        p[0] = p[1] + ["WRITEF"]
+    elif "CALL" in p[1]: # Caso em que é uma função, vai dar write à variável onde o return foi colocado
+        p[0] = writeln_for_function(p[1])
+    elif "PUSHG" in p[1][-1]:
+        p[0] = p[1] + writeln_for_variable(p[1][-1])
+    elif "CHARAT" in p[1]: # Caso em que é um acesso a um carater numa string
+        p[0] = p[1] + ["WRITEI"]
+    else: # Caso em que são expressões diretamente dentro do writeln
+        p[0] = p[1] + ['WRITEF']
+
     if len(p) == 4:
         p[0] += p[3]
 

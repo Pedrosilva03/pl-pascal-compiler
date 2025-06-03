@@ -45,3 +45,6 @@ def add_array_load(instrutions):
 def add_ascii_conversion(instructions):
     return (['CHRCODE'] if "PUSHS" in instructions[-1] else [])
     # return (['CHRCODE'] if instructions[-1] == 'CHARAT' else [])
+
+def get_index_from_pushg(instructions):
+    return int(instructions.split(" ")[1])
