@@ -40,3 +40,4 @@ PYTHON := python3
 O resultado dos testes serão colocados na pasta [out](https://github.com/Pedrosilva03/pl-pascal-compiler/tree/main/out), com o mesmo nome do programa original.
 ## Conclusão
 Trabalho realizado por Pedro Silva, Diogo Barros e Diogo Costa
+- Nota final: 18/20
